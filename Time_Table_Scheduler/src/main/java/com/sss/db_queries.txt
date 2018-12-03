@@ -1,0 +1,9 @@
+use ttsdb;
+
+create table courselist(
+    courseId VARCHAR(50) PRIMARY KEY,
+    courseName VARCHAR(50) NOT NULL,
+	credits INT NOT NULL,
+	tutHours INT NOT NULL,
+	containsLab BOOLEAN NOT NULL);
+
