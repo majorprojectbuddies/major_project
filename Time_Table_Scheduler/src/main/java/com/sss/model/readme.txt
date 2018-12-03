@@ -1,0 +1,1 @@
+This directory will contain the basic structure of different objects related to the project

@@ -1,0 +1,1 @@
+This directory will contain the files which will help in connecting with the db
