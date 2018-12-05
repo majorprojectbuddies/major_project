@@ -30,6 +30,7 @@ public class LoginController {
         SignupDao signupDao = new SignupDao();
         //if user not exist
         if(!signupDao.CheckOrSignUp(loginid,password)){
+
             return loginid;
         }
         else{
