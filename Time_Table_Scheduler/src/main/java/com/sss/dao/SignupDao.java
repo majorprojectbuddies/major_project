@@ -36,12 +36,12 @@ public class SignupDao {
             }
             else{
                 sql = "insert into logindetails values(\""+username+"\",\""+password+"\")";
-                rs = stmt.executeQuery(sql);
+                stmt.executeUpdate(sql);
 
                 //initialize faculty data
                 sql = "insert into facultydetails values(\""+username+"\",\"null\", \"null\",0,\"null\",\"null\",\"null\")";
                 System.out.println(sql);
-                rs = stmt.executeQuery(sql);
+                stmt.executeUpdate(sql);
 
                 return false;
             }
