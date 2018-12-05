@@ -2,6 +2,7 @@ package com.sss.controller;
 
 
 import com.sss.classModel.FacultyResponse;
+import com.sss.classModel.OverallResponse;
 import com.sss.dao.LoginDao;
 import com.sss.dao.SignupDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,33 +16,35 @@ public class LoginController {
 
     @PostMapping("/Login")
 
-    public ResponseEntity<FacultyResponse> LoginMethod(@RequestParam("loginid") String loginid, @RequestParam("password") String password){
+    public ResponseEntity<OverallResponse> LoginMethod(@RequestParam("loginid") String loginid, @RequestParam("password") String password){
         SignupDao signupDao = new SignupDao();
-        FacultyResponse facultyResponse = new FacultyResponse();
+        OverallResponse overallResponse = new OverallResponse();
         LoginDao loginDao = new LoginDao();
         if(loginDao.ValidateUser(loginid,password)){
-            facultyResponse = signupDao.FetchFacultyData(loginid);
-            return new ResponseEntity<>(facultyResponse, HttpStatus.OK);
+            overallResponse.facultyResponse = signupDao.FetchFacultyData(loginid);
+            overallResponse.courseResponse = signupDao.FetchCourseData();
+            return new ResponseEntity<>(overallResponse, HttpStatus.OK);
         }
 
         else{
-            return new ResponseEntity<>(facultyResponse, HttpStatus.OK);
+            return new ResponseEntity<>(overallResponse, HttpStatus.OK);
         }
 
     }
     @PostMapping("/Signup")
 
-    public ResponseEntity<FacultyResponse> SignupMethod(@RequestParam("loginid") String loginid, @RequestParam("password") String password){
+    public ResponseEntity<OverallResponse> SignupMethod(@RequestParam("loginid") String loginid, @RequestParam("password") String password){
         SignupDao signupDao = new SignupDao();
         //if user not exist
-        FacultyResponse facultyResponse = new FacultyResponse();
+        OverallResponse overallResponse = new OverallResponse();
         if(!signupDao.CheckOrSignUp(loginid,password)){
 
-            facultyResponse = signupDao.FetchFacultyData(loginid);
-            return new ResponseEntity<>(facultyResponse, HttpStatus.OK);
+            overallResponse.facultyResponse = signupDao.FetchFacultyData(loginid);
+            overallResponse.courseResponse = signupDao.FetchCourseData();
+            return new ResponseEntity<>(overallResponse, HttpStatus.OK);
         }
         else{
-            return new ResponseEntity<>(facultyResponse, HttpStatus.OK);
+            return new ResponseEntity<>(overallResponse, HttpStatus.OK);
         }
     }
     
