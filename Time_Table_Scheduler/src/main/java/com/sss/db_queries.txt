@@ -7,3 +7,45 @@ create table courselist(
 	tutHours INT NOT NULL,
 	containsLab BOOLEAN NOT NULL);
 
+
+create database ttsdb;
+use ttsdb;
+
+create table courselist(courseId varchar(50) PRIMARY KEY,courseName varchar(50) NOT NULL,credits int NOT NULL,tutHours int NOT NULL,containsLab boolean NOT NULL);
+create table logindetails(loginid varchar(64) PRIMARY KEY,password varchar(255));
+insert into logindetails values("sag","sag");
+
+insert into courselist values("MA102","Mathematics 2",4,4,false);
+
+insert into courselist values("MC202","Real Analysis",4,4,false);
+insert into courselist values("MC204","Scientific Computing",4,3,true);
+insert into courselist values("MC206","Computer Organization and Architecture",4,4,false);
+insert into courselist values("MC208","Linear Algebra",4,4,false);
+
+insert into courselist values("MC302","Database Management System",4,3,true);
+insert into courselist values("MC304","Theory of Computation",4,4,false);
+insert into courselist values("MC306","Financial Engineering",4,4,false);
+
+insert into courselist values("MC310","Software Engineering",4,4,false);
+insert into courselist values("MC320","Web Technology",4,4,false);
+
+insert into courselist values("MC308","Computer Networks",4,4,false);
+insert into courselist values("MC312","Artificial Intelligence",4,4,false);
+insert into courselist values("MC318","Computer Graphics",4,4,false);
+insert into courselist values("MC322","Cluster and Grid Computing",4,4,false);
+insert into courselist values("MC324","Big Data Analytics",4,4,false);
+insert into courselist values("MC404","Matrix Computation",4,4,false);
+insert into courselist values("MC406","Partial Differential Equation",4,4,false);
+insert into courselist values("MC408","Quality Control and Decision Making",4,4,false);
+insert into courselist values("MC410","Topology",4,4,false);
+insert into courselist values("MC412","Functional Analysis",4,4,false);
+insert into courselist values("MC418","Optimization Techniques",4,4,false);
+insert into courselist values("MC420","Information Theory and Coding",4,4,false);
+insert into courselist values("MC422","Finite Element Methods",4,4,false);
+insert into courselist values("MC424","Game Theory",4,4,false);
+insert into courselist values("MC426","Differential Geometry",4,4,false);
+insert into courselist values("MC432","Fuzzy Sets and Fuzzy Logic",4,4,false);
+insert into courselist values("MC434","Numerial Methods for PDE",4,4,false);
+insert into courselist values("MC436","Petrinet Theory and Application",4,4,false);
+insert into courselist values("MC438","Tensor Calculus",4,4,false);
+insert into courselist values("MC440","Stastical Inference",4,4,false);
