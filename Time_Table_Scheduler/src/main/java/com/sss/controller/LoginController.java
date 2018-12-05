@@ -2,6 +2,7 @@ package com.sss.controller;
 
 
 import com.sss.dao.LoginDao;
+import com.sss.dao.SignupDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,13 +18,24 @@ public class LoginController {
         if(loginDao.ValidateUser(loginid,password)){
             return loginid;
         }
-        /*if(true){
-            return "hey";
-        }*/
+
         else{
             return "null";
         }
 
     }
+    @PostMapping("/Signup")
+    @ResponseBody
+    public String SignupMethod(@RequestParam("loginid") String loginid, @RequestParam("password") String password){
+        SignupDao signupDao = new SignupDao();
+        //if user not exist
+        if(!signupDao.CheckOrSignUp(loginid,password)){
+            return loginid;
+        }
+        else{
+            return "null";
+        }
+    }
+    
 }
 
