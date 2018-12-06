@@ -62,7 +62,7 @@ public class SignupDao {
                     username1 = username + "-mon";
                     username2 = username + "-tue";
                     username3 = username + "-wed";
-                    username4 = username + "-thur";
+                    username4 = username + "-thu";
                     username5 = username + "-fri";
                     ;               sql1 = "insert into facultytimetable values(\""+username1+"\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\")";
                     stmt.executeUpdate(sql1);
