@@ -47,6 +47,24 @@ public class SignupDao {
                 System.out.println(sql);
                 stmt.executeUpdate(sql);
 
+                String sql1,sql2,sql3,sql4,sql5;
+                String username1,username2,username3,username4,username5;
+                username1 = username + "-mon";
+                username2 = username + "-tue";
+                username3 = username + "-wed";
+                username4 = username + "-thur";
+                username5 = username + "-fri";
+;               sql1 = "insert into facultytimetable values(\""+username1+"\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\")";
+                stmt.executeUpdate(sql1);
+                sql2 = "insert into facultytimetable values(\""+username2+"\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\")";
+                stmt.executeUpdate(sql2);
+                sql3 = "insert into facultytimetable values(\""+username3+"\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\")";
+                stmt.executeUpdate(sql3);
+                sql4 = "insert into facultytimetable values(\""+username4+"\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\")";
+                stmt.executeUpdate(sql4);
+                sql5 = "insert into facultytimetable values(\""+username5+"\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\")";
+                stmt.executeUpdate(sql5);
+
                 return false;
             }
 
