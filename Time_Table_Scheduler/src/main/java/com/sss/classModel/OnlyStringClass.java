@@ -1,5 +1,9 @@
 package com.sss.classModel;
 
 public class OnlyStringClass {
-    public String myString;
+    public String loginid;
+
+    public OnlyStringClass(){
+        loginid="";
+    }
 }
