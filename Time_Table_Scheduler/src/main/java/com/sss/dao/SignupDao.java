@@ -45,6 +45,8 @@ public class SignupDao {
                     stmt.executeUpdate(sql);
 
                     initializeFirstYearTimeTables();
+                    initializePhdTimeTable();
+                    initializeSectionsTimeTable();
                 }
                 else{
                     sql = "insert into logindetails values(\""+username+"\",\""+password+"\")";
@@ -246,42 +248,95 @@ public class SignupDao {
 
 
             for(int i=0;i<5;++i){
-                String sql = "SELECT * from facultytimetable where facultyid=\""+username+"-mon\"";
-                ResultSet rs = stmt.executeQuery(sql);
+                String sql;
+                ResultSet rs;
                 if(i==0){
-                    sql = "SELECT * from facultytimetable where facultyid=\""+username+"-mon\"";
+                    sql = "SELECT * from facultytimetable where facultyttid=\""+username+"-mon\"";
+                    System.out.println("hey "+sql);
                     rs = stmt.executeQuery(sql);
+                    if(rs.next()){
+                        timeTable.timetable[i][0]=rs.getString(10);
+                        timeTable.timetable[i][1]=rs.getString(11);
+                        timeTable.timetable[i][2]=rs.getString(2);
+                        timeTable.timetable[i][3]=rs.getString(3);
+                        timeTable.timetable[i][4]=rs.getString(5);
+                        timeTable.timetable[i][5]=rs.getString(4);
+                        timeTable.timetable[i][6]=rs.getString(6);
+                        timeTable.timetable[i][7]=rs.getString(7);
+                        timeTable.timetable[i][8]=rs.getString(8);
+                        timeTable.timetable[i][9]=rs.getString(9);
+
+                        System.out.println("hey "+timeTable.timetable[i][0]+timeTable.timetable[i][1]+timeTable.timetable[i][2]+timeTable.timetable[i][3]+timeTable.timetable[i][4]+timeTable.timetable[i][5]+timeTable.timetable[i][6]+timeTable.timetable[i][7]+timeTable.timetable[i][8]+timeTable.timetable[i][9]);
+                    }
 
                 }
                 if(i==1){
-                    sql = "SELECT * from facultytimetable where facultyid=\""+username+"-tue\"";
+                    sql = "SELECT * from facultytimetable where facultyttid=\""+username+"-tue\"";
                     rs = stmt.executeQuery(sql);
+                    if(rs.next()){
+                        timeTable.timetable[i][0]=rs.getString(10);
+                        timeTable.timetable[i][1]=rs.getString(11);
+                        timeTable.timetable[i][2]=rs.getString(2);
+                        timeTable.timetable[i][3]=rs.getString(3);
+                        timeTable.timetable[i][4]=rs.getString(5);
+                        timeTable.timetable[i][5]=rs.getString(4);
+                        timeTable.timetable[i][6]=rs.getString(6);
+                        timeTable.timetable[i][7]=rs.getString(7);
+                        timeTable.timetable[i][8]=rs.getString(8);
+                        timeTable.timetable[i][9]=rs.getString(9);
+                    }
                 }
                 if(i==2){
-                    sql = "SELECT * from facultytimetable where facultyid=\""+username+"-wed\"";
+                    sql = "SELECT * from facultytimetable where facultyttid=\""+username+"-wed\"";
                     rs = stmt.executeQuery(sql);
+                    if(rs.next()){
+                        timeTable.timetable[i][0]=rs.getString(10);
+                        timeTable.timetable[i][1]=rs.getString(11);
+                        timeTable.timetable[i][2]=rs.getString(2);
+                        timeTable.timetable[i][3]=rs.getString(3);
+                        timeTable.timetable[i][4]=rs.getString(5);
+                        timeTable.timetable[i][5]=rs.getString(4);
+                        timeTable.timetable[i][6]=rs.getString(6);
+                        timeTable.timetable[i][7]=rs.getString(7);
+                        timeTable.timetable[i][8]=rs.getString(8);
+                        timeTable.timetable[i][9]=rs.getString(9);
+                    }
                 }
                 if(i==3){
-                    sql = "SELECT * from facultytimetable where facultyid=\""+username+"-thu\"";
+                    sql = "SELECT * from facultytimetable where facultyttid=\""+username+"-thu\"";
                     rs = stmt.executeQuery(sql);
+                    if(rs.next()){
+                        timeTable.timetable[i][0]=rs.getString(10);
+                        timeTable.timetable[i][1]=rs.getString(11);
+                        timeTable.timetable[i][2]=rs.getString(2);
+                        timeTable.timetable[i][3]=rs.getString(3);
+                        timeTable.timetable[i][4]=rs.getString(4);
+                        timeTable.timetable[i][5]=rs.getString(4);
+                        timeTable.timetable[i][6]=rs.getString(6);
+                        timeTable.timetable[i][7]=rs.getString(7);
+                        timeTable.timetable[i][8]=rs.getString(8);
+                        timeTable.timetable[i][9]=rs.getString(9);
+                    }
                 }
                 if(i==4) {
-                    sql = "SELECT * from facultytimetable where facultyid=\"" + username + "-fri\"";
+                    sql = "SELECT * from facultytimetable where facultyttid=\"" + username + "-fri\"";
                     rs = stmt.executeQuery(sql);
+
+                    if(rs.next()){
+                        timeTable.timetable[i][0]=rs.getString(10);
+                        timeTable.timetable[i][1]=rs.getString(11);
+                        timeTable.timetable[i][2]=rs.getString(2);
+                        timeTable.timetable[i][3]=rs.getString(3);
+                        timeTable.timetable[i][4]=rs.getString(4);
+                        timeTable.timetable[i][5]=rs.getString(4);
+                        timeTable.timetable[i][6]=rs.getString(6);
+                        timeTable.timetable[i][7]=rs.getString(7);
+                        timeTable.timetable[i][8]=rs.getString(8);
+                        timeTable.timetable[i][9]=rs.getString(9);
+                    }
                 }
 
-                if(rs.next()){
-                    timeTable.timetable[i][0]=rs.getString(9);
-                    timeTable.timetable[i][1]=rs.getString(10);
-                    timeTable.timetable[i][2]=rs.getString(1);
-                    timeTable.timetable[i][3]=rs.getString(2);
-                    timeTable.timetable[i][4]=rs.getString(4);
-                    timeTable.timetable[i][5]=rs.getString(3);
-                    timeTable.timetable[i][6]=rs.getString(5);
-                    timeTable.timetable[i][7]=rs.getString(6);
-                    timeTable.timetable[i][8]=rs.getString(7);
-                    timeTable.timetable[i][9]=rs.getString(8);
-                }
+
             }
             return timeTable;
 
@@ -378,7 +433,16 @@ public class SignupDao {
                 }
             }
         }
+    }
 
+    public void initializePhdTimeTable(){
 
     }
+
+
+    public void initializeSectionsTimeTable(){
+
+    }
+
+
 }

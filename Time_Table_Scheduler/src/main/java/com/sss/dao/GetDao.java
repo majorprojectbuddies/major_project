@@ -3,6 +3,7 @@ package com.sss.dao;
 import com.sss.classModel.FacultyResponse;
 import com.sss.classModel.FirstYearGroup;
 import com.sss.classModel.FirstYearGroupList;
+import com.sss.classModel.FullFacultyResponse;
 
 import java.sql.*;
 
@@ -104,6 +105,76 @@ public class GetDao {
         }
         return firstYearGroupList;
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public FullFacultyResponse getFullFacultyResponse() {
+        Connection conn = null;
+        Statement stmt = null;
+        FullFacultyResponse fullFacultyResponse = new FullFacultyResponse();
+        SignupDao signupDao = new SignupDao();
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            stmt = conn.createStatement();
+
+            String sql = "SELECT * from facultydetails";
+            ResultSet rs = stmt.executeQuery(sql);
+
+            while(rs.next()){
+                FacultyResponse facultyResponse = new FacultyResponse();
+                facultyResponse.facultyid = rs.getString(1);
+                facultyResponse.designation = rs.getString(2);
+                facultyResponse.name = rs.getString(3);
+                facultyResponse.noOfHours = rs.getInt(4);
+                facultyResponse.subject1 = rs.getString(5);
+                facultyResponse.subject2 = rs.getString(6);
+                facultyResponse.subject3 = rs.getString(7);
+                facultyResponse.timeTable = signupDao.getTimeTableOfTeacher(facultyResponse.facultyid);
+                fullFacultyResponse.fullFacultyResponseList.add(facultyResponse);
+            }
+
+            return fullFacultyResponse;
+
+        } catch (SQLException se) {
+            se.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (stmt != null)
+                    stmt.close();
+            } catch (SQLException se2) {
+            }
+            try {
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }
+        }
+        return fullFacultyResponse;
+    }
+
+
+
+
+
+
+
+
+
+
 
 
 
