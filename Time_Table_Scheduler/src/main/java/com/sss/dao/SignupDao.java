@@ -45,6 +45,8 @@ public class SignupDao {
                     stmt.executeUpdate(sql);
 
                     initializeFirstYearTimeTables();
+                    initializePhdTimeTable();
+                    initializeSectionsTimeTable();
                 }
                 else{
                     sql = "insert into logindetails values(\""+username+"\",\""+password+"\")";
@@ -378,7 +380,16 @@ public class SignupDao {
                 }
             }
         }
+    }
 
+    public void initializePhdTimeTable(){
+        
+    }
+
+
+    public void initializeSectionsTimeTable(){
 
     }
+
+
 }
