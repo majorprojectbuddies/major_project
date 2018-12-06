@@ -3,9 +3,9 @@ package com.sss.services;
 
 import com.sss.classModel.*;
 import com.sss.dao.UpdateDao;
+import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-
+@Service
 public class UpdateFirstYearTimeTable {
     public  UpdateFirstYearResponse updateFirstYearTimeTable(FirstYearGroupList firstYearGroupList){
         UpdateDao updateDao = new UpdateDao();
