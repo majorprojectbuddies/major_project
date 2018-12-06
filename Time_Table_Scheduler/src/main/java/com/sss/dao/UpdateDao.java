@@ -1,8 +1,10 @@
 package com.sss.dao;
 
 import com.sss.classModel.FacultyResponse;
+import com.sss.classModel.FirstYearGroup;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 public class UpdateDao {
 
@@ -51,4 +53,58 @@ public class UpdateDao {
         }
         return affected;
     }
+
+
+
+
+
+
+    /*public int UpdateFirstYearInfo(ArrayList<FirstYearGroup> firstYearGroupList) {
+        Connection conn = null;
+        Statement stmt = null;
+        int affected = 0;
+        try {
+
+            Class.forName("com.mysql.jdbc.Driver");
+
+
+            System.out.println("Connecting to database...");
+            conn = DriverManager.getConnection(DB_URL, USER, PASS);
+
+            System.out.println("Creating statement...");
+            stmt = conn.createStatement();
+            String sql;
+
+            for(int i = 0;i<firstYearGroupList.size();++i){
+
+                for()
+            }
+            sql = "insert into facultydetails values(\"" + facultyResponse.facultyid + "\",\"" + facultyResponse.designation + "\",\"" + facultyResponse.name + "\",\"" + facultyResponse.noOfHours + "\",\"" + facultyResponse.subject1 + "\",\"" + facultyResponse.subject2 + "\",\"" + facultyResponse.subject3 + "\")";
+            System.out.println(sql);
+            affected = stmt.executeUpdate(sql);
+
+            return affected;
+
+        } catch (SQLException se) {
+            se.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (stmt != null)
+                    stmt.close();
+            } catch (SQLException se2) {
+            }
+            try {
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }
+        }
+        return affected;
+    }*/
+
+
+
 }

@@ -4,6 +4,7 @@ package com.sss.dao;
 import com.sss.classModel.Course;
 import com.sss.classModel.CourseResponse;
 import com.sss.classModel.FacultyResponse;
+import com.sss.classModel.TimeTable;
 
 import java.sql.*;
 public class SignupDao {
@@ -126,6 +127,8 @@ public class SignupDao {
                 facultyResponse.subject1 = rs.getString(5);
                 facultyResponse.subject2 = rs.getString(6);
                 facultyResponse.subject3 = rs.getString(7);
+                facultyResponse.timeTable = getTimeTableOfTeacher(username);
+
                 return facultyResponse;
 
 
@@ -217,5 +220,83 @@ public class SignupDao {
         System.out.println("Goodbye!");
 
         return courseResponse;
+    }
+
+
+    //to get time table of the teacher
+
+    public TimeTable getTimeTableOfTeacher(String username){
+
+
+        Connection conn = null;
+        Statement stmt = null;
+        TimeTable timeTable = new TimeTable();
+        try{
+            Class.forName("com.mysql.jdbc.Driver");
+            conn = DriverManager.getConnection(DB_URL,USER,PASS);
+            stmt = conn.createStatement();
+
+
+            for(int i=0;i<5;++i){
+                String sql = "SELECT * from facultytimetable where facultyid=\""+username+"-mon\"";
+                ResultSet rs = stmt.executeQuery(sql);
+                if(i==0){
+                    sql = "SELECT * from facultytimetable where facultyid=\""+username+"-mon\"";
+                    rs = stmt.executeQuery(sql);
+
+                }
+                if(i==1){
+                    sql = "SELECT * from facultytimetable where facultyid=\""+username+"-tue\"";
+                    rs = stmt.executeQuery(sql);
+                }
+                if(i==2){
+                    sql = "SELECT * from facultytimetable where facultyid=\""+username+"-wed\"";
+                    rs = stmt.executeQuery(sql);
+                }
+                if(i==3){
+                    sql = "SELECT * from facultytimetable where facultyid=\""+username+"-thu\"";
+                    rs = stmt.executeQuery(sql);
+                }
+                if(i==4) {
+                    sql = "SELECT * from facultytimetable where facultyid=\"" + username + "-fri\"";
+                    rs = stmt.executeQuery(sql);
+                }
+
+                if(rs.next()){
+                    timeTable.timetable[i][0]=rs.getString(9);
+                    timeTable.timetable[i][1]=rs.getString(10);
+                    timeTable.timetable[i][2]=rs.getString(1);
+                    timeTable.timetable[i][3]=rs.getString(2);
+                    timeTable.timetable[i][4]=rs.getString(4);
+                    timeTable.timetable[i][5]=rs.getString(3);
+                    timeTable.timetable[i][6]=rs.getString(5);
+                    timeTable.timetable[i][7]=rs.getString(6);
+                    timeTable.timetable[i][8]=rs.getString(7);
+                    timeTable.timetable[i][9]=rs.getString(8);
+                }
+            }
+            return timeTable;
+
+
+        }catch(SQLException se){
+            se.printStackTrace();
+        }catch(Exception e){
+            e.printStackTrace();
+        }finally{
+            try{
+                if(stmt!=null)
+                    stmt.close();
+            }catch(SQLException se2){
+            try{
+                if(conn!=null)
+                    conn.close();
+            }catch(SQLException se){
+                se.printStackTrace();
+            }
+        }
+
+        return timeTable;
+
+        }
     }
 }
