@@ -23,9 +23,16 @@ public class LoginController {
         OverallResponse overallResponse = new OverallResponse();
         LoginDao loginDao = new LoginDao();
         if(loginDao.ValidateUser(loginDetails.loginid,loginDetails.password)){
-            overallResponse.facultyResponse = signupDao.FetchFacultyData(loginDetails.loginid);
-            overallResponse.courseResponse = signupDao.FetchCourseData();
-            return new ResponseEntity<>(overallResponse, HttpStatus.OK);
+            if(loginDetails.loginid.equals("admin")){
+                overallResponse.facultyResponse.facultyid="admin";
+                return new ResponseEntity<>(overallResponse, HttpStatus.OK);
+            }
+            else{
+                overallResponse.facultyResponse = signupDao.FetchFacultyData(loginDetails.loginid);
+                overallResponse.courseResponse = signupDao.FetchCourseData();
+                return new ResponseEntity<>(overallResponse, HttpStatus.OK);
+            }
+
         }
 
         else{
