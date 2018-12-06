@@ -18,13 +18,9 @@ public class CourseFacultyController {
 
     @PostMapping("/profile")
     public ResponseEntity<OverallResponse> getCourseFacultyData(@RequestBody String loginid) throws IOException {
-//        System.out.println("my nme dhflsdfsldflsdf" + onlyStringClass.myString);
-//        String loginid = onlyStringClass.myString;
-        OnlyStringClass onlyStringClass = new ObjectMapper().readValue(loginid, OnlyStringClass.class);
+        OnlyStringClass onlyStringClass = new ObjectMapper().readValue(loginid,OnlyStringClass.class);
         FetchFacultyCourseData fetchFacultyCourseData = new FetchFacultyCourseData();
         System.out.println("sagar "+ loginid);
-        System.out.println("sagar "+ onlyStringClass.loginid);
         return new ResponseEntity<>(fetchFacultyCourseData.fetchFacultyCourseInfo(onlyStringClass.loginid), HttpStatus.OK);
-
     }
 }
