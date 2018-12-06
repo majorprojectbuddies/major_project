@@ -1,16 +1,17 @@
 package com.sss.services;
 
 
-import com.sss.classModel.FacultyResponse;
-import com.sss.classModel.FirstYearGroup;
+import com.sss.classModel.*;
 import com.sss.dao.UpdateDao;
 
 import java.util.ArrayList;
 
 public class UpdateFirstYearTimeTable {
-    /*public int updateFirstYearData(ArrayList<FirstYearGroup> firstYearGroupList){
+    public  UpdateFirstYearResponse updateFirstYearTimeTable(FirstYearGroupList firstYearGroupList){
         UpdateDao updateDao = new UpdateDao();
-        int affected = updateDao.UpdateFirstYearInfo(firstYearGroupList);
-        return affected;
-    }*/
+        UpdateFirstYearResponse updateFirstYearResponse = new UpdateFirstYearResponse();
+        updateFirstYearResponse.affected = Integer.toString(updateDao.UpdateFirstYearInfo(firstYearGroupList.firstYearGroupList));
+
+        return updateFirstYearResponse;
+    }
 }

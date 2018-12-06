@@ -40,31 +40,39 @@ public class SignupDao {
                 return true;
             }
             else{
-                sql = "insert into logindetails values(\""+username+"\",\""+password+"\")";
-                stmt.executeUpdate(sql);
+                if(username.equals("admin")){
+                    sql = "insert into logindetails values(\""+username+"\",\""+password+"\")";
+                    stmt.executeUpdate(sql);
 
-                //initialize faculty data
-                sql = "insert into facultydetails values(\""+username+"\",\"null\", \"null\",0,\"null\",\"null\",\"null\")";
-                System.out.println(sql);
-                stmt.executeUpdate(sql);
+                    initializeFirstYearTimeTables();
+                }
+                else{
+                    sql = "insert into logindetails values(\""+username+"\",\""+password+"\")";
+                    stmt.executeUpdate(sql);
 
-                String sql1,sql2,sql3,sql4,sql5;
-                String username1,username2,username3,username4,username5;
-                username1 = username + "-mon";
-                username2 = username + "-tue";
-                username3 = username + "-wed";
-                username4 = username + "-thur";
-                username5 = username + "-fri";
-;               sql1 = "insert into facultytimetable values(\""+username1+"\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\")";
-                stmt.executeUpdate(sql1);
-                sql2 = "insert into facultytimetable values(\""+username2+"\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\")";
-                stmt.executeUpdate(sql2);
-                sql3 = "insert into facultytimetable values(\""+username3+"\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\")";
-                stmt.executeUpdate(sql3);
-                sql4 = "insert into facultytimetable values(\""+username4+"\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\")";
-                stmt.executeUpdate(sql4);
-                sql5 = "insert into facultytimetable values(\""+username5+"\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\")";
-                stmt.executeUpdate(sql5);
+                    //initialize faculty data
+                    sql = "insert into facultydetails values(\""+username+"\",\"null\", \"null\",0,\"null\",\"null\",\"null\")";
+                    System.out.println(sql);
+                    stmt.executeUpdate(sql);
+
+                    String sql1,sql2,sql3,sql4,sql5;
+                    String username1,username2,username3,username4,username5;
+                    username1 = username + "-mon";
+                    username2 = username + "-tue";
+                    username3 = username + "-wed";
+                    username4 = username + "-thur";
+                    username5 = username + "-fri";
+                    ;               sql1 = "insert into facultytimetable values(\""+username1+"\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\")";
+                    stmt.executeUpdate(sql1);
+                    sql2 = "insert into facultytimetable values(\""+username2+"\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\")";
+                    stmt.executeUpdate(sql2);
+                    sql3 = "insert into facultytimetable values(\""+username3+"\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\")";
+                    stmt.executeUpdate(sql3);
+                    sql4 = "insert into facultytimetable values(\""+username4+"\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\")";
+                    stmt.executeUpdate(sql4);
+                    sql5 = "insert into facultytimetable values(\""+username5+"\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\")";
+                    stmt.executeUpdate(sql5);
+                }
 
                 return false;
             }
@@ -298,5 +306,79 @@ public class SignupDao {
         return timeTable;
 
         }
+    }
+
+
+    public void initializeFirstYearTimeTables(){
+
+
+        Connection conn = null;
+        Statement stmt = null;
+        TimeTable timeTable = new TimeTable();
+        try{
+            Class.forName("com.mysql.jdbc.Driver");
+            conn = DriverManager.getConnection(DB_URL,USER,PASS);
+            stmt = conn.createStatement();
+            int numOfAGroups = 15;
+            int numOBGroups = 15;
+
+            for(int i=1;i<=numOfAGroups;++i){
+                String groupid1 = "a"+Integer.toString(i)+"-mon";
+                String groupid2 = "a"+Integer.toString(i)+"-tue";
+                String groupid3 = "a"+Integer.toString(i)+"-wed";
+                String groupid4 = "a"+Integer.toString(i)+"-thu";
+                String groupid5 = "a"+Integer.toString(i)+"-fri";
+                String sql1 = "insert into firstyeartimetable values(\""+groupid1+"\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\")";
+                String sql2 = "insert into firstyeartimetable values(\""+groupid2+"\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\")";
+                String sql3 = "insert into firstyeartimetable values(\""+groupid3+"\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\")";
+                String sql4 = "insert into firstyeartimetable values(\""+groupid4+"\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\")";
+                String sql5 = "insert into firstyeartimetable values(\""+groupid5+"\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\")";
+
+                stmt.executeUpdate(sql1);
+                stmt.executeUpdate(sql2);
+                stmt.executeUpdate(sql3);
+                stmt.executeUpdate(sql4);
+                stmt.executeUpdate(sql5);
+            }
+
+            for(int i=1;i<=numOBGroups;++i){
+                String groupid1 = "b"+Integer.toString(i)+"-mon";
+                String groupid2 = "b"+Integer.toString(i)+"-tue";
+                String groupid3 = "b"+Integer.toString(i)+"-wed";
+                String groupid4 = "b"+Integer.toString(i)+"-thu";
+                String groupid5 = "b"+Integer.toString(i)+"-fri";
+                String sql1 = "insert into firstyeartimetable values(\""+groupid1+"\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\")";
+                String sql2 = "insert into firstyeartimetable values(\""+groupid2+"\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\")";
+                String sql3 = "insert into firstyeartimetable values(\""+groupid3+"\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\")";
+                String sql4 = "insert into firstyeartimetable values(\""+groupid4+"\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\")";
+                String sql5 = "insert into firstyeartimetable values(\""+groupid5+"\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\")";
+
+                stmt.executeUpdate(sql1);
+                stmt.executeUpdate(sql2);
+                stmt.executeUpdate(sql3);
+                stmt.executeUpdate(sql4);
+                stmt.executeUpdate(sql5);
+            }
+
+
+        }catch(SQLException se){
+            se.printStackTrace();
+        }catch(Exception e){
+            e.printStackTrace();
+        }finally{
+            try{
+                if(stmt!=null)
+                    stmt.close();
+            }catch(SQLException se2){
+                try{
+                    if(conn!=null)
+                        conn.close();
+                }catch(SQLException se){
+                    se.printStackTrace();
+                }
+            }
+        }
+
+
     }
 }
