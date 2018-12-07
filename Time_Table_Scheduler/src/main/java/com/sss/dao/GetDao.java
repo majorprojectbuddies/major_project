@@ -41,7 +41,7 @@ public class GetDao {
             for(int i=0;i<firstYearGroupList.firstYearGroupList.size();++i){
                 String groupId = firstYearGroupList.firstYearGroupList.get(i).groupId;
 
-                for(int j=0;i<5;++i){
+                for(int j=0;j<5;++j){
                     String sql;
                     ResultSet rs;
                     if(j==0){

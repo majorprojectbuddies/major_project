@@ -26,15 +26,24 @@ public class FetchFirstYearGroupDataController {
         FirstYearGroupList firstYearGroupList = getFirstYearTimeTable.getFirstYearTimeTableData();
 
 
-        FirstYearGroup firstYearGroup = new FirstYearGroup();
+        System.out.println("sagar in fetch controller1  "+ onlyStringClass2.groupid);
         for(int i=0;i<firstYearGroupList.firstYearGroupList.size();++i){
-            firstYearGroup = firstYearGroupList.firstYearGroupList.get(i);
+            FirstYearGroup firstYearGroup = firstYearGroupList.firstYearGroupList.get(i);
             if(firstYearGroup.groupId.equals(onlyStringClass2.groupid)){
-                return new ResponseEntity<>(firstYearGroup, HttpStatus.OK);
+
+                for(int j=0;j<5;++j){
+                    for(int k=0;k<10;++k){
+                        System.out.print(firstYearGroup.timeTable.timetable[j][k]+"  ");
+                    }
+                    System.out.println("");
+                }
+
+                return new ResponseEntity<>(firstYearGroupList.firstYearGroupList.get(i), HttpStatus.OK);
             }
         }
 
-        System.out.println("sagar "+ onlyStringClass2.groupid);
+        FirstYearGroup firstYearGroup = new FirstYearGroup();
+        System.out.println("sagar in fetch controller  "+ onlyStringClass2.groupid);
         return new ResponseEntity<>(firstYearGroup, HttpStatus.OK);
 
     }
