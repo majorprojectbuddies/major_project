@@ -33,13 +33,13 @@ public class Teacher {
 
         //
         this.labHours = this.hoursToAssign;
-        if (this.facultyResponse.subject1 != "null") {
+        if (!this.facultyResponse.subject1.equals("null")) {
             this.labHours -= TimeTableGenerator.courseDataHM.get(this.facultyResponse.subject1).tutHours;
         }
-        if (this.facultyResponse.subject2 != "null") {
+        if (!this.facultyResponse.subject2.equals("null")) {
             this.labHours -= TimeTableGenerator.courseDataHM.get(this.facultyResponse.subject2).tutHours;
         }
-        if (this.facultyResponse.subject3 != "null") {
+        if (!this.facultyResponse.subject3.equals("null")) {
             this.labHours -= TimeTableGenerator.courseDataHM.get(this.facultyResponse.subject3).tutHours;
         }
     }
