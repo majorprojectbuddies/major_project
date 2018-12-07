@@ -21,7 +21,7 @@ public class FetchSectionDataController {
     public ResponseEntity<Section> getSingleGroupData(@RequestBody OnlyStringClass2 onlyStringClass2) throws IOException {
 
         GetSectionTimeTable getSectionTimeTable = new GetSectionTimeTable();
-        FullSectionGroup fullSectionGroup = new FullSectionGroup();
+        FullSectionGroup fullSectionGroup = getSectionTimeTable.getSectionTimeTableData();
 
         Section section = new Section();
 
