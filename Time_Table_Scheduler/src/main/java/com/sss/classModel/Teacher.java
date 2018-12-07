@@ -44,19 +44,20 @@ public class Teacher {
         }
     }
 
-    public void assignRoom(int d, int t, String r_id) {
-        if (this.facultyResponse.timeTable.timetable[d][t] != "null") {
+
+    public void assign(int d, int t, String val) {
+        if (this.facultyResponse.timeTable.timetable[d][t].equals( "null" )) {
             System.out.println("Error for teacher " + this.facultyResponse.facultyid
                     + " for slot " + d + " " + t);
         }
-        this.facultyResponse.timeTable.timetable[d][t] = r_id;
+        this.facultyResponse.timeTable.timetable[d][t] = val;
         this.hoursToAssign--;
         days[d] = true;
         slots[t] = true;
     }
 
     public boolean isFree(int d, int t) {
-        return this.facultyResponse.timeTable.timetable[d][t] == "null";
+        return this.facultyResponse.timeTable.timetable[d][t].equals("null");
     }
 
     public void printTeacherTT() {
