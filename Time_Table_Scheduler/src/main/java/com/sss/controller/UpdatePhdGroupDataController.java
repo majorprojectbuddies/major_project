@@ -23,7 +23,7 @@ public class UpdatePhdGroupDataController {
     @PostMapping("/updatePhdBatch")
     public ResponseEntity<UpdatePhdResponse> updateSingleGroupData(@RequestBody PhdGroup phdGroup) throws IOException {
 
-        OnlyStringClass onlyStringClass = new ObjectMapper().readValue(phdGroup.groupId,OnlyStringClass.class);
+        //OnlyStringClass onlyStringClass = new ObjectMapper().readValue(phdGroup.groupId,OnlyStringClass.class);
 
 
         GetPhdTimeTable getPhdTimeTable = new GetPhdTimeTable();
@@ -33,7 +33,7 @@ public class UpdatePhdGroupDataController {
         for(int i=0;i<fullPhdGroup.fullPhdGroupList.size();++i){
             PhdGroup phdGroup1 = new PhdGroup();
             phdGroup1 = fullPhdGroup.fullPhdGroupList.get(i);
-            if(phdGroup1.groupId.equals(onlyStringClass.loginid)){
+            if(phdGroup1.groupId.equals(phdGroup.groupId)){
                 phdGroup1.timeTable = phdGroup.timeTable;
             }
             fullPhdGroup1.fullPhdGroupList.add(phdGroup1);
