@@ -32,6 +32,7 @@ public class TimeTableGenerator {
 
         this.sections = sections;
 
+        System.out.println("gleba in first function 2 call at 0");
 
     }
 
@@ -175,15 +176,27 @@ public class TimeTableGenerator {
 
     static void assignLabs(Teacher[] teachers, Room lab, Section[] sections) {
 
+
+        System.out.println("gleba in first function 3 call at 0");
+
         HashMap<String, Integer> coursesWithLab = new HashMap<>();
+
+        System.out.println("gleba in first function 3 call at 1");
 
         for (Teacher t : teachers) {
 
+            System.out.println("gleba in first function 3 call at 2");
             String sub = t.facultyResponse.subject1;
+
+            System.out.println("gleba in first function 3 call at 3");
+
             if (sub.length() == 5 && courseDataHM.get(sub).containsLab) {
                 coursesWithLab.put(sub, 1);
             }
             sub = t.facultyResponse.subject2;
+
+            System.out.println("gleba in first function 3 call at 4");
+
             if (sub.length() == 5 && courseDataHM.get(sub).containsLab) {
                 coursesWithLab.put(sub, 1);
             }
@@ -192,16 +205,26 @@ public class TimeTableGenerator {
                 coursesWithLab.put(sub, 1);
             }
 
+            System.out.println("gleba in first function 3 call at 5");
         }
         Random rand = new Random();
+
+        System.out.println("gleba in first function 3 call at 6");
         int N = teachers.length;
+        System.out.println("gleba in first function 3 call at 7");
+
         for (String sub : coursesWithLab.keySet()) {
 
+
+            System.out.println("gleba in first function 3 call at 8");
             while (true) {
                 int d = rand.nextInt(5);
                 int h = rand.nextInt(9);
                 int n = rand.nextInt(N + 1);
                 int section = getSection(sub + "lab", sections);
+
+                System.out.println("gleba in first function 3 call at 9");
+
                 if (teachers[n].isFree(d, h) && teachers[n].isFree(d, h + 1) &&
                         lab.isFree(d, h) && lab.isFree(d, h + 1) &&
                         sections[section].isFree(d, h) && sections[section].isFree(d, h + 1)) {
@@ -214,9 +237,15 @@ public class TimeTableGenerator {
                             "lab-"+section+"-"+sub);
                     sections[section].assign(d, h + 1,
                             "lab-"+section+"-"+sub);
+
+                    System.out.println("gleba in first function 3 call at 10");
                     break;
                 }
+
+                System.out.println("gleba in first function 3 call at 11");
             }
+
+            System.out.println("gleba in first function 3 call at 12");
         }
 
     }
@@ -358,7 +387,7 @@ public class TimeTableGenerator {
     }
 
     static int getSection(String sub, Section[] sections) {
-        int year = Integer.parseInt(sub.charAt(0) + "");
+        int year = Integer.parseInt(sub.charAt(2) + "");
         int section;
         if (year == 2) {
             section = 0;
@@ -377,6 +406,9 @@ public class TimeTableGenerator {
 
 
     public OverallTT generateTimeTable(){
+
+        System.out.println("gleba in first function 2 call at 1");
+
         Room[] rooms = new Room[4];
         for(int i=0;i<4;i++){
             rooms[i]=new Room(i);
@@ -385,27 +417,52 @@ public class TimeTableGenerator {
         for(int i=0;i<teachersData.size();i++){
             teachers[i]=new Teacher(teachersData.get(i));
         }
+
+        System.out.println("gleba in first function 2 call at 2");
+
         Section[] sectionsArray = new Section[sections.size()];
         for(int i=0;i<sections.size();i++){
             sectionsArray[i]=sections.get(i);
         }
+
+        System.out.println("gleba in first function 2 call at 3");
+
         assignElectives(sectionsArray, teachers, rooms);
+
+        System.out.println("gleba in first function 2 call at 4");
+
+
         assignPhdLectures(teachers,rooms,sectionsArray);
+
+        System.out.println("gleba in first function 2 call at 5");
+
         assignDecLabs(teachers, rooms[3], sectionsArray);
+
+        System.out.println("gleba in first function 2 call at 6");
+
         assignTeachersToFirstYear(teachers);
+
+        System.out.println("gleba in first function 2 call at 7");
+
         assignLabs(teachers, rooms[3], sectionsArray);
+
+        System.out.println("gleba in first function 2 call at 8");
         assignDccCourses(teachers, rooms, sectionsArray);
 
+        System.out.println("gleba in first function 2 call at 9");
         OverallTT overallTT = new OverallTT();
 
         for(Teacher t : teachers){
             overallTT.facultyResponses.add(t.facultyResponse);
         }
 
+        System.out.println("gleba in first function 2 call at 10");
         overallTT.sections=sections;
         for(Room room : rooms){
             overallTT.rooms.add(room);
         }
+
+        System.out.println("gleba in first function 2 call at 11");
 
         return overallTT;
     }
