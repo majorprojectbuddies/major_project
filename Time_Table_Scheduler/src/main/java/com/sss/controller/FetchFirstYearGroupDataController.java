@@ -2,10 +2,7 @@ package com.sss.controller;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sss.classModel.FirstYearGroup;
-import com.sss.classModel.FirstYearGroupList;
-import com.sss.classModel.FullFacultyResponse;
-import com.sss.classModel.OnlyStringClass;
+import com.sss.classModel.*;
 import com.sss.services.GetAllTeacherTimeTable;
 import com.sss.services.GetFirstYearTimeTable;
 import org.springframework.http.HttpStatus;
@@ -22,9 +19,9 @@ import java.io.IOException;
 public class FetchFirstYearGroupDataController {
 
     @PostMapping("/batch")
-    public ResponseEntity<FirstYearGroup> getSingleGroupData(@RequestBody String groupid) throws IOException {
+    public ResponseEntity<FirstYearGroup> getSingleGroupData(@RequestBody OnlyStringClass2 onlyStringClass2)  {
 
-        OnlyStringClass onlyStringClass = new ObjectMapper().readValue(groupid,OnlyStringClass.class);
+        //OnlyStringClass onlyStringClass = new ObjectMapper().readValue(groupid,OnlyStringClass.class);
         GetFirstYearTimeTable getFirstYearTimeTable = new GetFirstYearTimeTable();
         FirstYearGroupList firstYearGroupList = getFirstYearTimeTable.getFirstYearTimeTableData();
 
@@ -32,12 +29,12 @@ public class FetchFirstYearGroupDataController {
         FirstYearGroup firstYearGroup = new FirstYearGroup();
         for(int i=0;i<firstYearGroupList.firstYearGroupList.size();++i){
             firstYearGroup = firstYearGroupList.firstYearGroupList.get(i);
-            if(firstYearGroup.groupId.equals(onlyStringClass.loginid)){
+            if(firstYearGroup.groupId.equals(onlyStringClass2.groupid)){
                 return new ResponseEntity<>(firstYearGroup, HttpStatus.OK);
             }
         }
 
-        System.out.println("sagar "+ groupid);
+        System.out.println("sagar "+ onlyStringClass2.groupid);
         return new ResponseEntity<>(firstYearGroup, HttpStatus.OK);
 
     }
