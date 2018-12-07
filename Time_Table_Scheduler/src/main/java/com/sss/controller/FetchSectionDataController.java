@@ -20,19 +20,12 @@ public class FetchSectionDataController {
     @PostMapping("/sectionBatch")
     public ResponseEntity<Section> getSingleGroupData(@RequestBody OnlyStringClass2 onlyStringClass2) throws IOException {
 
-        //OnlyStringClass onlyStringClass = new ObjectMapper().readValue(groupid,OnlyStringClass.class);
-
-
-        GetPhdTimeTable getPhdTimeTable = new GetPhdTimeTable();
-        FullPhdGroup fullPhdGroup = getPhdTimeTable.getPhdTimeTableData();
-
-        PhdGroup phdGroup = new PhdGroup();
-
         GetSectionTimeTable getSectionTimeTable = new GetSectionTimeTable();
         FullSectionGroup fullSectionGroup = new FullSectionGroup();
 
         Section section = new Section();
 
+        System.out.println("printing "+onlyStringClass2.groupid);
 
         for(int i=0;i<fullSectionGroup.fullSectionGroupList.size();++i){
             section = fullSectionGroup.fullSectionGroupList.get(i);
