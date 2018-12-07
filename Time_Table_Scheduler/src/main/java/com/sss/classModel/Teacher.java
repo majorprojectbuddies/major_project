@@ -46,7 +46,7 @@ public class Teacher {
 
 
     public void assign(int d, int t, String val) {
-        if (this.facultyResponse.timeTable.timetable[d][t].equals( "null" )) {
+        if (!this.facultyResponse.timeTable.timetable[d][t].equals( "null" )) {
             System.out.println("Error for teacher " + this.facultyResponse.facultyid
                     + " for slot " + d + " " + t);
         }
