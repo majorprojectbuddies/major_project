@@ -222,6 +222,38 @@ public class TimeTableGenerator {
     }
 
 
+
+
+
+    static void assignPhdLectures(Teacher[] teachers, Room[] rooms, Section[] sections){
+        for(PhdGroup phdGroup : phdData){
+            String[][] timetable = phdGroup.timeTable.timetable;
+
+            for(int d=0;d<5;d++){
+                for(int h=0;h<10;h++){
+                    if(!timetable[d][h].equals("null")){
+                        String sub = timetable[d][h];
+                        for(Teacher t : teachers){
+                            if(t.facultyResponse.subject1.equals(sub)){
+                                t.assign(d, h, sub);
+                            }
+                            if(t.facultyResponse.subject2.equals(sub)){
+                                t.assign(d, h, sub);
+                            }
+                            if(t.facultyResponse.subject3.equals(sub)){
+                                t.assign(d, h, sub);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+
+
+
     static void assignDccCourses(Teacher[] teachers, Room[] rooms, Section[] sections) {
 
         // TODO change for loop by priority queue
@@ -358,6 +390,7 @@ public class TimeTableGenerator {
             sectionsArray[i]=sections.get(i);
         }
         assignElectives(sectionsArray, teachers, rooms);
+        assignPhdLectures(teachers,rooms,sectionsArray);
         assignDecLabs(teachers, rooms[3], sectionsArray);
         assignTeachersToFirstYear(teachers);
         assignLabs(teachers, rooms[3], sectionsArray);
