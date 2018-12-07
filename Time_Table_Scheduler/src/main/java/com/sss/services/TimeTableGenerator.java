@@ -93,7 +93,7 @@ public class TimeTableGenerator {
 
             for (int d = 0; d < 5; d++) {
                 for (int h = 0; h < 10; h++) {
-                    if (timetable[d][h] != "null") {
+                    if (!timetable[d][h].equals("null")) {
                         days[i] = d;
                         hours[i] = h;
                     }
