@@ -23,10 +23,8 @@ public class FetchAllFacultyDataController {
 
     @PostMapping("/fetchAllFacultyData")
     public ResponseEntity<FullFacultyResponse> getAllFacultyData(@RequestBody String loginid) throws IOException {
-
         OnlyStringClass onlyStringClass = new ObjectMapper().readValue(loginid,OnlyStringClass.class);
         GetAllTeacherTimeTable getAllTeacherTimeTable = new GetAllTeacherTimeTable();
-
         System.out.println("sagar "+ loginid);
         return new ResponseEntity<>(getAllTeacherTimeTable.getAllFacultyData(), HttpStatus.OK);
 
