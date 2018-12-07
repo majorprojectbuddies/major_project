@@ -14,6 +14,8 @@ public class GenerateTimeTableController {
     @GetMapping("/generateTimeTable")
     public ResponseEntity<OverallTT> getGeneratedTimeTableData() {
 
+
+
         GenerateAllTimeTables generateAllTimeTables = new GenerateAllTimeTables();
         return new ResponseEntity<>(generateAllTimeTables.getAllTimeTableData(), HttpStatus.OK);
     }

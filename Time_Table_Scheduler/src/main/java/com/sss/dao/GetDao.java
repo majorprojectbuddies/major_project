@@ -248,7 +248,7 @@ public class GetDao {
                     String sql;
                     ResultSet rs;
                     if(j==0){
-                        sql = "SELECT * from phdtimetable where groupid=\""+groupId+"-mon\"";
+                        sql = "SELECT * from phdtimetable where sectionid=\""+groupId+"-mon\"";
                         rs = stmt.executeQuery(sql);
                         if(rs.next()){
                             fullPhdGroup.fullPhdGroupList.get(i).timeTable.timetable[j][0]=rs.getString(10);
@@ -265,7 +265,7 @@ public class GetDao {
 
                     }
                     if(j==1){
-                        sql = "SELECT * from phdtimetable where groupid=\""+groupId+"-tue\"";
+                        sql = "SELECT * from phdtimetable where sectionid=\""+groupId+"-tue\"";
                         rs = stmt.executeQuery(sql);
                         if(rs.next()){
                             fullPhdGroup.fullPhdGroupList.get(i).timeTable.timetable[j][0]=rs.getString(10);
@@ -281,7 +281,7 @@ public class GetDao {
                         }
                     }
                     if(j==2){
-                        sql = "SELECT * from phdtimetable where groupid=\""+groupId+"-wed\"";
+                        sql = "SELECT * from phdtimetable where sectionid=\""+groupId+"-wed\"";
                         rs = stmt.executeQuery(sql);
                         if(rs.next()){
                             fullPhdGroup.fullPhdGroupList.get(i).timeTable.timetable[j][0]=rs.getString(10);
@@ -297,7 +297,7 @@ public class GetDao {
                         }
                     }
                     if(j==3){
-                        sql = "SELECT * from phdtimetable where groupid=\""+groupId+"-thu\"";
+                        sql = "SELECT * from phdtimetable where sectionid=\""+groupId+"-thu\"";
                         rs = stmt.executeQuery(sql);
                         if(rs.next()){
                             fullPhdGroup.fullPhdGroupList.get(i).timeTable.timetable[j][0]=rs.getString(10);
@@ -313,7 +313,7 @@ public class GetDao {
                         }
                     }
                     if(j==4) {
-                        sql = "SELECT * from phdtimetable where groupid=\""+groupId+"-fri\"";
+                        sql = "SELECT * from phdtimetable where sectionid=\""+groupId+"-fri\"";
                         rs = stmt.executeQuery(sql);
                         if(rs.next()){
                             fullPhdGroup.fullPhdGroupList.get(i).timeTable.timetable[j][0]=rs.getString(10);
@@ -427,7 +427,7 @@ public class GetDao {
 
                     }
                     if(j==1){
-                        sql = "SELECT * from sectionstimetable where groupid=\""+groupId+"-tue\"";
+                        sql = "SELECT * from sectionstimetable where sectionid=\""+groupId+"-tue\"";
                         rs = stmt.executeQuery(sql);
                         if(rs.next()){
                             fullSectionGroup.fullSectionGroupList.get(i).timeTable.timetable[j][0]=rs.getString(10);
@@ -443,7 +443,7 @@ public class GetDao {
                         }
                     }
                     if(j==2){
-                        sql = "SELECT * from sectionstimetable where groupid=\""+groupId+"-wed\"";
+                        sql = "SELECT * from sectionstimetable where sectionid=\""+groupId+"-wed\"";
                         rs = stmt.executeQuery(sql);
                         if(rs.next()){
                             fullSectionGroup.fullSectionGroupList.get(i).timeTable.timetable[j][0]=rs.getString(10);
@@ -459,7 +459,7 @@ public class GetDao {
                         }
                     }
                     if(j==3){
-                        sql = "SELECT * from sectionstimetable where groupid=\""+groupId+"-thu\"";
+                        sql = "SELECT * from sectionstimetable where sectionid=\""+groupId+"-thu\"";
                         rs = stmt.executeQuery(sql);
                         if(rs.next()){
                             fullSectionGroup.fullSectionGroupList.get(i).timeTable.timetable[j][0]=rs.getString(10);
@@ -475,7 +475,7 @@ public class GetDao {
                         }
                     }
                     if(j==4) {
-                        sql = "SELECT * from sectionstimetable where groupid=\""+groupId+"-fri\"";
+                        sql = "SELECT * from sectionstimetable where sectionid=\""+groupId+"-fri\"";
                         rs = stmt.executeQuery(sql);
                         if(rs.next()){
                             fullSectionGroup.fullSectionGroupList.get(i).timeTable.timetable[j][0]=rs.getString(10);
