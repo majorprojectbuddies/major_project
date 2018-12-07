@@ -244,7 +244,7 @@ public class GetDao {
             for(int i=0;i<fullPhdGroup.fullPhdGroupList.size();++i){
                 String groupId = fullPhdGroup.fullPhdGroupList.get(i).groupId;
 
-                for(int j=0;i<5;++i){
+                for(int j=0;j<5;++j){
                     String sql;
                     ResultSet rs;
                     if(j==0){
@@ -406,7 +406,7 @@ public class GetDao {
             for(int i=0;i<fullSectionGroup.fullSectionGroupList.size();++i){
                 String groupId = fullSectionGroup.fullSectionGroupList.get(i).secId;
 
-                for(int j=0;i<5;++i){
+                for(int j=0;j<5;++j){
                     String sql;
                     ResultSet rs;
                     if(j==0){

@@ -17,7 +17,7 @@ public class GenerateAllTimeTables {
     public ArrayList<PhdGroup> phdData;
     public ArrayList<Section> sections;
 
-    public void PrintTimeTable(){
+    public OverallTT getAllTimeTableData(){
         GetAllTeacherTimeTable getAllTeacherTimeTable = new GetAllTeacherTimeTable();
         teachersData = getAllTeacherTimeTable.getAllFacultyData().fullFacultyResponseList;
 
@@ -46,6 +46,7 @@ public class GenerateAllTimeTables {
                 System.out.println("");
             }
         }
+        return overallTT;
     }
 
 }
