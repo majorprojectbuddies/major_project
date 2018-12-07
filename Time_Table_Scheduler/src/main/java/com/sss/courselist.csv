@@ -1,0 +1,16 @@
+courseId,courseName,credits,tutHours,containsLab
+AM501,"Introduction to Mathematical Software",4,3,0
+MA102,"Mathematics 2",4,4,0
+MC202,"Real Analysis",4,4,0
+MC204,"Scientific Computing",4,3,1
+MC206,"Computer Organization and Architecture",4,4,0
+MC208,"Linear Algebra",4,4,0
+MC302,"Database Management System",4,3,1
+MC304,"Theory of Computation",4,4,0
+MC306,"Financial Engineering",4,4,0
+MC310(Slot-A),"Software Engineering (Slot-A)",4,4,0
+MC310(Slot-C),"Software Engineering (Slot-C)",4,4,0
+MC320(Slot-B),"Web Technology (Slot-B)",4,4,0
+MC320(Slot-D),"Web Technology (Slot-D)",4,4,0
+MC411,"Mathematical Modeling & Simulation (MS)",4,3,1
+MC412,"Optimization Techniques (OT)",4,3,1
