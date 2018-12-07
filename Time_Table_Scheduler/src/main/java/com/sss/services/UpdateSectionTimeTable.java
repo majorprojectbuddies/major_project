@@ -1,9 +1,7 @@
 package com.sss.services;
 
 
-import com.sss.classModel.FullPhdGroup;
 import com.sss.classModel.FullSectionGroup;
-import com.sss.classModel.UpdatePhdResponse;
 import com.sss.classModel.UpdateSectionResponse;
 import com.sss.dao.UpdateDao;
 import org.springframework.stereotype.Service;
