@@ -30,7 +30,7 @@ public class UpdateFirstYearGroupDataController {
         FirstYearGroupList firstYearGroupList = getFirstYearTimeTable.getFirstYearTimeTableData();
         FirstYearGroupList firstYearGroupList1 = new FirstYearGroupList();
 
-        
+
         for(int i=0;i<firstYearGroupList.firstYearGroupList.size();++i){
             FirstYearGroup firstYearGroup1 = new FirstYearGroup();
             firstYearGroup1 = firstYearGroupList.firstYearGroupList.get(i);
