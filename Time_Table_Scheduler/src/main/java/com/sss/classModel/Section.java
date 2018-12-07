@@ -26,7 +26,7 @@ public class Section {
         return (timeTable.timetable[d][h] == null || timeTable.timetable[d][h].equals("null"));
     }
 
-    public void assignTeacher(int d, int t, String t_id) {
+    public void assign(int d, int t, String t_id) {
         this.timeTable.timetable[d][t] = t_id;
     }
 
