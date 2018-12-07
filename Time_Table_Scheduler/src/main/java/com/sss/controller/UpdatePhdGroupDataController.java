@@ -39,7 +39,6 @@ public class UpdatePhdGroupDataController {
             fullPhdGroup1.fullPhdGroupList.add(phdGroup1);
         }
 
-        UpdateFirstYearTimeTable updateFirstYearTimeTable = new UpdateFirstYearTimeTable();
 
         UpdatePhdTimeTable updatePhdTimeTable = new UpdatePhdTimeTable();
 
