@@ -48,11 +48,14 @@ public class LoginController {
         OverallResponse overallResponse = new OverallResponse();
         if(!signupDao.CheckOrSignUp(loginDetails.loginid,loginDetails.password)){
 
-            overallResponse.facultyResponse = signupDao.FetchFacultyData(loginDetails.loginid);
-            overallResponse.courseResponse = signupDao.FetchCourseData();
+            overallResponse.facultyResponse.facultyid=loginDetails.loginid;
             return new ResponseEntity<>(overallResponse, HttpStatus.OK);
         }
         else{
+
+            overallResponse.facultyResponse = signupDao.FetchFacultyData(loginDetails.loginid);
+            overallResponse.courseResponse = signupDao.FetchCourseData();
+
             return new ResponseEntity<>(overallResponse, HttpStatus.OK);
         }
     }
