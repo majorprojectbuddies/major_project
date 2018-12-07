@@ -503,11 +503,11 @@ public class SignupDao {
                 String groupid3 = "s"+Integer.toString(i)+"-wed";
                 String groupid4 = "s"+Integer.toString(i)+"-thu";
                 String groupid5 = "s"+Integer.toString(i)+"-fri";
-                String sql1 = "insert into firstyeartimetable values(\""+groupid1+"\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\")";
-                String sql2 = "insert into firstyeartimetable values(\""+groupid2+"\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\")";
-                String sql3 = "insert into firstyeartimetable values(\""+groupid3+"\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\")";
-                String sql4 = "insert into firstyeartimetable values(\""+groupid4+"\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\")";
-                String sql5 = "insert into firstyeartimetable values(\""+groupid5+"\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\")";
+                String sql1 = "insert into sectionstimetable values(\""+groupid1+"\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\")";
+                String sql2 = "insert into sectionstimetable values(\""+groupid2+"\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\")";
+                String sql3 = "insert into sectionstimetable values(\""+groupid3+"\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\")";
+                String sql4 = "insert into sectionstimetable values(\""+groupid4+"\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\")";
+                String sql5 = "insert into sectionstimetable values(\""+groupid5+"\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\",\"null\")";
 
                 stmt.executeUpdate(sql1);
                 stmt.executeUpdate(sql2);
