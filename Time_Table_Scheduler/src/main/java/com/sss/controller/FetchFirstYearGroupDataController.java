@@ -1,9 +1,7 @@
 package com.sss.controller;
 
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sss.classModel.*;
-import com.sss.services.GetAllTeacherTimeTable;
 import com.sss.services.GetFirstYearTimeTable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +10,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
 
 @RestController
 @CrossOrigin
