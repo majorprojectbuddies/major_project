@@ -25,7 +25,7 @@ public class UpdateFirstYearGroupDataController {
     @PostMapping("/updateBatch")
     public ResponseEntity<UpdateFirstYearResponse> updateSingleGroupData(@RequestBody FirstYearGroup firstYearGroup) throws IOException {
 
-        OnlyStringClass onlyStringClass = new ObjectMapper().readValue(firstYearGroup.groupId,OnlyStringClass.class);
+        //OnlyStringClass onlyStringClass = new ObjectMapper().readValue(firstYearGroup.groupId,OnlyStringClass.class);
         GetFirstYearTimeTable getFirstYearTimeTable = new GetFirstYearTimeTable();
         FirstYearGroupList firstYearGroupList = getFirstYearTimeTable.getFirstYearTimeTableData();
         FirstYearGroupList firstYearGroupList1 = new FirstYearGroupList();
@@ -34,7 +34,7 @@ public class UpdateFirstYearGroupDataController {
         for(int i=0;i<firstYearGroupList.firstYearGroupList.size();++i){
             FirstYearGroup firstYearGroup1 = new FirstYearGroup();
             firstYearGroup1 = firstYearGroupList.firstYearGroupList.get(i);
-            if(firstYearGroup1.groupId.equals(onlyStringClass.loginid)){
+            if(firstYearGroup1.groupId.equals(firstYearGroup.groupId)){
                 firstYearGroup1.timeTable = firstYearGroup.timeTable;
             }
             firstYearGroupList1.firstYearGroupList.add(firstYearGroup1);
