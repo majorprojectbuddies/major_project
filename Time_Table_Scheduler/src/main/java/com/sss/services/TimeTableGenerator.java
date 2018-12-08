@@ -41,23 +41,23 @@ public class TimeTableGenerator {
 
     static void assignElectives(Section[] sections, Teacher[] teachers, Room[] rooms) {
 
-        for (int section = 0; section < sections.length; section++) {
+        for (int section = 0; section < sections.length; section+=2) {
             for (int d = 0; d < 5; d++) {
                 for (int h = 0; h < 10; h++) {
-                    if (!sections[section].timeTable.timetable[d][h].equals("null") ) {
+                    if (!sections[section].timeTable.timetable[d][h].equals("null")) {
                         String sub = sections[section].timeTable.timetable[d][h];
                         for (Teacher t : teachers) {
                             if (t.facultyResponse.subject1.equals(sub)) {
-                                t.assign(d, h,(section / 2)  +"-"+sub);
-                                rooms[section / 2].assign(d, h, sub+"-"+t.facultyResponse.facultyid);
+                                t.assign(d, h, (section / 2) + "-" + sub);
+                                rooms[section / 2].assign(d, h, sub + "-" + t.facultyResponse.facultyid);
                             }
                             if (t.facultyResponse.subject2.equals(sub)) {
-                                t.assign(d, h,(section / 2)  +"-"+sub);
-                                rooms[section / 2].assign(d, h, sub+"-"+t.facultyResponse.facultyid);
+                                t.assign(d, h, (section / 2) + "-" + sub);
+                                rooms[section / 2].assign(d, h, sub + "-" + t.facultyResponse.facultyid);
                             }
                             if (t.facultyResponse.subject3.equals(sub)) {
-                                t.assign(d, h,(section / 2)  +"-"+sub);
-                                rooms[section / 2].assign(d, h, sub+"-"+t.facultyResponse.facultyid);
+                                t.assign(d, h, (section / 2) + "-" + sub);
+                                rooms[section / 2].assign(d, h, sub + "-" + t.facultyResponse.facultyid);
                             }
 
                         }
@@ -97,6 +97,7 @@ public class TimeTableGenerator {
                     if (!timetable[d][h].equals("null")) {
                         days[i] = d;
                         hours[i] = h;
+                        i++;
                     }
                 }
             }
@@ -108,6 +109,8 @@ public class TimeTableGenerator {
 
 
     }
+
+
 
     static void firstYearHelper(PriorityQueue<Teacher> pq,
                                 DaysHours daysHours, char group, int i) {
@@ -126,15 +129,16 @@ public class TimeTableGenerator {
             t = pq.poll();
             al.add(t);
         }
-        t.assign(days[0], hours[0], "" + group + (i + 1));
-        t.assign(days[1], hours[1], "" + group + (i + 1));
-        t.assign(days[2], hours[2], "" + group + (i + 1));
-        t.assign(days[3], hours[3], "" + group + (i + 1));
+        t.assign(days[0], hours[0], "MA102-" + group + (i ));
+        t.assign(days[1], hours[1], "MA102-" + group + (i ));
+        t.assign(days[2], hours[2], "MA102-" + group + (i ));
+        t.assign(days[3], hours[3], "MA102-" + group + (i ));
         t.current1Batches++;
         for (Teacher teacher : al) {
             pq.add(teacher);
         }
     }
+
 
     static class DaysHours {
         int[] days;
@@ -157,13 +161,33 @@ public class TimeTableGenerator {
                 for (int h = 0; h < 10; h++) {
                     if (!sections[section].timeTable.timetable[d][h].equals("null")
                             && sections[section].timeTable.timetable[d][h].substring(9).equals("lab")) {
-                        while(true){
+                        while (true) {
                             int n = rand.nextInt(N);
+
                             if (teachers[n].isFree(d, h) && teachers[n].isFree(d, h + 1) &&
-                                    sections[section].isFree(d, h) && sections[section].isFree(d, h + 1)) {
+                                    sections[section].isFree(d, h) && sections[section].isFree(d, h + 1)
+                                    && teachers[n].labHours>=2) {
                                 teachers[n].assign(d, h, sections[section].timeTable.timetable[d][h]);
                                 teachers[n].assign(d, h + 1, sections[section].timeTable.timetable[d][h]);
+                                lab.assign(d, h, sections[section].timeTable.timetable[d][h] + "-" + teachers[n].facultyResponse.facultyid);
+                                lab.assign(d, h + 1, sections[section].timeTable.timetable[d][h] + "-" + teachers[n].facultyResponse.facultyid);
+                                teachers[n].labHours-=2;
+                                //h++;
+                                break;
+                            }
+                        }
+                        while (true) {
+                            int n = rand.nextInt(N);
+
+                            if (teachers[n].facultyResponse.noOfHours==6 &&
+                                    teachers[n].isFree(d, h) && teachers[n].isFree(d, h + 1)
+                                    && teachers[n].labHours>=2) {
+                                teachers[n].assign(d, h, sections[section].timeTable.timetable[d][h]);
+                                teachers[n].assign(d, h + 1, sections[section].timeTable.timetable[d][h]);
+                                lab.assignSecondTeacher(d, h, teachers[n].facultyResponse.facultyid);
+                                lab.assignSecondTeacher(d, h + 1, teachers[n].facultyResponse.facultyid);
                                 h++;
+                                teachers[n].labHours-=2;
                                 break;
                             }
                         }
@@ -176,27 +200,15 @@ public class TimeTableGenerator {
 
     static void assignLabs(Teacher[] teachers, Room lab, Section[] sections) {
 
-
-        System.out.println("gleba in first function 3 call at 0");
-
         HashMap<String, Integer> coursesWithLab = new HashMap<>();
-
-        System.out.println("gleba in first function 3 call at 1");
 
         for (Teacher t : teachers) {
 
-            System.out.println("gleba in first function 3 call at 2");
             String sub = t.facultyResponse.subject1;
-
-            System.out.println("gleba in first function 3 call at 3");
-
             if (sub.length() == 5 && courseDataHM.get(sub).containsLab) {
                 coursesWithLab.put(sub, 1);
             }
             sub = t.facultyResponse.subject2;
-
-            System.out.println("gleba in first function 3 call at 4");
-
             if (sub.length() == 5 && courseDataHM.get(sub).containsLab) {
                 coursesWithLab.put(sub, 1);
             }
@@ -205,47 +217,48 @@ public class TimeTableGenerator {
                 coursesWithLab.put(sub, 1);
             }
 
-            System.out.println("gleba in first function 3 call at 5");
         }
         Random rand = new Random();
-
-        System.out.println("gleba in first function 3 call at 6");
         int N = teachers.length;
-        System.out.println("gleba in first function 3 call at 7");
-
         for (String sub : coursesWithLab.keySet()) {
-
-
-            System.out.println("gleba in first function 3 call at 8");
+            int d, h;
             while (true) {
-                int d = rand.nextInt(5);
-                int h = rand.nextInt(9);
-                int n = rand.nextInt(N + 1);
+                d = rand.nextInt(5);
+                h = rand.nextInt(9);
+                int n = rand.nextInt(N );
                 int section = getSection(sub + "lab", sections);
-
-                System.out.println("gleba in first function 3 call at 9");
-
                 if (teachers[n].isFree(d, h) && teachers[n].isFree(d, h + 1) &&
                         lab.isFree(d, h) && lab.isFree(d, h + 1) &&
-                        sections[section].isFree(d, h) && sections[section].isFree(d, h + 1)) {
+                        sections[section].isFree(d, h) && sections[section].isFree(d, h + 1)
+                        && teachers[n].labHours>=2) {
                     sections[section].subjects.put(sub + "lab", 1);
-                    teachers[n].assign(d, h, "lab-"+section+"-"+sub+" lab");
-                    teachers[n].assign(d, h + 1, "lab-"+section+"-"+sub+" lab");
-                    lab.assign(d, h, section+"-"+sub+"-"+teachers[n].facultyResponse.facultyid);
-                    lab.assign(d, h + 1, section+"-"+sub+"-"+teachers[n].facultyResponse.facultyid);
+                    teachers[n].assign(d, h, "lab-" + section + "-" + sub + " lab");
+                    teachers[n].assign(d, h + 1, "lab-" + section + "-" + sub + " lab");
+                    lab.assign(d, h, section + "-" + sub + "-" + teachers[n].facultyResponse.facultyid);
+                    lab.assign(d, h + 1, section + "-" + sub + "-" + teachers[n].facultyResponse.facultyid);
                     sections[section].assign(d, h + 1,
-                            "lab-"+section+"-"+sub);
+                            "lab-" + section + "-" + sub);
                     sections[section].assign(d, h + 1,
-                            "lab-"+section+"-"+sub);
-
-                    System.out.println("gleba in first function 3 call at 10");
+                            "lab-" + section + "-" + sub);
+                    teachers[n].labHours-=2;
                     break;
                 }
-
-                System.out.println("gleba in first function 3 call at 11");
             }
+            while (true) {
+                int n = rand.nextInt(N);
+                int section = getSection(sub + "lab", sections);
 
-            System.out.println("gleba in first function 3 call at 12");
+                if (teachers[n].facultyResponse.noOfHours==6 &&
+                        teachers[n].isFree(d, h) && teachers[n].isFree(d, h + 1)
+                        && teachers[n].labHours>=2) {
+                    teachers[n].assign(d, h, sections[section].timeTable.timetable[d][h]);
+                    teachers[n].assign(d, h + 1, sections[section].timeTable.timetable[d][h]);
+                    lab.assignSecondTeacher(d, h, teachers[n].facultyResponse.facultyid);
+                    lab.assignSecondTeacher(d, h + 1, teachers[n].facultyResponse.facultyid);
+                    teachers[n].labHours-=2;
+                    break;
+                }
+            }
         }
 
     }
@@ -302,6 +315,12 @@ public class TimeTableGenerator {
                     continue;
                 }
 
+                int year = Integer.parseInt(sub.charAt(2)+"");
+                if(year<2 || year>4){
+                    continue;
+                }
+
+
                 int section = getSection(sub, sections);
                 int room = section / 2;
 
@@ -313,9 +332,9 @@ public class TimeTableGenerator {
                         for (int j = 0; j < 10; j++) {
                             if (!t.days[i] && !t.slots[j] && sections[section].isFree(i, j)
                                     && rooms[room].isFree(i, j)) {
-                                t.assign(i, j, room + "-"+section+"-"+sub);
-                                rooms[room].assign(i, j, section+"-"+sub+"-"+t.facultyResponse.facultyid);
-                                sections[section].assign(i, j, room+"-"+sub+"-"+t.facultyResponse.facultyid);
+                                t.assign(i, j, room + "-" + section + "-" + sub);
+                                rooms[room].assign(i, j, section + "-" + sub + "-" + t.facultyResponse.facultyid);
+                                sections[section].assign(i, j, room + "-" + sub + "-" + t.facultyResponse.facultyid);
                                 assigned = true;
                                 break;
                             }
@@ -331,9 +350,9 @@ public class TimeTableGenerator {
                             for (int j = 0; j < 10; j++) {
                                 if (t.isFree(i, j) && sections[section].isFree(i, j)
                                         && rooms[room].isFree(i, j)) {
-                                    t.assign(i, j, room + "-"+section+"-"+sub);
-                                    rooms[room].assign(i, j, section+"-"+sub+"-"+t.facultyResponse.facultyid);
-                                    sections[section].assign(i, j, room+"-"+sub+"-"+t.facultyResponse.facultyid);
+                                    t.assign(i, j, room + "-" + section + "-" + sub);
+                                    rooms[room].assign(i, j, section + "-" + sub + "-" + t.facultyResponse.facultyid);
+                                    sections[section].assign(i, j, room + "-" + sub + "-" + t.facultyResponse.facultyid);
                                     assigned = true;
                                     break;
                                 }
@@ -351,9 +370,9 @@ public class TimeTableGenerator {
                             for (int i = 0; i < 5; i++) {
                                 if (t.isFree(i, j) && sections[section].isFree(i, j)
                                         && rooms[room].isFree(i, j)) {
-                                    t.assign(i, j, room + "-"+section+"-"+sub);
-                                    rooms[room].assign(i, j, section+"-"+sub+"-"+t.facultyResponse.facultyid);
-                                    sections[section].assign(i, j, room+"-"+sub+"-"+t.facultyResponse.facultyid);
+                                    t.assign(i, j, room + "-" + section + "-" + sub);
+                                    rooms[room].assign(i, j, section + "-" + sub + "-" + t.facultyResponse.facultyid);
+                                    sections[section].assign(i, j, room + "-" + sub + "-" + t.facultyResponse.facultyid);
                                     assigned = true;
                                     break;
                                 }
@@ -369,9 +388,9 @@ public class TimeTableGenerator {
                         for (int j = 0; j < 10; j++) {
                             if (t.isFree(i, j) && sections[section].isFree(i, j)
                                     && rooms[room].isFree(i, j)) {
-                                t.assign(i, j, room + "-"+section+"-"+sub);
-                                rooms[room].assign(i, j, section+"-"+sub+"-"+t.facultyResponse.facultyid);
-                                sections[section].assign(i, j, room+"-"+sub+"-"+t.facultyResponse.facultyid);
+                                t.assign(i, j, room + "-" + section + "-" + sub);
+                                rooms[room].assign(i, j, section + "-" + sub + "-" + t.facultyResponse.facultyid);
+                                sections[section].assign(i, j, room + "-" + sub + "-" + t.facultyResponse.facultyid);
                                 assigned = true;
                                 break;
                             }
@@ -400,6 +419,66 @@ public class TimeTableGenerator {
             section++;
         }
         return section;
+    }
+
+
+
+
+    public void assignTrainingSeminar(Section[] sections, Teacher[] teachers) {
+        int N = teachers.length;
+        Random random = new Random();
+        for (int s = 4; s <= 5; s++) {
+            Boolean assigned = false;
+            for (int d = 0; d < 5; d++) {
+                for (int h = 0; h < 9; h++) {
+                    int n = random.nextInt(N);
+                    int m = random.nextInt(N);
+                    if (n!=m && teachers[n].hoursToAssign>=2 && teachers[m].hoursToAssign>=2 &&teachers[n].isFree(d, h) && teachers[m].isFree(d, h) &&
+                            teachers[n].isFree(d, h + 1) && teachers[m].isFree(d, h + 1) &&
+                            sections[s].isFree(d, h)
+                            && sections[s].isFree(d, h + 1)) {
+                        teachers[n].assign(d, h, s+"");
+                        teachers[m].assign(d, h, s+"");
+                        teachers[n].assign(d, h + 1, s+"");
+                        teachers[m].assign(d, h + 1, s+"");
+                        sections[s].assign(d, h, teachers[n].facultyResponse.facultyid
+                                + "-" + teachers[m].facultyResponse.facultyid);
+                        sections[s].assign(d, h+1, teachers[n].facultyResponse.facultyid
+                                + "-" + teachers[m].facultyResponse.facultyid);
+                        assigned = true;
+                    }
+                }
+                if (assigned)
+                    break;
+            }
+        }
+    }
+
+
+    public void assignMajorProj(Teacher[] teachers, Section[] sections){
+        for(Teacher t: teachers){
+            boolean assigned = false;
+            if(t.hoursToAssign >=3){
+                for(int d=0;d<5;d++){
+                    for(int h=0;h<8;h++){
+                        if(t.isFree(d, h) && t.isFree(d, h+1) && t.isFree(d, h+2) &&
+                                sections[4].isFree(d, h) &&sections[4].isFree(d, h+1) &&
+                                sections[4].isFree(d, h+2) &&sections[5].isFree(d, h) &&
+                                sections[5].isFree(d, h+1) &&
+                                sections[5].isFree(d, h+2) ){
+                            t.assign(d, h, "Major Project");
+                            t.assign(d, h+1, "Major Project");
+                            t.assign(d, h+2, "Major Project");
+                            assigned=true;
+                            break;
+                        }
+                    }
+                    if(assigned){
+                        break;
+                    }
+                }
+            }
+        }
     }
 
 
@@ -449,7 +528,16 @@ public class TimeTableGenerator {
         System.out.println("gleba in first function 2 call at 8");
         assignDccCourses(teachers, rooms, sectionsArray);
 
+
+        System.out.println("gleba in first function 2 call at 8.1");
+
+        assignTrainingSeminar(sectionsArray,teachers);
+
         System.out.println("gleba in first function 2 call at 9");
+
+        assignMajorProj(teachers, sectionsArray);
+
+        System.out.println("gleba in first function 2 call at 9.2");
         OverallTT overallTT = new OverallTT();
 
         for(Teacher t : teachers){
