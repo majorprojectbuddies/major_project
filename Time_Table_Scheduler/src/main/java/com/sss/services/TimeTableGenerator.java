@@ -705,39 +705,17 @@ public class TimeTableGenerator {
         }
 
 
-        int count = 0;
-        int pid = 0;
-        for (int i = 0; i < overallTT.facultyResponses.size(); ++i) {
-
+        for (int i = 0; i < sections.size(); ++i) {
             for (int j = 0; j < 5; ++j) {
                 for (int k = 0; k < 10; ++k) {
-                    if (overallTT.facultyResponses.get(i).facultyid.equals("payal") && !overallTT.facultyResponses.get(i).timeTable.timetable[j][k].equals("-") && !overallTT.facultyResponses.get(i).timeTable.timetable[j][k].equals("X")) {
-                        pid = i;
-                        count++;
+                    if (sections.get(i).timeTable.timetable[j][k].equals("null")) {
+                        sections.get(i).timeTable.timetable[j][k] = "-";
                     }
                 }
             }
-            if (count > 0) {
-                break;
-            }
         }
-        System.out.println("payal count = " + count);
-        if (count == 4) {
-            boolean find = false;
-            for (int j = 0; j < 5; ++j) {
-                for (int k = 0; k < 9; ++k) {
-                    if (overallTT.facultyResponses.get(pid).timeTable.timetable[j][k].equals("-") && overallTT.facultyResponses.get(pid).timeTable.timetable[j][k + 1].equals("-")) {
-                        overallTT.facultyResponses.get(pid).timeTable.timetable[j][k] = "lab-3B-MC302 lab";
-                        overallTT.facultyResponses.get(pid).timeTable.timetable[j][k + 1] = "lab-3B-MC302 lab";
-                        find = true;
-                        break;
-                    }
-                }
-                if (find) {
-                    break;
-                }
-            }
-        }
+
+
 
         System.out.println("Size of First Year = " + firstYearData.size());
         return overallTT;
