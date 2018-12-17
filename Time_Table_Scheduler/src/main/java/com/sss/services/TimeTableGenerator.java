@@ -241,7 +241,7 @@ public class TimeTableGenerator {
                     int counter1 = 0;
                     while (true) {
                         counter1++;
-                        if (counter1 == 200)
+                        if (counter1 == 2000)
                             break;
                         d = rand.nextInt(5);
                         h = rand.nextInt(9);
@@ -274,7 +274,7 @@ public class TimeTableGenerator {
                     counter1 = 0;
                     while (true) {
                         counter1++;
-                        if (counter1 == 200)
+                        if (counter1 == 2000)
                             break;
                         m = rand.nextInt(N);
                         if (m != prev_m && m != n && teachers[m].facultyResponse.noOfHours == 6 &&
