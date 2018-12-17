@@ -1,32 +1,23 @@
 facultyid,designation,name,noOfHours,subject1,subject2,subject3
-payal,"Research Scholar",Payal,6,MC304,null,null
-naokantdeo,"Associate Professor","Naokant Deo",14,MA102,MC202,null
-ssivaprasadkumar,"Associate Professor","S Sivaprasad Kumar",14,MA102,MC202,AM501
-ajaykumar,"Research Scholar","Ajay Kumar",6,MC208,null,null
-cpsingh,"Associate Professor","C P Singh",14,MA102,MC208,null
-hctaneja,Professor,"H C Taneja",10,MA102,MC204,null
+payal,"Assistant Professor",Payal,16,MA102,MA102,MC304
+naokantdeo,Professor,"Naokant Deo",12,MA102,MC202,null
+ssivaprasadkumar,Professor,"S Sivaprasad Kumar",12,MA102,MC202,AM501
+cpsingh,"Associate Professor","C P Singh",14,MA102,MC204,null
+hctaneja,Professor,"H C Taneja",10,MA102,MC420(Slot-Q),null
 vpkaushik,Professor,"V P Kaushik",12,MA102,MC204,null
 sangitakansal,Professor,"Sangita Kansal",10,MA102,MC304,null
-giftymalhotra,"Research Scholar","Gifty Malhotra",6,MC306,null,null
-rsrivastava,"Associate Professor","R Srivastava",14,MA102,MC306,null
-dineshudar,"Assistant Professor","Dinesh Udar",16,MA102,MC320(Slot-B),MC320(Slot-D)
-rohitkumar,"Assistant Professor","Rohit Kumar",16,MA102,MC310(Slot-A),MC310(Slot-C)
-goonjanjain,"Assistant Professor","Goonjan Jain",16,MA102,MC302,null
-lndas,Professor,"L N Das",12,MA102,MC412,null
-anjanagupta,Professor,"Anjana Gupta",12,MA102,MC412,null
-nilam,"Assistant Professor",Nilam,16,MA102,MA102,MC411
-vivekaggarwal,"Assistant Professor","Vivek Aggarwal",16,MA102,MA102,MC411
-milan,"Research Scholar","Milan Srivastava",6,MA102,null,null
-mamatasahu,"Research Scholar","Mamata Sahu",6,MA102,null,null
-rampratap,"Research Scholar","Ram Pratap",6,MA102,null,null
-ankitkumar,"Research Scholar","Ankit Kumar",6,MA102,null,null
-mridulamundalia,"Research Scholar","Mridula Mundalia",6,MA102,null,null
-ritugoel,"Research Scholar","Ritu Goel",6,MA102,null,null
-ruchika,"Research Scholar",Ruchika,6,MA102,null,null
-charuarora,"Research Scholar","Charu Arora",6,MA102,null,null
-kanchan,"Research Scholar",Kanchan,6,MA102,null,null
-kanicagoel,"Research Scholar","Kanica Goel",6,MA102,null,null
-abhishekkumar,"Research Scholar","Abhishek Kumar",6,MA102,null,null
-tanya,"Research Scholar",Tanya,6,MA102,null,null
-kartikey,"Research Scholar",Kartikey,6,MA102,null,null
-satyabrataadhikari,"Guest Faculty","Satyabrata Adhikari",8,MA102,MA102,null
+rsrivastava,Professor,"R Srivastava",12,MA102,MC306,null
+dineshudar,"Assistant Professor","Dinesh Udar",16,MA102,MA102,MC208
+rohitkumar,"Assistant Professor","Rohit Kumar",16,MA102,MA102,MC404(Slot-S)
+goonjanjain,"Assistant Professor","Goonjan Jain",16,MA102,MC302,MC302
+lndas,Professor,"L N Das",12,MA102,MC418(Slot-R),null
+anjanagupta,Professor,"Anjana Gupta",12,MA102,MC432(Slot-T),null
+nilam,"Assistant Professor",Nilam,16,MA102,MA102,MC406(Slot-P)
+vivekaggarwal,"Assistant Professor","Vivek Aggarwal",16,MA102,MC306,MC324(Slot-D)
+dk,"Assistant Professor",DK,16,MA102,CS262,MC312(Slot-A)
+jt,"Assistant Professor",JT,16,MA102,MA102,MC310(Slot-A)
+aa,"Assistant Professor",AA,16,MA102,MC206,CS262
+trasha,"Assistant Professor",Trasha,16,MA102,MA102,MC318(Slot-C)
+sumedha,"Assistant Professor",Sumedha,16,MA102,MC206,MC308(Slot-B)
+adityakaushik,"Associate Professor","Aditya Kaushik",14,MA102,MA102,null
+satyabrataadhikari,"Assistant Professor","Satyabrata Adhikari",8,MA102,MC208,null
