@@ -129,11 +129,11 @@ a5-thu,null,null,null,null,null,MA102,null,null,null,null
 a5-wed,null,null,null,null,null,null,null,null,null,null
 a5-tue,null,null,null,null,null,null,null,null,null,null
 a5-mon,MA102,null,null,null,null,null,null,null,null,null
-a4-fri,null,null,null,null,null,null,null,null,null,null
-a4-thu,null,null,null,null,null,null,null,null,null,null
+a4-fri,null,null,null,MA102,null,null,null,null,null,null
+a4-thu,null,null,null,null,null,null,null,null,null,MA102
 a4-wed,null,null,null,null,null,null,null,null,null,null
 a4-tue,null,null,null,null,null,null,null,null,null,null
-a4-mon,null,null,null,null,null,null,null,null,null,null
+a4-mon,null,null,null,null,null,null,null,null,MA102,MA102
 a3-fri,null,MA102,null,null,null,null,null,null,null,null
 a3-thu,null,null,MA102,null,null,null,null,null,null,null
 a3-wed,null,null,null,null,null,null,null,null,null,null
