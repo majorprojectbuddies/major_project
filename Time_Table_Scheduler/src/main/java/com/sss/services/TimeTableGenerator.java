@@ -87,9 +87,7 @@ public class TimeTableGenerator {
 
         for (FirstYearGroup firstYear : firstYearData) {
             System.out.println(firstYear.groupId);
-            if(firstYear.groupId.equals("b15")){
-                break;
-            }
+
             String[][] timetable = firstYear.timeTable.timetable;
             int i = 0;
             int[] days = new int[4];
@@ -108,6 +106,9 @@ public class TimeTableGenerator {
             if (i != 0) {
                 firstYearHelper(pq, daysHours, firstYear.groupId.charAt(0),
                         Integer.parseInt(firstYear.groupId.substring(1)));
+            }
+            if(firstYear.groupId.equals("b15")){
+                break;
             }
         }
 
