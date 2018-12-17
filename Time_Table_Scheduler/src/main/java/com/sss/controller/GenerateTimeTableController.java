@@ -17,6 +17,7 @@ public class GenerateTimeTableController {
 
 
         GenerateAllTimeTables generateAllTimeTables = new GenerateAllTimeTables();
+        System.out.println("reachn the controller gleba");
         return new ResponseEntity<>(generateAllTimeTables.getAllTimeTableData(), HttpStatus.OK);
     }
 

@@ -47,6 +47,11 @@ public class GenerateAllTimeTables {
 
         System.out.println("gleba in first function call at 5");
 
+        System.out.println("teacherdata " + teachersData);
+
+        System.out.println("gleba in first function call at 5.1");
+        System.out.println("teacherdata " + teachersData.size());
+        System.out.println("gleba in first function call at 5.2");
         TimeTableGenerator timeTableGenerator = new TimeTableGenerator(teachersData,courseDataList,firstYearData,phdData,sections);
         OverallTT overallTT = new OverallTT();
         overallTT = timeTableGenerator.generateTimeTable();
