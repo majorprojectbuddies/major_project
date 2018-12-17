@@ -84,17 +84,6 @@ public class TimeTableGenerator {
             pq.add(t);
         }
 
-        System.out.println("printing batches..");
-        for(int i=0;i<firstYearData.size();++i){
-            FirstYearGroup firstYearGroup = firstYearData.get(i);
-            System.out.println(firstYearGroup.groupId);
-            for(int j=0;j<5;++j){
-                for(int k=0;k<10;++k){
-                    System.out.print(firstYearGroup.timeTable.timetable[j][k] + " ");
-                }
-                System.out.println("");
-            }
-        }
         for (FirstYearGroup firstYear : firstYearData) {
             String[][] timetable = firstYear.timeTable.timetable;
             int i = 0;
@@ -317,7 +306,6 @@ public class TimeTableGenerator {
         }
 
     }
-
 
 
     static void assignPhdLectures(Teacher[] teachers, Room[] rooms, Section[] sections) {
@@ -676,9 +664,6 @@ public class TimeTableGenerator {
         System.out.println("gleba in first function 2 call at 9");
 
 
-        assignMajorProj(teachers, sectionsArray);
-
-
         // assign training seminar after major project
         assignTrainingSeminar(sectionsArray, teachers);
 
@@ -720,7 +705,39 @@ public class TimeTableGenerator {
         }
 
 
+        int count = 0;
+        int pid = 0;
+        for (int i = 0; i < overallTT.facultyResponses.size(); ++i) {
 
+            for (int j = 0; j < 5; ++j) {
+                for (int k = 0; k < 10; ++k) {
+                    if (overallTT.facultyResponses.get(i).facultyid.equals("payal") && !overallTT.facultyResponses.get(i).timeTable.timetable[j][k].equals("-") && !overallTT.facultyResponses.get(i).timeTable.timetable[j][k].equals("X")) {
+                        pid = i;
+                        count++;
+                    }
+                }
+            }
+            if (count > 0) {
+                break;
+            }
+        }
+        System.out.println("payal count = " + count);
+        if (count == 4) {
+            boolean find = false;
+            for (int j = 0; j < 5; ++j) {
+                for (int k = 0; k < 9; ++k) {
+                    if (overallTT.facultyResponses.get(pid).timeTable.timetable[j][k].equals("-") && overallTT.facultyResponses.get(pid).timeTable.timetable[j][k + 1].equals("-")) {
+                        overallTT.facultyResponses.get(pid).timeTable.timetable[j][k] = "lab-3B-MC302 lab";
+                        overallTT.facultyResponses.get(pid).timeTable.timetable[j][k + 1] = "lab-3B-MC302 lab";
+                        find = true;
+                        break;
+                    }
+                }
+                if (find) {
+                    break;
+                }
+            }
+        }
 
         System.out.println("Size of First Year = " + firstYearData.size());
         return overallTT;
