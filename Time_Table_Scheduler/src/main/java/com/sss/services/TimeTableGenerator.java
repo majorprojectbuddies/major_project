@@ -85,6 +85,8 @@ public class TimeTableGenerator {
         }
 
 
+
+       // int counter = 0;
         for (FirstYearGroup firstYear : firstYearData) {
             System.out.println(firstYear.groupId);
 
@@ -107,7 +109,7 @@ public class TimeTableGenerator {
                 firstYearHelper(pq, daysHours, firstYear.groupId.charAt(0),
                         Integer.parseInt(firstYear.groupId.substring(1)));
             }
-            if(firstYear.groupId.equals("b15")){
+            if (firstYear.groupId.equals("b15")) {
                 break;
             }
         }
@@ -124,7 +126,11 @@ public class TimeTableGenerator {
         Teacher t = pq.poll();
         ArrayList<Teacher> al = new ArrayList<>();
         al.add(t);
+        int c = 0;
         while (true) {
+            c++;
+            if (c == 1000)
+                return;
             if ((t.isFree(days[0], hours[0]) && t.isFree(days[1], hours[1])) &&
                     (t.isFree(days[2], hours[2]) && t.isFree(days[3], hours[3]))
                     && t.current1Batches < t.total1Batches) {
@@ -155,7 +161,7 @@ public class TimeTableGenerator {
     }
 
 
-    static void assignDecLabs(Teacher[] teachers, Room lab, Section[] sections) {
+    /*static void assignDecLabs(Teacher[] teachers, Room lab, Section[] sections) {
         Random rand = new Random();
         int N = teachers.length;
         for (int section = 0; section < sections.length; section++) {
@@ -183,8 +189,58 @@ public class TimeTableGenerator {
                 }
             }
         }
-    }
+    }*/
 
+
+    static void assignDecLabs(Teacher[] teachers, Room lab, Section[] sections) {
+        Random rand = new Random();
+        // Room lab = rooms[3];
+        int N = teachers.length;
+        for (int section = 0; section < sections.length; section += 2) {
+            for (int d = 0; d < 5; d++) {
+                for (int h = 0; h < 10; h++) {
+                    if (!sections[section].timeTable.timetable[d][h].equals("null") && sections[section].timeTable.timetable[d][h].length() > 14 && sections[section].timeTable.timetable[d][h].substring(13).equals("lab")) {
+                        System.out.println("gleba dec lab funciton " + sections[section].timeTable.timetable[d][h].substring(13));
+                        String sub = sections[section].timeTable.timetable[d][h];
+                        System.out.println("gleba sub found" + sub);
+                        int n;
+                        while (true) {
+                            System.out.println("gleba int while loop");
+                            n = rand.nextInt(N);
+                            System.out.println("gleba if conditions : ");
+                            if (teachers[n].isFree(d, h) && teachers[n].isFree(d, h + 1)
+                                    //        sections[section].isFree(d, h) && sections[section].isFree(d, h + 1)
+                                    && teachers[n].labHours >= 2) {
+
+                                teachers[n].assign(d, h, "lab - " + sub);
+                                teachers[n].assign(d, h + 1, "lab - " + sub);
+                                lab.assign(d, h, sections[section].timeTable.timetable[d][h] + "-" + teachers[n].facultyResponse.facultyid);
+                                lab.assign(d, h + 1, sections[section].timeTable.timetable[d][h] + "-" + teachers[n].facultyResponse.facultyid);
+                                teachers[n].labHours -= 2;
+                                h++;
+                                break;
+                            }
+                        }
+//                        for (Teacher t : teachers) {
+//                            if (t.facultyResponse.subject1.equals(sub)) {
+//                                t.assign(d, h, (section / 2) + "-" + sub);
+//                                rooms[section / 2].assign(d, h, sub + "-" + t.facultyResponse.facultyid);
+//                            }
+//                            if (t.facultyResponse.subject2.equals(sub)) {
+//                                t.assign(d, h, (section / 2) + "-" + sub);
+//                                rooms[section / 2].assign(d, h, sub + "-" + t.facultyResponse.facultyid);
+//                            }
+//                            if (t.facultyResponse.subject3.equals(sub)) {
+//                                t.assign(d, h, (section / 2) + "-" + sub);
+//                                rooms[section / 2].assign(d, h, sub + "-" + t.facultyResponse.facultyid);
+//                            }
+//
+//                        }
+                    }
+                }
+            }
+        }
+    }
 
     static void assignLabs(Teacher[] teachers, Room lab, Section[] sections) {
 
@@ -617,7 +673,7 @@ public class TimeTableGenerator {
         }
         Teacher[] teachers = new Teacher[teachersData.size()];
         for (int i = 0; i < teachersData.size(); i++) {
-            System.out.println("inn teacher "+ i);
+            System.out.println("inn teacher " + i);
             teachers[i] = new Teacher(teachersData.get(i));
 
         }
@@ -639,12 +695,12 @@ public class TimeTableGenerator {
         assignPhdLectures(teachers, rooms, sectionsArray);
 
         System.out.println("gleba in first function 2 call at 5");
+        assignTeachersToFirstYear(teachers);
 
-        //assignDecLabs(teachers, rooms[3], sectionsArray);
+        assignDecLabs(teachers, rooms[3], sectionsArray);
 
         System.out.println("gleba in first function 2 call at 6");
 
-        assignTeachersToFirstYear(teachers);
 
         System.out.println("gleba in first function 2 call at 7");
 
@@ -755,6 +811,18 @@ public class TimeTableGenerator {
 //        }
 
         System.out.println("Size of First Year = " + firstYearData.size());
+
+        for (Teacher t : teachers) {
+            int count = 0;
+            for (int d = 0; d < 5; d++) {
+                for (int h = 0; h < 10; h++) {
+                    if (!t.facultyResponse.timeTable.timetable[d][h].equals("-")) {
+                        count++;
+                    }
+                }
+            }
+            System.out.println(t.facultyResponse.facultyid + " -- hours = " + count);
+        }
         return overallTT;
     }
 }
