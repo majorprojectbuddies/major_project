@@ -85,8 +85,9 @@ public class TimeTableGenerator {
         }
 
 
+        Collections.shuffle(firstYearData);
 
-       // int counter = 0;
+        int counter = 0;
         for (FirstYearGroup firstYear : firstYearData) {
             System.out.println(firstYear.groupId);
 
@@ -109,7 +110,8 @@ public class TimeTableGenerator {
                 firstYearHelper(pq, daysHours, firstYear.groupId.charAt(0),
                         Integer.parseInt(firstYear.groupId.substring(1)));
             }
-            if (firstYear.groupId.equals("b15")) {
+            counter++;
+            if (counter==30) {
                 break;
             }
         }
