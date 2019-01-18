@@ -44,10 +44,10 @@ dineshudar-tue,null,null,null,null,null,null,null,null,null,null
 dineshudar-wed,null,null,null,null,null,null,null,null,null,null
 dineshudar-thu,null,null,null,null,null,null,null,null,null,null
 dineshudar-fri,null,null,null,null,null,null,null,null,null,null
-rohitkumar-mon,null,null,null,null,null,null,null,null,null,null
+rohitkumar-mon,null,null,null,null,null,null,null,null,0,0
 rohitkumar-tue,null,null,null,null,null,null,null,null,null,null
-rohitkumar-wed,null,null,null,null,null,null,null,null,null,null
-rohitkumar-thu,null,null,null,null,null,null,null,null,null,null
+rohitkumar-wed,null,null,null,null,null,null,null,null,0,null
+rohitkumar-thu,null,null,null,null,null,null,null,null,0,0
 rohitkumar-fri,null,null,null,null,null,null,null,null,null,null
 goonjanjain-mon,null,null,null,null,null,null,null,null,null,null
 goonjanjain-tue,null,null,null,null,null,null,null,null,null,null
@@ -74,9 +74,9 @@ vivekaggarwal-tue,null,null,null,null,null,null,null,null,null,null
 vivekaggarwal-wed,null,null,null,null,null,null,null,null,null,null
 vivekaggarwal-thu,null,null,null,null,null,null,null,null,null,null
 vivekaggarwal-fri,null,null,null,null,null,null,null,null,null,null
-dk-fri,null,null,null,null,null,null,null,null,0,null
-dk-thu,null,null,null,null,null,null,null,null,0,null
-dk-wed,null,null,null,null,null,null,null,null,0,null
+dk-fri,null,null,null,null,null,null,null,null,null,null
+dk-thu,null,null,null,null,null,null,null,null,null,null
+dk-wed,null,null,null,null,null,null,null,null,null,null
 dk-tue,null,null,null,null,null,null,null,null,null,null
 dk-mon,null,null,null,null,null,null,null,null,null,null
 jt-fri,null,null,null,null,null,null,null,null,null,null
