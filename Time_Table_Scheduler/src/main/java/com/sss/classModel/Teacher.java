@@ -56,6 +56,16 @@ public class Teacher {
         slots[t] = true;
     }
 
+    public int numOfHoursInDay(int d){
+        int numHours = 0;
+        for(int i=0;i<10;++i){
+            if(!this.facultyResponse.timeTable.timetable[d][i].equals("null") && !!this.facultyResponse.timeTable.timetable[d][i].equals("X")){
+                numHours++;
+            }
+        }
+        return numHours;
+    }
+
     public boolean isFree(int d, int t) {
         return this.facultyResponse.timeTable.timetable[d][t].equals("null");
     }

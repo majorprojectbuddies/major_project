@@ -73,7 +73,7 @@ public class TimeTableGenerator {
     }
 
 
-    static void assignTeachersToFirstYear(Teacher[] teachers){
+    static void assignTeachersToFirstYear(Teacher[] teachers,Room[] rooms,Section[] sectionsArray){
 
         int n = teachers.length;
         Collections.shuffle(firstYearData);
@@ -84,17 +84,22 @@ public class TimeTableGenerator {
         for(int i=0;i<isAssignedGroup.length;++i){
             isAssignedGroup[i]=false;
         }
-        helperFirstYear(teachers,indexOfFirstYear,isAssignedGroup,numOfFirstYearGroup);
+        helperFirstYear(teachers,indexOfFirstYear,isAssignedGroup,numOfFirstYearGroup,rooms,sectionsArray);
 
         // if(above line works){make the next function call here}
 
     }
 
-    static boolean helperFirstYear(Teacher[] teachers,int indexOfFirstYear, Boolean[] isAssignedGroup, int numOfFirstYearGroup){
+    static boolean helperFirstYear(Teacher[] teachers,int indexOfFirstYear, Boolean[] isAssignedGroup, int numOfFirstYearGroup, Room[] rooms,Section[] sectionsArray){
         if (indexOfFirstYear == numOfFirstYearGroup){
 
+
+            if(assignDecLabs(teachers, rooms[3], sectionsArray)){
+                return true;
+            }
+
             //condition for next backtrack
-            return true;
+            return false;
         }
         FirstYearGroup firstYearGroup = firstYearData.get(indexOfFirstYear);
         System.out.println(firstYearGroup.groupId);
@@ -116,7 +121,6 @@ public class TimeTableGenerator {
         DaysHours daysHours = new DaysHours(days, hours);
 
         int j =0;
-        //boolean found = false;
         for(;j<teachers.length;++j){
 
             Teacher t = teachers[j];
@@ -130,7 +134,7 @@ public class TimeTableGenerator {
                 t.assign(days[1], hours[1], "MA102-" + firstYearGroup.groupId );
                 t.assign(days[2], hours[2], "MA102-" + firstYearGroup.groupId );
                 t.assign(days[3], hours[3], "MA102-" + firstYearGroup.groupId );
-                if(helperFirstYear(teachers,indexOfFirstYear+1,isAssignedGroup,numOfFirstYearGroup)) {
+                if(helperFirstYear(teachers,indexOfFirstYear+1,isAssignedGroup,numOfFirstYearGroup,rooms,sectionsArray)) {
                     return true;
                 }
 
@@ -147,85 +151,9 @@ public class TimeTableGenerator {
         if(j==teachers.length){
             return false;
         }
-
         return true;
-
-
     }
 
-    /*static void assignTeachersToFirstYear(Teacher[] teachers) {
-
-        // 8 0 9 1 10 2 11 3 12 4 1 5 2 6 3 7 4 8 5 9
-
-        int n = teachers.length;
-        PriorityQueue<Teacher> pq = new PriorityQueue<>(n, new sortTeachersByRemainingHours());
-        for (Teacher t : teachers) {
-            pq.add(t);
-        }
-        Collections.shuffle(firstYearData);
-        int counter = 0;
-        for (FirstYearGroup firstYear : firstYearData) {
-            System.out.println(firstYear.groupId);
-
-            String[][] timetable = firstYear.timeTable.timetable;
-            int i = 0;
-            int[] days = new int[4];
-            int[] hours = new int[4];
-
-            for (int d = 0; d < 5; d++) {
-                for (int h = 0; h < 10; h++) {
-                    if (!timetable[d][h].equals("null")) {
-                        days[i] = d;
-                        hours[i] = h;
-                        i++;
-                    }
-                }
-            }
-            DaysHours daysHours = new DaysHours(days, hours);
-            if (i != 0) {
-                firstYearHelper(pq, daysHours, firstYear.groupId.charAt(0),
-                        Integer.parseInt(firstYear.groupId.substring(1)));
-            }
-            counter++;
-            if (counter == 30) {
-                break;
-            }
-        }
-
-
-    }
-
-
-    static void firstYearHelper(PriorityQueue<Teacher> pq,
-                                DaysHours daysHours, char group, int i) {
-        int[] days = daysHours.days;
-        int[] hours = daysHours.hours;
-
-        Teacher t = pq.poll();
-        ArrayList<Teacher> al = new ArrayList<>();
-        al.add(t);
-        int c = 0;
-        while (true) {
-            c++;
-            if (c == 1000)
-                return;
-            if ((t.isFree(days[0], hours[0]) && t.isFree(days[1], hours[1])) &&
-                    (t.isFree(days[2], hours[2]) && t.isFree(days[3], hours[3]))
-                    && t.current1Batches < t.total1Batches) {
-                break;
-            }
-            t = pq.poll();
-            al.add(t);
-        }
-        t.assign(days[0], hours[0], "MA102-" + group + (i));
-        t.assign(days[1], hours[1], "MA102-" + group + (i));
-        t.assign(days[2], hours[2], "MA102-" + group + (i));
-        t.assign(days[3], hours[3], "MA102-" + group + (i));
-        t.current1Batches++;
-        for (Teacher teacher : al) {
-            pq.add(teacher);
-        }
-    }*/
 
 
     static class DaysHours {
@@ -239,84 +167,106 @@ public class TimeTableGenerator {
     }
 
 
-    /*static void assignDecLabs(Teacher[] teachers, Room lab, Section[] sections) {
-        Random rand = new Random();
-        int N = teachers.length;
-        for (int section = 0; section < sections.length; section++) {
-            for (int d = 0; d < 5; d++) {
-                for (int h = 0; h < 10; h++) {
-                    if (!sections[section].timeTable.timetable[d][h].equals("null")
-                            && sections[section].timeTable.timetable[d][h].substring(13).equals("lab")) {
-                        while (true) {
-                            int n = rand.nextInt(N);
-                            if (teachers[n].isFree(d, h) && teachers[n].isFree(d, h + 1) &&
-                                    sections[section].isFree(d, h) && sections[section].isFree(d, h + 1)
-                                    && teachers[n].labHours >= 2) {
-                                teachers[n].assign(d, h, sections[section].timeTable.timetable[d][h]);
-                                teachers[n].assign(d, h + 1, sections[section].timeTable.timetable[d][h]);
-                                lab.assign(d, h, sections[section].timeTable.timetable[d][h] + "-" + teachers[n].facultyResponse.facultyid);
-                                lab.assign(d, h + 1, sections[section].timeTable.timetable[d][h] + "-" + teachers[n].facultyResponse.facultyid);
-                                teachers[n].labHours -= 2;
-                                //h++;
-                                break;
-                            }
+    static boolean assignDecLabs(Teacher[] teachers,Room lab, Section[] sections){
+
+        int sectionIndex = 0;
+        ArrayList<Integer> sectionIndexArray=new ArrayList<Integer>();
+        sectionIndexArray.add(0);
+        sectionIndexArray.add(2);
+        sectionIndexArray.add(4);
+        Collections.shuffle(sectionIndexArray);
+        if(helperDecLabs(teachers,lab,sections,0,0,sectionIndex,sectionIndexArray)){
+         return true;
+        }
+        return false;
+
+    }
+
+    static boolean helperDecLabs(Teacher[] teachers, Room lab,Section[] sections,int day,int hour, int sectionIndex,ArrayList<Integer> sectionIndexArray){
+
+        if(sectionIndex>=sectionIndexArray.size()){
+
+            //condition for next backtracking function goes here
+            return true;
+        }
+
+        int d=0,h=0;
+        String sub="";
+        boolean isFound = false;
+        for (d = day; d < 5; d++) {
+            for (h = hour; h < 10; h++) {
+                if (!sections[sectionIndexArray.get(sectionIndex)].timeTable.timetable[d][h].equals("null") && sections[sectionIndexArray.get(sectionIndex)].timeTable.timetable[d][h].length() > 14 && sections[sectionIndexArray.get(sectionIndex)].timeTable.timetable[d][h].substring(13).equals("lab")) {
+                    System.out.println("gleba dec lab funciton " + sections[sectionIndexArray.get(sectionIndex)].timeTable.timetable[d][h].substring(13));
+                    sub = sections[sectionIndexArray.get(sectionIndex)].timeTable.timetable[d][h];
+                    System.out.println("gleba sub found" + sub);
+                    isFound = true;
+                    break;
+                }
+
+            }
+            if(isFound){
+                break;
+            }
+        }
+        if(d==5){
+            return helperDecLabs(teachers,lab,sections,0,0,sectionIndex+1,sectionIndexArray);
+        }
+        System.out.println("saags " + sectionIndexArray.get(sectionIndex) + " " + d + " " + h);
+
+        int j = 0;
+        int k=0;
+        for(;j<teachers.length;++j){
+
+            System.out.println("saagsSS " + j);
+            if (teachers[j].isFree(d, h) && teachers[j].isFree(d, h + 1)
+                    && teachers[j].labHours >= 2 ) {
+
+                for(k=j+1;k<teachers.length;++k){
+
+                    if (teachers[k].isFree(d, h) && teachers[k].isFree(d, h + 1)
+                            && teachers[k].labHours >= 2 ) {
+
+                        System.out.println("saags2" + j + " " + k);
+                        teachers[j].assign(d, h, "lab - " + sub);
+                        teachers[j].assign(d, h + 1, "lab - " + sub);
+                        teachers[k].assign(d, h, "lab - " + sub);
+                        teachers[k].assign(d, h + 1, "lab - " + sub);
+
+                        lab.assign(d, h, sections[sectionIndexArray.get(sectionIndex)].timeTable.timetable[d][h] + "-" + teachers[j].facultyResponse.facultyid + " " + teachers[k].facultyResponse.facultyid);
+                        lab.assign(d, h + 1, sections[sectionIndexArray.get(sectionIndex)].timeTable.timetable[d][h] + "-" + teachers[j].facultyResponse.facultyid  + " " + teachers[k].facultyResponse.facultyid);
+
+                        teachers[j].labHours -= 2;
+                        teachers[k].labHours -= 2;
+
+                        if(helperDecLabs(teachers,lab,sections,d,h+2,sectionIndex,sectionIndexArray)){
+                            return true;
                         }
+
+
+                        teachers[j].assign(d, h, "null");
+                        teachers[j].assign(d, h + 1, "null");
+                        teachers[k].assign(d, h, "null");
+                        teachers[k].assign(d, h + 1,"null");
+
+                        lab.assign(d, h, "null");
+                        lab.assign(d, h + 1, "null");
+
+                        teachers[j].labHours += 2;
+                        teachers[k].labHours += 2;
+
                     }
                 }
             }
         }
-    }*/
-
-
-    static void assignDecLabs(Teacher[] teachers, Room lab, Section[] sections) {
-        Random rand = new Random();
-        // Room lab = rooms[3];
-        int N = teachers.length;
-        for (int section = 0; section < sections.length; section += 2) {
-            for (int d = 0; d < 5; d++) {
-                for (int h = 0; h < 10; h++) {
-                    if (!sections[section].timeTable.timetable[d][h].equals("null") && sections[section].timeTable.timetable[d][h].length() > 14 && sections[section].timeTable.timetable[d][h].substring(13).equals("lab")) {
-                        System.out.println("gleba dec lab funciton " + sections[section].timeTable.timetable[d][h].substring(13));
-                        String sub = sections[section].timeTable.timetable[d][h];
-                        System.out.println("gleba sub found" + sub);
-                        int n;
-                        while (true) {
-                            System.out.println("gleba int while loop");
-                            n = rand.nextInt(N);
-                            System.out.println("gleba if conditions : ");
-                            if (teachers[n].isFree(d, h) && teachers[n].isFree(d, h + 1)
-                                    //        sections[section].isFree(d, h) && sections[section].isFree(d, h + 1)
-                                    && teachers[n].labHours >= 2) {
-
-                                teachers[n].assign(d, h, "lab - " + sub);
-                                teachers[n].assign(d, h + 1, "lab - " + sub);
-                                lab.assign(d, h, sections[section].timeTable.timetable[d][h] + "-" + teachers[n].facultyResponse.facultyid);
-                                lab.assign(d, h + 1, sections[section].timeTable.timetable[d][h] + "-" + teachers[n].facultyResponse.facultyid);
-                                teachers[n].labHours -= 2;
-
-                                h++;
-                                break;
-                            }
-                        }
-//                        for (Teacher t : teachers) {
-//                            if (t.facultyResponse.subject1.equals(sub)) {
-//                                t.assign(d, h, (section / 2) + "-" + sub);
-//                                rooms[section / 2].assign(d, h, sub + "-" + t.facultyResponse.facultyid);
-//                            }
-//                            if (t.facultyResponse.subject2.equals(sub)) {
-//                                t.assign(d, h, (section / 2) + "-" + sub);
-//                                rooms[section / 2].assign(d, h, sub + "-" + t.facultyResponse.facultyid);
-//                            }
-//                            if (t.facultyResponse.subject3.equals(sub)) {
-//                                t.assign(d, h, (section / 2) + "-" + sub);
-//                                rooms[section / 2].assign(d, h, sub + "-" + t.facultyResponse.facultyid);
-//                            }
-//
-//                        }
-                    }
-                }
-            }
+        if(j==teachers.length){
+            return false;
         }
+
+        if(k==teachers.length){
+            return false;
+        }
+        return true;
+
     }
 
     static void assignLabs(Teacher[] teachers, Room lab, Section[] sections) {
@@ -819,9 +769,9 @@ public class TimeTableGenerator {
         assignPhdLectures(teachers, rooms, sectionsArray);
 
         System.out.println("gleba in first function 2 call at 5");
-        assignTeachersToFirstYear(teachers);
+        assignTeachersToFirstYear(teachers,rooms,sectionsArray);
 
-        assignDecLabs(teachers, rooms[3], sectionsArray);
+        //assignDecLabs(teachers, rooms[3], sectionsArray);
 
         System.out.println("gleba in first function 2 call at 6");
 
