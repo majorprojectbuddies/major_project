@@ -59,13 +59,6 @@ public class GenerateAllTimeTables {
 
         System.out.println("gleba in first function call at 6");
 
-        //adding values to freezed map
-
-        Iterator teacherItr = teachersData.iterator();
-        while (teacherItr.hasNext()){
-            FacultyResponse facultyResponseObj = (FacultyResponse) teacherItr.next();
-            overallTT.freezedMap.put(facultyResponseObj.facultyid,"false");
-        }
 
         for(int i=0;i<overallTT.facultyResponses.size();++i){
             FacultyResponse facultyResponse = overallTT.facultyResponses.get(i);

@@ -9,6 +9,7 @@ public class FacultyResponse {
     public Integer noOfHours;
     public String designation;
     public TimeTable timeTable;
+    public Boolean isFreezed;
 
     public FacultyResponse(){
         this.facultyid = "null";
@@ -19,6 +20,7 @@ public class FacultyResponse {
         this.noOfHours = 0;
         this.designation = "null";
         this.timeTable = new TimeTable();
+        this.isFreezed = false;
     }
 
 
