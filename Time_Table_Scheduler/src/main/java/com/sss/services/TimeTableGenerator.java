@@ -217,6 +217,7 @@ public class TimeTableGenerator {
                                 lab.assign(d, h, sections[section].timeTable.timetable[d][h] + "-" + teachers[n].facultyResponse.facultyid);
                                 lab.assign(d, h + 1, sections[section].timeTable.timetable[d][h] + "-" + teachers[n].facultyResponse.facultyid);
                                 teachers[n].labHours -= 2;
+
                                 h++;
                                 break;
                             }
@@ -422,6 +423,7 @@ public class TimeTableGenerator {
                     }
                 }
                 int counter = 0;
+                int[] lecturesAssignedPerDay = new int[5];
                 for (int hour = 1; hour <= subjectHours; ) {
                     counter++;
                     if (counter == 100)
@@ -450,6 +452,9 @@ public class TimeTableGenerator {
                     if (assigned) {
                         hour++;
                         hoursEachDay[minDay]++;
+                        lecturesAssignedPerDay[minDay]++;
+                        if(lecturesAssignedPerDay[minDay]==2)
+                            hoursEachDay[minDay]=50;
                     } else {
                         hoursEachDay[minDay] = 50;
                     }
