@@ -415,81 +415,124 @@ public class TimeTableGenerator {
                 int room = section / 2;
 
                 int subjectHours = courseDataHM.get(sub).tutHours;
-                for (int hour = 1; hour <= subjectHours; hour++) {
-                    boolean assigned = false;
-
-                    for (int i = 0; i < 5; i++) {
-                        for (int j = 0; j < 10; j++) {
-                            if (!t.days[i] && !t.slots[j] && sections[section].isFree(i, j)
-                                    && rooms[room].isFree(i, j)) {
-                                t.assign(i, j, room + "-" + matchSection(section) + "-" + sub);
-                                rooms[room].assign(i, j, matchSection(section) + "-" + sub + "-" + t.facultyResponse.facultyid);
-                                sections[section].assign(i, j, room + "-" + sub + "-" + t.facultyResponse.facultyid);
-                                assigned = true;
-                                break;
-                            }
-                        }
-                        if (assigned)
-                            break;
+                //
+                int[] hoursEachDay = new int[5];
+                for (int d = 0; d < 5; d++) {
+                    for (int h = 0; h < 10; h++) {
+                        if (!t.isFree(d, h))
+                            hoursEachDay[d]++;
                     }
-                    if (assigned)
-                        continue;
-
-                    for (int i = 0; i < 5; i++) {
-                        if (!t.days[i]) {
-                            for (int j = 0; j < 10; j++) {
-                                if (t.isFree(i, j) && sections[section].isFree(i, j)
-                                        && rooms[room].isFree(i, j)) {
-                                    t.assign(i, j, room + "-" + matchSection(section) + "-" + sub);
-                                    rooms[room].assign(i, j, matchSection(section) + "-" + sub + "-" + t.facultyResponse.facultyid);
-                                    sections[section].assign(i, j, room + "-" + sub + "-" + t.facultyResponse.facultyid);
-                                    assigned = true;
-                                    break;
-                                }
-                            }
-                        }
-
-                        if (assigned)
-                            break;
-                    }
-                    if (assigned)
-                        continue;
-
-                    for (int j = 0; j < 10; j++) {
-                        if (!t.slots[j]) {
-                            for (int i = 0; i < 5; i++) {
-                                if (t.isFree(i, j) && sections[section].isFree(i, j)
-                                        && rooms[room].isFree(i, j)) {
-                                    t.assign(i, j, room + "-" + matchSection(section) + "-" + sub);
-                                    rooms[room].assign(i, j, matchSection(section) + "-" + sub + "-" + t.facultyResponse.facultyid);
-                                    sections[section].assign(i, j, room + "-" + sub + "-" + t.facultyResponse.facultyid);
-                                    assigned = true;
-                                    break;
-                                }
-                            }
-                        }
-
-                        if (assigned)
-                            break;
-                    }
-                    if (assigned)
-                        continue;
-                    for (int i = 0; i < 5; i++) {
-                        for (int j = 0; j < 10; j++) {
-                            if (t.isFree(i, j) && sections[section].isFree(i, j)
-                                    && rooms[room].isFree(i, j)) {
-                                t.assign(i, j, room + "-" + matchSection(section) + "-" + sub);
-                                rooms[room].assign(i, j, matchSection(section) + "-" + sub + "-" + t.facultyResponse.facultyid);
-                                sections[section].assign(i, j, room + "-" + sub + "-" + t.facultyResponse.facultyid);
-                                assigned = true;
-                                break;
-                            }
-                        }
-                        if (assigned)
-                            break;
-                    }
-
                 }
+                int counter = 0;
+                for (int hour = 1; hour <= subjectHours; ) {
+                    counter++;
+                    if (counter == 100)
+                        break;
+                    int minDay = -1;
+                    int minDayHours = 50;
+                    for (int d = 0; d < 5; d++) {
+                        if (hoursEachDay[d] < minDayHours) {
+                            minDayHours = hoursEachDay[d];
+                            minDay = d;
+                        }
+                    }
+                    boolean assigned = false;
+                    for (int h = 0; h < 10; h++) {
+                        int i = minDay;
+                        int j = h;
+                        if (t.isFree(i, j) && sections[section].isFree(i, j)
+                                && rooms[room].isFree(i, j)) {
+                            t.assign(i, j, room + "-" + matchSection(section) + "-" + sub);
+                            rooms[room].assign(i, j, matchSection(section) + "-" + sub + "-" + t.facultyResponse.facultyid);
+                            sections[section].assign(i, j, room + "-" + sub + "-" + t.facultyResponse.facultyid);
+                            assigned = true;
+                            break;
+                        }
+                    }
+                    if (assigned) {
+                        hour++;
+                        hoursEachDay[minDay]++;
+                    } else {
+                        hoursEachDay[minDay] = 50;
+                    }
+                }
+
+                //
+//                for (int hour = 1; hour <= subjectHours; hour++) {
+//                    boolean assigned = false;
+//
+//                    for (int i = 0; i < 5; i++) {
+//                        for (int j = 0; j < 10; j++) {
+//                            if (!t.days[i] && !t.slots[j] && sections[section].isFree(i, j)
+//                                    && rooms[room].isFree(i, j)) {
+//                                t.assign(i, j, room + "-" + matchSection(section) + "-" + sub);
+//                                rooms[room].assign(i, j, matchSection(section) + "-" + sub + "-" + t.facultyResponse.facultyid);
+//                                sections[section].assign(i, j, room + "-" + sub + "-" + t.facultyResponse.facultyid);
+//                                assigned = true;
+//                                break;
+//                            }
+//                        }
+//                        if (assigned)
+//                            break;
+//                    }
+//                    if (assigned)
+//                        continue;
+//
+//                    for (int i = 0; i < 5; i++) {
+//                        if (!t.days[i]) {
+//                            for (int j = 0; j < 10; j++) {
+//                                if (t.isFree(i, j) && sections[section].isFree(i, j)
+//                                        && rooms[room].isFree(i, j)) {
+//                                    t.assign(i, j, room + "-" + matchSection(section) + "-" + sub);
+//                                    rooms[room].assign(i, j, matchSection(section) + "-" + sub + "-" + t.facultyResponse.facultyid);
+//                                    sections[section].assign(i, j, room + "-" + sub + "-" + t.facultyResponse.facultyid);
+//                                    assigned = true;
+//                                    break;
+//                                }
+//                            }
+//                        }
+//
+//                        if (assigned)
+//                            break;
+//                    }
+//                    if (assigned)
+//                        continue;
+//
+//                    for (int j = 0; j < 10; j++) {
+//                        if (!t.slots[j]) {
+//                            for (int i = 0; i < 5; i++) {
+//                                if (t.isFree(i, j) && sections[section].isFree(i, j)
+//                                        && rooms[room].isFree(i, j)) {
+//                                    t.assign(i, j, room + "-" + matchSection(section) + "-" + sub);
+//                                    rooms[room].assign(i, j, matchSection(section) + "-" + sub + "-" + t.facultyResponse.facultyid);
+//                                    sections[section].assign(i, j, room + "-" + sub + "-" + t.facultyResponse.facultyid);
+//                                    assigned = true;
+//                                    break;
+//                                }
+//                            }
+//                        }
+//
+//                        if (assigned)
+//                            break;
+//                    }
+//                    if (assigned)
+//                        continue;
+//                    for (int i = 0; i < 5; i++) {
+//                        for (int j = 0; j < 10; j++) {
+//                            if (t.isFree(i, j) && sections[section].isFree(i, j)
+//                                    && rooms[room].isFree(i, j)) {
+//                                t.assign(i, j, room + "-" + matchSection(section) + "-" + sub);
+//                                rooms[room].assign(i, j, matchSection(section) + "-" + sub + "-" + t.facultyResponse.facultyid);
+//                                sections[section].assign(i, j, room + "-" + sub + "-" + t.facultyResponse.facultyid);
+//                                assigned = true;
+//                                break;
+//                            }
+//                        }
+//                        if (assigned)
+//                            break;
+//                    }
+//
+//                }
 
             }
         }
