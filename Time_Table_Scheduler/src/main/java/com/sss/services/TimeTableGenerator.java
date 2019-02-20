@@ -72,21 +72,92 @@ public class TimeTableGenerator {
         }
     }
 
-    static void assignTeachersToFirstYear(Teacher[] teachers) {
-        /*
-         * 8 0 9 1 10 2 11 3 12 4 1 5 2 6 3 7 4 8 5 9
-         */
+
+    static void assignTeachersToFirstYear(Teacher[] teachers){
 
         int n = teachers.length;
+        Collections.shuffle(firstYearData);
 
+        int numOfFirstYearGroup = firstYearData.size();
+        int indexOfFirstYear = 0;
+        Boolean[] isAssignedGroup = new Boolean[teachers.length];
+        helperFirstYear(teachers,indexOfFirstYear,isAssignedGroup,numOfFirstYearGroup);
+
+    }
+
+    static boolean helperFirstYear(Teacher[] teachers,int indexOfFirstYear, Boolean[] isAssignedGroup, int numOfFirstYearGroup){
+        if (indexOfFirstYear == numOfFirstYearGroup){
+            return true;
+            // make the calling of the next function here
+        }
+        FirstYearGroup firstYearGroup = firstYearData.get(indexOfFirstYear);
+        System.out.println(firstYearGroup.groupId);
+
+        String[][] timetable = firstYearGroup.timeTable.timetable;
+        int i = 0;
+        int[] days = new int[4];
+        int[] hours = new int[4];
+
+        for (int d = 0; d < 5; d++) {
+            for (int h = 0; h < 10; h++) {
+                if (!timetable[d][h].equals("null")) {
+                    days[i] = d;
+                    hours[i] = h;
+                    i++;
+                }
+            }
+        }
+        DaysHours daysHours = new DaysHours(days, hours);
+
+        int j =0;
+        //boolean found = false;
+        for(;j<teachers.length;++j){
+
+            Teacher t = teachers[j];
+
+            if (!isAssignedGroup[j] && (t.isFree(days[0], hours[0]) && t.isFree(days[1], hours[1])) &&
+                    (t.isFree(days[2], hours[2]) && t.isFree(days[3], hours[3]))
+                    && t.current1Batches < t.total1Batches) {
+                isAssignedGroup[j]=true;
+                boolean changedValues =false;
+                if(helperFirstYear(teachers,indexOfFirstYear+1,isAssignedGroup,numOfFirstYearGroup)) {
+                    changedValues = true;
+                    t.assign(days[0], hours[0], "MA102-" + firstYearGroup.groupId + (i));
+                    t.assign(days[1], hours[1], "MA102-" + firstYearGroup.groupId + (i));
+                    t.assign(days[2], hours[2], "MA102-" + firstYearGroup.groupId + (i));
+                    t.assign(days[3], hours[3], "MA102-" + firstYearGroup.groupId + (i));
+                    t.current1Batches++;
+                    break;
+                }
+                isAssignedGroup[j]=false;
+                if(changedValues){
+                    t.assign(days[0], hours[0],"null");
+                    t.assign(days[1], hours[1], "null");
+                    t.assign(days[2], hours[2], "null");
+                    t.assign(days[3], hours[3], "null");
+                }
+
+            }
+        }
+        if(j==teachers.length){
+            return false;
+        }
+
+        return true;
+
+
+    }
+
+    /*static void assignTeachersToFirstYear(Teacher[] teachers) {
+
+        // 8 0 9 1 10 2 11 3 12 4 1 5 2 6 3 7 4 8 5 9
+
+        int n = teachers.length;
         PriorityQueue<Teacher> pq = new PriorityQueue<>(n, new sortTeachersByRemainingHours());
         for (Teacher t : teachers) {
             pq.add(t);
         }
-
-
         Collections.shuffle(firstYearData);
-
         int counter = 0;
         for (FirstYearGroup firstYear : firstYearData) {
             System.out.println(firstYear.groupId);
@@ -149,7 +220,7 @@ public class TimeTableGenerator {
         for (Teacher teacher : al) {
             pq.add(teacher);
         }
-    }
+    }*/
 
 
     static class DaysHours {
