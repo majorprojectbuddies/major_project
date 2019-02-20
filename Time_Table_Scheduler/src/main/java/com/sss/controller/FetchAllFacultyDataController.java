@@ -20,10 +20,8 @@ public class FetchAllFacultyDataController {
 
     @GetMapping("/fetchAllFacultyData")
     public ResponseEntity<FullFacultyResponse> getAllFacultyData() {
-
         //OnlyStringClass onlyStringClass = new ObjectMapper().readValue(loginid,OnlyStringClass.class);
         GetAllTeacherTimeTable getAllTeacherTimeTable = new GetAllTeacherTimeTable();
-
         //System.out.println("sagar "+ loginid);
         FullFacultyResponse fullFacultyResponse = getAllTeacherTimeTable.getAllFacultyData();
 

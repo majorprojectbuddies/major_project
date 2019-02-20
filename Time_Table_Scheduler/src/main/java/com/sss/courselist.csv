@@ -1,5 +1,6 @@
 courseId,courseName,credits,tutHours,containsLab
 AM501,"Introduction to Mathematical Software",4,3,0
+CS262,"Algorithm Design and Analysis",4,4,0
 MA102,"Mathematics 2",4,4,0
 MC202,"Real Analysis",4,4,0
 MC204,"Scientific Computing",4,3,1
@@ -8,9 +9,17 @@ MC208,"Linear Algebra",4,4,0
 MC302,"Database Management System",4,3,1
 MC304,"Theory of Computation",4,4,0
 MC306,"Financial Engineering",4,4,0
+MC308(Slot-B),"Computer Networks (Slot-B)",4,4,0
 MC310(Slot-A),"Software Engineering (Slot-A)",4,4,0
 MC310(Slot-C),"Software Engineering (Slot-C)",4,4,0
+MC312(Slot-A),"Artificial Intelligence (Slot-A)",4,3,1
+MC318(Slot-C),"Computer Graphics (Slot-C)",4,3,1
 MC320(Slot-B),"Web Technology (Slot-B)",4,4,0
 MC320(Slot-D),"Web Technology (Slot-D)",4,4,0
+MC324(Slot-D),"Big Data Analytics (Slot-D)",4,3,1
+MC404(Slot-S),"Matrix Computation (Slot-S)",4,3,1
+MC406(Slot-P),"Partial Differential Equation (Slot-P)",4,4,0
 MC411,"Mathematical Modeling & Simulation (MS)",4,3,1
-MC412,"Optimization Techniques (OT)",4,3,1
+MC418(Slot-R),"Optimization Techniques (OT) (Slot-R)",4,3,1
+MC420(Slot-Q),"Information Theory and Coding (Slot-Q)",4,4,0
+MC432(Slot-T),"Fuzzy Sets and Fuzzy Logic (Slot-T)",4,4,0
