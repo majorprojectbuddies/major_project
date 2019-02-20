@@ -81,14 +81,20 @@ public class TimeTableGenerator {
         int numOfFirstYearGroup = firstYearData.size();
         int indexOfFirstYear = 0;
         Boolean[] isAssignedGroup = new Boolean[teachers.length];
+        for(int i=0;i<isAssignedGroup.length;++i){
+            isAssignedGroup[i]=false;
+        }
         helperFirstYear(teachers,indexOfFirstYear,isAssignedGroup,numOfFirstYearGroup);
+
+        // if(above line works){make the next function call here}
 
     }
 
     static boolean helperFirstYear(Teacher[] teachers,int indexOfFirstYear, Boolean[] isAssignedGroup, int numOfFirstYearGroup){
         if (indexOfFirstYear == numOfFirstYearGroup){
+
+            //condition for next backtrack
             return true;
-            // make the calling of the next function here
         }
         FirstYearGroup firstYearGroup = firstYearData.get(indexOfFirstYear);
         System.out.println(firstYearGroup.groupId);
@@ -115,27 +121,26 @@ public class TimeTableGenerator {
 
             Teacher t = teachers[j];
 
-            if (!isAssignedGroup[j] && (t.isFree(days[0], hours[0]) && t.isFree(days[1], hours[1])) &&
+            if ( (t.isFree(days[0], hours[0]) && t.isFree(days[1], hours[1])) &&
                     (t.isFree(days[2], hours[2]) && t.isFree(days[3], hours[3]))
                     && t.current1Batches < t.total1Batches) {
-                isAssignedGroup[j]=true;
-                boolean changedValues =false;
+
+                t.current1Batches++;
+                t.assign(days[0], hours[0], "MA102-" + firstYearGroup.groupId );
+                t.assign(days[1], hours[1], "MA102-" + firstYearGroup.groupId );
+                t.assign(days[2], hours[2], "MA102-" + firstYearGroup.groupId );
+                t.assign(days[3], hours[3], "MA102-" + firstYearGroup.groupId );
                 if(helperFirstYear(teachers,indexOfFirstYear+1,isAssignedGroup,numOfFirstYearGroup)) {
-                    changedValues = true;
-                    t.assign(days[0], hours[0], "MA102-" + firstYearGroup.groupId + (i));
-                    t.assign(days[1], hours[1], "MA102-" + firstYearGroup.groupId + (i));
-                    t.assign(days[2], hours[2], "MA102-" + firstYearGroup.groupId + (i));
-                    t.assign(days[3], hours[3], "MA102-" + firstYearGroup.groupId + (i));
-                    t.current1Batches++;
-                    break;
+                    return true;
                 }
-                isAssignedGroup[j]=false;
-                if(changedValues){
-                    t.assign(days[0], hours[0],"null");
-                    t.assign(days[1], hours[1], "null");
-                    t.assign(days[2], hours[2], "null");
-                    t.assign(days[3], hours[3], "null");
-                }
+
+                t.current1Batches--;
+
+                t.assign(days[0], hours[0],"null");
+                t.assign(days[1], hours[1], "null");
+                t.assign(days[2], hours[2], "null");
+                t.assign(days[3], hours[3], "null");
+
 
             }
         }
