@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 @Service
@@ -57,6 +58,14 @@ public class GenerateAllTimeTables {
         overallTT = timeTableGenerator.generateTimeTable();
 
         System.out.println("gleba in first function call at 6");
+
+        //adding values to freezed map
+
+        Iterator teacherItr = teachersData.iterator();
+        while (teacherItr.hasNext()){
+            FacultyResponse facultyResponseObj = (FacultyResponse) teacherItr.next();
+            overallTT.freezedMap.put(facultyResponseObj.facultyid,"false");
+        }
 
         for(int i=0;i<overallTT.facultyResponses.size();++i){
             FacultyResponse facultyResponse = overallTT.facultyResponses.get(i);
