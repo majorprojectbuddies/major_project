@@ -60,6 +60,10 @@ public class Teacher {
         return this.facultyResponse.timeTable.timetable[d][t].equals("null");
     }
 
+    public void makeFree(int d,int t){
+        this.facultyResponse.timeTable.timetable[d][t] = "null";
+    }
+
     public void printTeacherTT() {
         System.out.println("Time Table for teacher " + this.facultyResponse.timeTable);
         for (int i = 0; i < 5; i++) {
