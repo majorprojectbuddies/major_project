@@ -172,7 +172,7 @@ public class GetDao {
             conn = DriverManager.getConnection(DB_URL, USER, PASS);
             stmt = conn.createStatement();
 
-            String sql = "SELECT * from facultydetails";
+            String sql = "SELECT * from facultydetails ORDER BY facultyid ASC";
             ResultSet rs = stmt.executeQuery(sql);
 
             while(rs.next()){
