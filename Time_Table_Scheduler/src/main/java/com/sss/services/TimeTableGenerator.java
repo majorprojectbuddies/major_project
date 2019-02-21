@@ -130,10 +130,10 @@ public class TimeTableGenerator {
                     && t.current1Batches < t.total1Batches) {
 
                 t.current1Batches++;
-                t.assign(days[0], hours[0], "MA102-" + firstYearGroup.groupId );
-                t.assign(days[1], hours[1], "MA102-" + firstYearGroup.groupId );
-                t.assign(days[2], hours[2], "MA102-" + firstYearGroup.groupId );
-                t.assign(days[3], hours[3], "MA102-" + firstYearGroup.groupId );
+                t.assign(days[0], hours[0], "MA102:" + firstYearGroup.groupId + ":Lecture" + ":SPS");
+                t.assign(days[1], hours[1], "MA102:" + firstYearGroup.groupId + ":Lecture" + ":SPS");
+                t.assign(days[2], hours[2], "MA102:" + firstYearGroup.groupId + ":Lecture" + ":SPS");
+                t.assign(days[3], hours[3], "MA102:" + firstYearGroup.groupId + ":Lecture" + ":SPS");
                 if(helperFirstYear(teachers,indexOfFirstYear+1,isAssignedGroup,numOfFirstYearGroup,rooms,sectionsArray)) {
                     return true;
                 }
@@ -411,7 +411,80 @@ public class TimeTableGenerator {
     }
 
 
-    static void assignDccCourses(Teacher[] teachers, Room[] rooms, Section[] sections) {
+
+    static boolean assignDccCourses(Teacher[] teachers, Room[] rooms,Section[] sections){
+        ArrayList<Teacher> teacherArrayList = new ArrayList<>();
+        for(int i=0;i<teachers.length;++i){
+            teacherArrayList.add(teachers[i]);
+        }
+        Collections.shuffle(teacherArrayList);
+        int teacherIndex = 0;
+        if(helperDccCourses(teacherArrayList,teacherIndex,rooms,sections)){
+            return true;
+        }
+        return false;
+    }
+
+    static boolean helperDccCourses(ArrayList<Teacher> teacherArrayList,int teacherIndex, Room[] rooms,Section[] sections){
+
+        if(teacherIndex>=teacherArrayList.size()){
+
+            //make a call for the next backtracking function here
+            return true;
+        }
+
+        Teacher t = teacherArrayList.get(teacherIndex);
+        ArrayList<String> subjectList = new ArrayList<>();
+
+        int year;
+
+        if(!t.facultyResponse.subject1.equals("null")){
+            year = Integer.parseInt(t.facultyResponse.subject1.charAt(2) + "");
+            if (!(year < 2 || year > 4 || t.facultyResponse.subject1.length() != 5)) {
+                subjectList.add(t.facultyResponse.subject1);
+            }
+        }
+        if(!t.facultyResponse.subject2.equals("null")){
+            year = Integer.parseInt(t.facultyResponse.subject2.charAt(2) + "");
+            if (!(year < 2 || year > 4 || t.facultyResponse.subject2.length() != 5)) {
+                subjectList.add(t.facultyResponse.subject2);
+            }
+        }
+        if(!t.facultyResponse.subject3.equals("null")){
+            year = Integer.parseInt(t.facultyResponse.subject3.charAt(2) + "");
+            if (!(year < 2 || year > 4 || t.facultyResponse.subject3.length() != 5)) {
+                subjectList.add(t.facultyResponse.subject3);
+            }
+        }
+
+        Collections.shuffle(subjectList);
+
+        int subjectListIndex = 0;
+        if(helperDccCourses2(subjectList,subjectListIndex,t,rooms,sections)){
+            if(helperDccCourses(teacherArrayList,teacherIndex+1,rooms,sections)){
+                return true;
+            }
+            return false;
+        }
+        return false;
+
+
+    }
+
+    static boolean helperDccCourses2(ArrayList<String> subjectList, int subjectListIndex, Teacher t,Room[] rooms,Section[] sections){
+
+        if(subjectListIndex>=subjectList.size()){
+            return true;
+        }
+        /*
+        int subjectHours = courseDataHM.get(subjectList.get(i)).tutHours;
+        int initialSection = getInitialSectionSaag(subjectList.get(i));
+        ArrayList<Integer> daysAssignedArray = new ArrayList<>();*/
+        return true;
+
+    }
+
+    static void assignDccCoursesPrev(Teacher[] teachers, Room[] rooms, Section[] sections) {
 
         // TODO change for loop by priority queue
         for (Teacher t : teachers) {
@@ -474,6 +547,7 @@ public class TimeTableGenerator {
                             assigned = true;
                             break;
                         }
+
                     }
                     if (assigned) {
                         hour++;
@@ -603,6 +677,20 @@ public class TimeTableGenerator {
         return section;
     }
 
+
+    static int getInitialSectionSaag(String subject){
+        int year = Integer.parseInt(subject.charAt(2) + "");
+        if(year==2){
+            return 0;
+        }
+        else if(year==3){
+            return 2;
+        }
+        else if(year==4){
+            return 4;
+        }
+        return 0;
+    }
 
     public void assignTrainingSeminar(Section[] sections, Teacher[] teachers) {
         int N = teachers.length;
@@ -781,7 +869,7 @@ public class TimeTableGenerator {
         //assignMajorProj(teachers, sectionsArray);
 
         System.out.println("gleba in first function 2 call at 8");
-        assignDccCourses(teachers, rooms, sectionsArray);
+        assignDccCoursesPrev(teachers, rooms, sectionsArray);
 
 
         System.out.println("gleba in first function 2 call at 8.1");
