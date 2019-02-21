@@ -10,6 +10,11 @@ public class Room {
         this.id = id;
         this.timeTable = new TimeTable();
     }
+    public Room() {
+        this.id = 0;
+        this.timeTable = new TimeTable();
+    }
+
 
     public boolean isFree(int d, int h) {
         return (timeTable.timetable[d][h] == null || timeTable.timetable[d][h].equals("null"));
