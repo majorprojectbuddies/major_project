@@ -2,12 +2,11 @@ package com.sss.services;
 
 import com.sss.classModel.*;
 import com.sss.dao.SignupDao;
+import javafx.util.Pair;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import javax.persistence.criteria.CriteriaBuilder;
+import java.util.*;
 
 @Service
 public class GenerateAllTimeTablesAgain {
@@ -22,6 +21,8 @@ public class GenerateAllTimeTablesAgain {
     public ArrayList<FacultyResponse> freezedTeachersData;
     public ArrayList<FirstYearGroup> freezedFirstYearData;
     public ArrayList<FirstYearGroup> unfreezedFirstYearData;
+    // map of (course name, pair of( day<0-mon,1-tue...>, start time(0-9am,1-10am...)))
+    public Map<String, Pair<Integer, Integer>> labSlotToBeAssigned;
 
     public OverallTT getAllTimeTableAgainData(){
         System.out.println("overallTT IS faculty response size is : " + overallTT.facultyResponses.size());
@@ -113,10 +114,141 @@ public class GenerateAllTimeTablesAgain {
             }
         }
 
+        // find lab slot that needs to be definitely filled
+        //format -  (MC312(SLOT-A)lab:t1:Lab:COMPUTATION LAB)
+
+        labSlotToBeAssigned = new HashMap<>();
+        Iterator itrFreezedTeachersData = freezedTeachersData.iterator();
+        while(itrFreezedTeachersData.hasNext()){
+            FacultyResponse facultyResponse = (FacultyResponse) itrFreezedTeachersData.next();
+            for(int i=0;i<5;i++){
+                for(int j=0;j<10;j++){
+                    String s = facultyResponse.timeTable.timetable[i][j];
+                    if(s.equals("-") || s.equals("null") || s.equals("X")){
+                        continue;
+                    }else{
+                        //separate the string to check whether its a lab or not
+                        String[] breaks = s.split(":");
+                        if(breaks[2].equals("Lab")){
+                            //if lab already present remove it coz partner found
+                            if(labSlotToBeAssigned.containsKey(breaks[0])){
+                                labSlotToBeAssigned.remove(breaks[0]);
+                            }else{
+                                Pair p = new Pair(i,j);
+                                j++;
+                                labSlotToBeAssigned.put(breaks[0],p);
+                            }
+                        }else{
+                            continue;
+                        }
+                    }
+                }
+            }
+        }
+
+        //FORMAT FOR TEACHER
+        //format -  (MC312(SLOT-A)lab:t1:Lab:COMPUTATION LAB)
+
+        //FORMAT FOR SECTIONS
+        //format -  (MC312(SLOT-A)LAB:Lab:COMPUTATION LAB)
+        //format -  (MC324:Lecture:1:PAYAL)
+        //format -  (MC318(SLOT-A):Lecture:2:PAYAL)
+        //format -  (MC318:Lab:COMPUTATION LAB)
+
+
+        //FORMAT FOR ROOMS
+        //format -  (MC312(SLOT-A)LAB:t2:Lab)
+        //format -  (MC324:t1:Lecture:PAYAL)
+        //format -  (MC318(SLOT-A):t2:Lecture:PAYAL)
+        //format -  (MC318:t2:Lab)
 
 
 
+        //Fill Sections
+        Iterator itrFreezedTeachersData2 = freezedTeachersData.iterator();
+        while(itrFreezedTeachersData2.hasNext()){
+            FacultyResponse facultyResponse = (FacultyResponse) itrFreezedTeachersData2.next();
+            for(int i=0;i<5;i++){
+                for(int j=0;j<10;j++){
+                    String s = facultyResponse.timeTable.timetable[i][j];
+                    if(s.equals("-") || s.equals("null") || s.equals("X")){
+                        continue;
+                    }else{
+                        //separate the string to check whether its a lab or lecture
+                        String[] breaks = s.split(":");
+                        //format for teacher -  (MC312(SLOT-A)lab:t1:Lab:COMPUTATION LAB)
+                        if(breaks[2].equals("Lab")){
+                            //its a lab
+                            Iterator secItr = sections.iterator();
+                            while(secItr.hasNext()) {
+                                Section sec = (Section) secItr.next();
+                                if (sec.secId.equals(breaks[1])) {
+                                    //check if its a elective lab or normal lab
+                                    if (breaks[0].contains("lab")) {
+                                        //its an elective lab
+                                        //format of sec for elective lab-  (MC312(SLOT-A)lab:Lab:COMPUTATION LAB)
+                                        sec.timeTable.timetable[i][j] = breaks[0] + ":Lab" + ":3";
+                                    } else {
+                                        //its a normal lab
+                                        //format of sec for normal lab -  (MC318:Lab:COMPUTATION LAB)
+                                        sec.timeTable.timetable[i][j] = breaks[0] + ":Lab" + ":3";
+                                    }
+                                    break;
+                                }
+                            }
+                        }else{
+                            //its a lecture
+                            Iterator secItr = sections.iterator();
+                            while(secItr.hasNext()) {
+                                Section sec = (Section) secItr.next();
+                                if(sec.secId.equals(breaks[1])){
+                                    //format for section -  (MC324:Lecture:1:PAYAL)
+                                    //format for teacher -  (MC312(SLOT-A)lab:t1:Lab:COMPUTATION LAB)
+                                    sec.timeTable.timetable[i][j] = breaks[0] + ":Lecture:" + breaks[3] + ":" + facultyResponse.name;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
+
+
+        //FILL ROOMS
+        Room[] rooms = new Room[4];
+        for (int i = 0; i < 4; i++) {
+            rooms[i] = new Room(i);
+        }
+        Iterator itrFreezedTeachersData3 = freezedTeachersData.iterator();
+        while(itrFreezedTeachersData3.hasNext()){
+            FacultyResponse facultyResponse = (FacultyResponse) itrFreezedTeachersData3.next();
+            for(int i=0;i<5;i++){
+                for(int j=0;j<10;j++){
+                    String s = facultyResponse.timeTable.timetable[i][j];
+                    if(s.equals("-") || s.equals("null") || s.equals("X")){
+                        continue;
+                    }else{
+                        //separate the string to check whether its a lab or lecture
+                        String[] breaks = s.split(":");
+                        //format for teacher -  (MC312(SLOT-A)lab:t1:Lab:COMPUTATION LAB)
+                        if(breaks[2].equals("Lab")){
+                            //its a lab so block the lab
+                            //format for lab room-  (MC312(SLOT-A)LAB:t2:Lab)
+                            String t_id = breaks[0] + ":" + breaks[1] + ":" + "Lab";
+                            rooms[3].assign(i,j,t_id);
+                        }else{
+                            //its a lecture so block the room accordingly
+                            //format for room with lecture -  (MC324:t1:Lecture:PAYAL)
+                            String t_id = breaks[0] + ":" + breaks[1] + ":Lecture:" + facultyResponse.name;
+                            rooms[Integer.parseInt(breaks[3])].assign(i,j,t_id);
+                        }
+                    }
+                }
+            }
+        }
+        
         return overallTT;
     }
 }
