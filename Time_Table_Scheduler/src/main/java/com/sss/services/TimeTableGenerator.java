@@ -2,8 +2,10 @@ package com.sss.services;
 
 
 import com.sss.classModel.*;
+import javafx.util.Pair;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 
@@ -227,6 +229,7 @@ public class TimeTableGenerator {
                             && teachers[k].labHours >= 2 ) {
 
                         System.out.println("saags2" + j + " " + k);
+                        //**** make changes to the format
                         teachers[j].assign(d, h, "lab - " + sub);
                         teachers[j].assign(d, h + 1, "lab - " + sub);
                         teachers[k].assign(d, h, "lab - " + sub);
@@ -234,6 +237,8 @@ public class TimeTableGenerator {
 
                         lab.assign(d, h, sections[sectionIndexArray.get(sectionIndex)].timeTable.timetable[d][h] + "-" + teachers[j].facultyResponse.facultyid + " " + teachers[k].facultyResponse.facultyid);
                         lab.assign(d, h + 1, sections[sectionIndexArray.get(sectionIndex)].timeTable.timetable[d][h] + "-" + teachers[j].facultyResponse.facultyid  + " " + teachers[k].facultyResponse.facultyid);
+                        //***** assign teachername to the section
+
 
                         teachers[j].labHours -= 2;
                         teachers[k].labHours -= 2;
@@ -419,9 +424,12 @@ public class TimeTableGenerator {
         }
         Collections.shuffle(teacherArrayList);
         int teacherIndex = 0;
+        System.out.println("inside dcc course func 1");
         if(helperDccCourses(teacherArrayList,teacherIndex,rooms,sections)){
+            System.out.println("inside dcc course func 2");
             return true;
         }
+        System.out.println("inside dcc course func 3");
         return false;
     }
 
@@ -429,28 +437,35 @@ public class TimeTableGenerator {
 
         if(teacherIndex>=teacherArrayList.size()){
 
-            //make a call for the next backtracking function here
+            //*********make a call for the next backtracking function here
+            System.out.println("inside dcc course helper func last");
             return true;
         }
 
+
+        System.out.println("inside dcc course helper func 1");
         Teacher t = teacherArrayList.get(teacherIndex);
         ArrayList<String> subjectList = new ArrayList<>();
 
         int year;
 
+        System.out.println("inside dcc course helper func 2");
         if(!t.facultyResponse.subject1.equals("null")){
+            System.out.println("inside dcc course helper func 3");
             year = Integer.parseInt(t.facultyResponse.subject1.charAt(2) + "");
             if (!(year < 2 || year > 4 || t.facultyResponse.subject1.length() != 5)) {
                 subjectList.add(t.facultyResponse.subject1);
             }
         }
         if(!t.facultyResponse.subject2.equals("null")){
+            System.out.println("inside dcc course helper func 4");
             year = Integer.parseInt(t.facultyResponse.subject2.charAt(2) + "");
             if (!(year < 2 || year > 4 || t.facultyResponse.subject2.length() != 5)) {
                 subjectList.add(t.facultyResponse.subject2);
             }
         }
         if(!t.facultyResponse.subject3.equals("null")){
+            System.out.println("inside dcc course helper func 5");
             year = Integer.parseInt(t.facultyResponse.subject3.charAt(2) + "");
             if (!(year < 2 || year > 4 || t.facultyResponse.subject3.length() != 5)) {
                 subjectList.add(t.facultyResponse.subject3);
@@ -460,27 +475,166 @@ public class TimeTableGenerator {
         Collections.shuffle(subjectList);
 
         int subjectListIndex = 0;
-        if(helperDccCourses2(subjectList,subjectListIndex,t,rooms,sections)){
+        System.out.println("inside dcc course helper func 6");
+        if(helperDccCoursesAssignSubjects(subjectList,subjectListIndex,t,rooms,sections)){
+            System.out.println("inside dcc course helper func 7");
             if(helperDccCourses(teacherArrayList,teacherIndex+1,rooms,sections)){
+                System.out.println("inside dcc course helper func 8");
                 return true;
             }
+            System.out.println("inside dcc course helper func 9");
             return false;
         }
+        System.out.println("inside dcc course helper func 10");
         return false;
 
 
     }
 
-    static boolean helperDccCourses2(ArrayList<String> subjectList, int subjectListIndex, Teacher t,Room[] rooms,Section[] sections){
+    static boolean helperDccCoursesAssignSubjects(ArrayList<String> subjectList, int subjectListIndex, Teacher t,Room[] rooms,Section[] sections){
 
         if(subjectListIndex>=subjectList.size()){
+            System.out.println("inside dcc course helper subject func last");
             return true;
         }
-        /*
-        int subjectHours = courseDataHM.get(subjectList.get(i)).tutHours;
-        int initialSection = getInitialSectionSaag(subjectList.get(i));
-        ArrayList<Integer> daysAssignedArray = new ArrayList<>();*/
-        return true;
+
+        System.out.println("inside dcc course helper subject func 1");
+        int subjectHours = courseDataHM.get(subjectList.get(subjectListIndex)).tutHours;
+        int initialSection = getInitialSectionSaag(subjectList.get(subjectListIndex));
+        ArrayList<Pair<Integer,Integer>> daysHoursAssignedArray = new ArrayList<>();
+
+        System.out.println("inside dcc course helper subject func 2");
+
+
+        int assignedToSection;
+        boolean isAssigned = false;
+        for(assignedToSection = initialSection;assignedToSection<initialSection+1;++assignedToSection){
+            if(sections[assignedToSection].subjects.containsKey(subjectList.get(subjectListIndex))){
+                System.out.println("inside dcc course helper subject func 3");
+                continue;
+            }
+            int [] daysLecturesAssigned = {0,0,0,0,0};
+
+            System.out.println("inside dcc course helper subject func 4");
+            for(int i=0;i<subjectHours;++i){
+
+
+                System.out.println("inside dcc course helper subject func 5 subject hours " + subjectHours);
+                boolean isAssigned2=false;
+                int [] D = new int[5];
+                int [] H = new int[10];
+                for(int d=0;d<5;++d){
+                    int classes = 10;
+                    for(int h=0;h<10;++h){
+                        if(t.facultyResponse.timeTable.timetable[d][h].equals("null") || t.facultyResponse.timeTable.timetable[d][h].equals("X")){
+                            classes--;
+                        }
+                    }
+                    D[d]=classes;
+                }
+                System.out.println("inside dcc course helper subject func 6");
+                for(int h =0 ;h<10;++h){
+                    int classes = 5;
+                    for(int d=0;d<5;++d){
+                        if(t.facultyResponse.timeTable.timetable[d][h].equals("null") || t.facultyResponse.timeTable.timetable[d][h].equals("X")){
+                            classes--;
+                        }
+                    }
+                    H[h]=classes;
+                }
+                System.out.println("inside dcc course helper subject func 7");
+
+                List<Pair<Integer, Integer>> DP = new ArrayList<Pair<Integer, Integer>>();
+                List<Pair<Integer, Integer>> HP = new ArrayList<Pair<Integer, Integer>>();
+                for(int j=0;j<5;++j){
+                    DP.add(new Pair<Integer, Integer>(D[j],j));
+                }
+
+
+                Collections.sort(DP, new Comparator<Pair<Integer, Integer>>() {
+                    @Override
+                    public int compare(final Pair<Integer, Integer> o1, final Pair<Integer, Integer> o2) {
+                        return (o2.getKey()-o1.getKey());
+                    }
+                });
+
+
+                //Arrays.sort(DP);
+                System.out.println("inside dcc course helper subject func 8");
+                for(int j=0;j<5;++j){
+                    for(int k=0;k<10;++k){
+                        HP.add(new Pair<Integer, Integer>(H[k],k));
+                    }
+                    Collections.sort(HP, new Comparator<Pair<Integer, Integer>>() {
+                        @Override
+                        public int compare(final Pair<Integer, Integer> o1, final Pair<Integer, Integer> o2) {
+                            return (o2.getKey()-o1.getKey());
+                        }
+                    });
+                    //Arrays.sort(HP);
+                    for(int k=0;k<10;++k){
+                        int newDay = DP.get(j).getValue();
+                        int newHour = HP.get(k).getValue();
+                        //**** D[newDay]<5 to make every day load of teacher to be max of 4
+                        //**** also add the constraint for the break between 12-2
+                        if(t.isFree(newDay,newHour) && sections[assignedToSection].isFree(newDay,newHour) && rooms[assignedToSection/2].isFree(newDay,newHour) && daysLecturesAssigned[newDay]<2 && D[newDay]<6){
+                            //assign classes to everything
+                            daysHoursAssignedArray.add(new Pair<>(newDay,newHour));
+                            t.assign(newDay,newHour,subjectList.get(subjectListIndex)+":"+((assignedToSection/2)+1)+ (assignedToSection%2==0?"A:":"B:") +"Lecture:" + assignedToSection/2);
+                            sections[assignedToSection].assign(newDay,newHour,subjectList.get(subjectListIndex)+":Lecture:"+assignedToSection/2+":"+t.facultyResponse.name);
+                            rooms[assignedToSection/2].assign(newDay, newHour, subjectList.get(subjectListIndex)+":"+((assignedToSection/2)+1)+ (assignedToSection%2==0?"A:":"B:") +"Lecture:"+"t.facultyResponse.name");
+                            isAssigned2=true;
+                            break;
+                        }
+                    }
+                    if(isAssigned2){
+                        break;
+                    }
+
+                }
+                System.out.println("inside dcc course helper subject func 9");
+                if(!isAssigned2){
+                    for(int k=0;k<daysHoursAssignedArray.size();++k){
+                        t.assign(daysHoursAssignedArray.get(k).getKey(),daysHoursAssignedArray.get(k).getValue(),"null");
+                        sections[assignedToSection].assign(daysHoursAssignedArray.get(k).getKey(),daysHoursAssignedArray.get(k).getValue(),"null");
+                        rooms[assignedToSection/2].assign(daysHoursAssignedArray.get(k).getKey(),daysHoursAssignedArray.get(k).getValue(),"null");
+                    }
+                    break;
+                }
+                if(isAssigned2 && i==subjectHours-1){
+                    isAssigned=true;
+                    break;
+                }
+
+            }
+            System.out.println("inside dcc course helper subject func 10");
+            if(isAssigned){
+                break;
+            }
+
+        }
+        System.out.println("inside dcc course helper subject func 11");
+        if(isAssigned){
+            sections[assignedToSection].subjects.put(subjectList.get(subjectListIndex),1);
+            System.out.println("inside dcc course helper subject func 12");
+            if(helperDccCoursesAssignSubjects(subjectList,subjectListIndex+1,t,rooms,sections)){
+                System.out.println("inside dcc course helper subject func 13");
+                return true;
+            }
+            //make everything null which is added to the room,section,teacher time table here
+            System.out.println("inside dcc course helper subject func 14");
+            for(int k=0;k<daysHoursAssignedArray.size();++k){
+                t.assign(daysHoursAssignedArray.get(k).getKey(),daysHoursAssignedArray.get(k).getValue(),"null");
+                sections[assignedToSection].assign(daysHoursAssignedArray.get(k).getKey(),daysHoursAssignedArray.get(k).getValue(),"null");
+                rooms[assignedToSection/2].assign(daysHoursAssignedArray.get(k).getKey(),daysHoursAssignedArray.get(k).getValue(),"null");
+            }
+            System.out.println("inside dcc course helper subject func 15");
+
+            return false;
+        }
+        System.out.println("inside dcc course helper subject func 16");
+        return false;
+
 
     }
 
@@ -869,7 +1023,7 @@ public class TimeTableGenerator {
         //assignMajorProj(teachers, sectionsArray);
 
         System.out.println("gleba in first function 2 call at 8");
-        assignDccCoursesPrev(teachers, rooms, sectionsArray);
+        assignDccCourses(teachers, rooms, sectionsArray);
 
 
         System.out.println("gleba in first function 2 call at 8.1");
