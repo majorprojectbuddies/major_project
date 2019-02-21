@@ -1,11 +1,15 @@
 package com.sss.classModel;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class OverallTT {
 
-    public ArrayList<FacultyResponse> facultyResponses = new ArrayList<>();
-    public ArrayList<Section> sections = new ArrayList<>();
-    public ArrayList<Room> rooms = new ArrayList<>();
+    public ArrayList<FacultyResponse> facultyResponses;
+    public ArrayList<Section> sections;
+    public ArrayList<Room> rooms;
+    public OverallTT(){
+        facultyResponses = new ArrayList<>();
+        sections = new ArrayList<>();
+        rooms = new ArrayList<>();
+    }
 }
