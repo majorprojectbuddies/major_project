@@ -9,6 +9,7 @@ public class Section {
     public TimeTable timeTable;
     public HashMap<String, Integer> subjects;
 
+
     public Section(String year, String secId) {
         this.year = year;
         this.secId = secId;
