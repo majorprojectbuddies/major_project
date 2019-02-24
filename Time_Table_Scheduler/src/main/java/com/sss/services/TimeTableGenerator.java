@@ -124,6 +124,42 @@ public class TimeTableGenerator {
 
             Teacher t = teachers[j];
 
+            boolean isNotAvailable = false;
+            for(int p=0;p<4;++p){
+
+                int continuousPrev = 0;
+                int continuousNext = 0;
+                int continuousPrevNext = 0;
+
+                if(hours[p]>1 && !(teachers[j].facultyResponse.timeTable.timetable[days[p]][hours[p]-1].equals("null") || teachers[j].facultyResponse.timeTable.timetable[days[p]][hours[p]-1].equals("X"))
+                        && !(teachers[j].facultyResponse.timeTable.timetable[days[p]][hours[p]-2].equals("null") || teachers[j].facultyResponse.timeTable.timetable[days[p]][hours[p]-2].equals("X"))){
+                    continuousPrev=2;
+                }
+
+                if(hours[p]<8 && !(teachers[j].facultyResponse.timeTable.timetable[days[p]][hours[p]+1].equals("null") || teachers[j].facultyResponse.timeTable.timetable[days[p]][hours[p]+1].equals("X"))
+                        && !(teachers[j].facultyResponse.timeTable.timetable[days[p]][hours[p]+2].equals("null") || teachers[j].facultyResponse.timeTable.timetable[days[p]][hours[p]+2].equals("X"))){
+                    continuousNext=2;
+                }
+
+                if(hours[p]>=1 && hours[p]<=8 &&  !(teachers[j].facultyResponse.timeTable.timetable[days[p]][hours[p]-1].equals("null") || teachers[j].facultyResponse.timeTable.timetable[days[p]][hours[p]-1].equals("X"))
+                        && !(teachers[j].facultyResponse.timeTable.timetable[days[p]][hours[p]+1].equals("null") || teachers[j].facultyResponse.timeTable.timetable[days[p]][hours[p]+1].equals("X"))){
+                    continuousPrevNext=2;
+                }
+
+                if(continuousNext>=2 || continuousPrev>=2 || continuousPrevNext>=2 ){
+                    isNotAvailable = true;
+                    break;
+                }
+
+            }
+
+            if(isNotAvailable){
+                continue;
+            }
+
+
+
+
             if ( (t.isFree(days[0], hours[0]) && t.isFree(days[1], hours[1])) &&
                     (t.isFree(days[2], hours[2]) && t.isFree(days[3], hours[3]))
                     && t.current1Batches < t.total1Batches) {
