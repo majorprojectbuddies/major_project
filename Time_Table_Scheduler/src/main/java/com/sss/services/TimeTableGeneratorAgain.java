@@ -4,6 +4,7 @@ import com.sss.classModel.*;
 import javafx.util.Pair;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,11 +15,11 @@ public class TimeTableGeneratorAgain {
     public static ArrayList<FirstYearGroup> firstYearData;
     public static ArrayList<PhdGroup> phdData;
     public static ArrayList<Section> sections;
-    public ArrayList<FacultyResponse> unfreezedTeachersData;
-    public ArrayList<FacultyResponse> freezedTeachersData;
-    public ArrayList<FirstYearGroup> freezedFirstYearData;
-    public ArrayList<FirstYearGroup> unfreezedFirstYearData;
-    public Map<String, Pair<Integer, Integer>> labSlotToBeAssigned;
+    public static ArrayList<FacultyResponse> unfreezedTeachersData;
+    public static ArrayList<FacultyResponse> freezedTeachersData;
+    public static ArrayList<FirstYearGroup> freezedFirstYearData;
+    public static ArrayList<FirstYearGroup> unfreezedFirstYearData;
+    public static Map<String, Pair<Integer, Integer>> labSlotToBeAssigned;
     public Room[] rooms;
 
     public TimeTableGeneratorAgain(ArrayList<FacultyResponse> teachersData,
@@ -104,21 +105,146 @@ public class TimeTableGeneratorAgain {
             for (int d = 0; d < 5; d++) {
                 for (int h = 0; h < 10; h++) {
                     if (!timetable[d][h].equals("null")) {
-                        String sub = timetable[d][h] + ":PHD:Lecture";
+                        String sub = timetable[d][h];
                         for (Teacher t : unfreezedTeachers) {
                             if (t.facultyResponse.subject1.equals(sub)) {
-                                t.assign(d, h, sub);
+                                t.assign(d, h, sub + ":PHD:Lecture");
                             }
                             if (t.facultyResponse.subject2.equals(sub)) {
-                                t.assign(d, h, sub);
+                                t.assign(d, h, sub + ":PHD:Lecture");
                             }
                             if (t.facultyResponse.subject3.equals(sub)) {
-                                t.assign(d, h, sub);
+                                t.assign(d, h, sub + ":PHD:Lecture");
                             }
                         }
                     }
                 }
             }
+        }
+    }
+
+    //ASSIGN FIRST YEAR
+    static void assignTeachersToFirstYear(Teacher[] unfreezedTeachers,Room[] rooms,Section[] sectionsArray){
+
+        int n = unfreezedTeachers.length;
+        Collections.shuffle(unfreezedFirstYearData);
+
+        int numOfFirstYearGroup = unfreezedFirstYearData.size();
+        int indexOfFirstYear = 0;
+        Boolean[] isAssignedGroup = new Boolean[unfreezedTeachers.length];
+        for(int i=0;i<isAssignedGroup.length;++i){
+            isAssignedGroup[i]=false;
+        }
+        while(!helperFirstYear(unfreezedTeachers,indexOfFirstYear,isAssignedGroup,numOfFirstYearGroup,rooms,sectionsArray)){
+            Collections.shuffle(unfreezedFirstYearData);
+        }
+    }
+
+    static boolean helperFirstYear(Teacher[] teachers,int indexOfFirstYear, Boolean[] isAssignedGroup, int numOfFirstYearGroup, Room[] rooms,Section[] sectionsArray){
+        if (indexOfFirstYear == numOfFirstYearGroup){
+
+// IMP IMP WORK NEED TO BE DONE HERE
+//            if(assignDecLabs(teachers, rooms[3], sectionsArray,rooms,sectionsArray)){
+//                return true;
+//            }
+//            return false;
+            return true;
+        }
+        FirstYearGroup firstYearGroup = unfreezedFirstYearData.get(indexOfFirstYear);
+        System.out.println(firstYearGroup.groupId);
+
+        String[][] timetable = firstYearGroup.timeTable.timetable;
+        int i = 0;
+        int[] days = new int[4];
+        int[] hours = new int[4];
+
+        for (int d = 0; d < 5; d++) {
+            for (int h = 0; h < 10; h++) {
+                if (!timetable[d][h].equals("null")) {
+                    days[i] = d;
+                    hours[i] = h;
+                    i++;
+                }
+            }
+        }
+        DaysHours daysHours = new DaysHours(days, hours);
+
+        int j =0;
+        for(;j<teachers.length;++j){
+
+            Teacher t = teachers[j];
+
+            if ( (t.isFree(days[0], hours[0]) && t.isFree(days[1], hours[1])) &&
+                    (t.isFree(days[2], hours[2]) && t.isFree(days[3], hours[3]))
+                    && t.current1Batches < t.total1Batches) {
+
+                boolean isNotAvailable = false;
+
+                for(int p=0;p<4;++p){
+
+                    int continuousPrev = 0;
+                    int continuousNext = 0;
+                    int continuousPrevNext = 0;
+
+                    if(hours[p]>1 && !(teachers[j].facultyResponse.timeTable.timetable[days[p]][hours[p]-1].equals("null") || teachers[j].facultyResponse.timeTable.timetable[days[p]][hours[p]-1].equals("X"))
+                            && !(teachers[j].facultyResponse.timeTable.timetable[days[p]][hours[p]-2].equals("null") || teachers[j].facultyResponse.timeTable.timetable[days[p]][hours[p]-2].equals("X"))){
+                        continuousPrev=2;
+                    }
+
+                    if(hours[p]<8 && !(teachers[j].facultyResponse.timeTable.timetable[days[p]][hours[p]+1].equals("null") || teachers[j].facultyResponse.timeTable.timetable[days[p]][hours[p]+1].equals("X"))
+                            && !(teachers[j].facultyResponse.timeTable.timetable[days[p]][hours[p]+2].equals("null") || teachers[j].facultyResponse.timeTable.timetable[days[p]][hours[p]+2].equals("X"))){
+                        continuousNext=2;
+                    }
+
+                    if(hours[p]>=1 && hours[p]<=8 &&  !(teachers[j].facultyResponse.timeTable.timetable[days[p]][hours[p]-1].equals("null") || teachers[j].facultyResponse.timeTable.timetable[days[p]][hours[p]-1].equals("X"))
+                            && !(teachers[j].facultyResponse.timeTable.timetable[days[p]][hours[p]+1].equals("null") || teachers[j].facultyResponse.timeTable.timetable[days[p]][hours[p]+1].equals("X"))){
+                        continuousPrevNext=2;
+                    }
+
+                    if(continuousNext>=2 || continuousPrev>=2 || continuousPrevNext>=2 ){
+                        isNotAvailable = true;
+                        break;
+                    }
+
+                }
+
+                if(isNotAvailable){
+                    continue;
+                }
+
+
+                t.current1Batches++;
+                t.assign(days[0], hours[0], "MA102:" + firstYearGroup.groupId + ":Lecture" + ":SPS");
+                t.assign(days[1], hours[1], "MA102:" + firstYearGroup.groupId + ":Lecture" + ":SPS");
+                t.assign(days[2], hours[2], "MA102:" + firstYearGroup.groupId + ":Lecture" + ":SPS");
+                t.assign(days[3], hours[3], "MA102:" + firstYearGroup.groupId + ":Lecture" + ":SPS");
+                if(helperFirstYear(teachers,indexOfFirstYear+1,isAssignedGroup,numOfFirstYearGroup,rooms,sectionsArray)) {
+                    return true;
+                }
+
+                t.current1Batches--;
+
+                t.assign(days[0], hours[0],"null");
+                t.assign(days[1], hours[1], "null");
+                t.assign(days[2], hours[2], "null");
+                t.assign(days[3], hours[3], "null");
+
+
+            }
+        }
+        if(j==teachers.length){
+            return false;
+        }
+        return false;
+    }
+
+    static class DaysHours {
+        int[] days;
+        int[] hours;
+
+        DaysHours(int[] days, int[] hours) {
+            this.days = days;
+            this.hours = hours;
         }
     }
 
@@ -142,13 +268,14 @@ public class TimeTableGeneratorAgain {
             sectionsArray[i] = sections.get(i);
         }
 
+
         //Functions callings will be done here
 
         assignElectives(sectionsArray, unfreezedTeachers, rooms);
 
         assignPhdLectures(unfreezedTeachers, rooms, sectionsArray);
 
-
+        assignTeachersToFirstYear(unfreezedTeachers,rooms,sectionsArray);
 
 
 
