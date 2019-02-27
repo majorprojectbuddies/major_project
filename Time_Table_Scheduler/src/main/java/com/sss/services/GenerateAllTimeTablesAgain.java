@@ -252,7 +252,7 @@ public class GenerateAllTimeTablesAgain {
                         }else{
 
                             //check if its a first year lecture--if so no need to do anything--skip it!
-                            if(breaks[0].equals("MA102")){
+                            if(breaks[0].equals("MA102") || breaks[0].equals("AM501")){
                                 continue;
                             }
                             //its a lecture so block the room accordingly

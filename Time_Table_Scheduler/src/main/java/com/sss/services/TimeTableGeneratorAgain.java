@@ -62,6 +62,7 @@ public class TimeTableGeneratorAgain {
     //format -  (MC318(SLOT-A):t2:Lecture:PAYAL)
     //format -  (MC318:t2:Lab)
 
+    //ASSIGN ELECTIVES
     static void assignElectives(Section[] sections, Teacher[] unfreezedTeachers, Room[] rooms) {
 
         for (int section = 0; section < sections.length; section += 2) {
@@ -94,6 +95,34 @@ public class TimeTableGeneratorAgain {
     }
 
 
+    //ASSIGN PHD LECTURES
+    //format -- (AM501:PHD:Lecture)
+    static void assignPhdLectures(Teacher[] unfreezedTeachers, Room[] rooms, Section[] sections) {
+        for (PhdGroup phdGroup : phdData) {
+            String[][] timetable = phdGroup.timeTable.timetable;
+
+            for (int d = 0; d < 5; d++) {
+                for (int h = 0; h < 10; h++) {
+                    if (!timetable[d][h].equals("null")) {
+                        String sub = timetable[d][h] + ":PHD:Lecture";
+                        for (Teacher t : unfreezedTeachers) {
+                            if (t.facultyResponse.subject1.equals(sub)) {
+                                t.assign(d, h, sub);
+                            }
+                            if (t.facultyResponse.subject2.equals(sub)) {
+                                t.assign(d, h, sub);
+                            }
+                            if (t.facultyResponse.subject3.equals(sub)) {
+                                t.assign(d, h, sub);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
     public OverallTT generateTimeTable() {
 
         System.out.println("inside generateTimeTable() function");
@@ -114,9 +143,10 @@ public class TimeTableGeneratorAgain {
         }
 
         //Functions callings will be done here
-        System.out.println("gonna assign electives");
+
         assignElectives(sectionsArray, unfreezedTeachers, rooms);
-        System.out.println("electives assigned");
+
+        assignPhdLectures(unfreezedTeachers, rooms, sectionsArray);
 
 
 
