@@ -13,6 +13,17 @@ public class Teacher {
     public int total1Batches;   // total first year batches to be given
     public int labHours;
 
+
+    public Teacher(){
+        this.facultyResponse=new FacultyResponse();
+        this.hoursToAssign = facultyResponse.noOfHours;
+        days = new boolean[5];
+        slots = new boolean[10];
+        this.current1Batches = 0;
+        this.total1Batches = 0;
+        this.labHours = this.hoursToAssign;
+    }
+
     public Teacher(FacultyResponse facultyResponse) {
 
         this.facultyResponse = facultyResponse;

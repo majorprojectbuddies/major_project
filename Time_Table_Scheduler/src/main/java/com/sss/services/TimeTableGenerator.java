@@ -367,7 +367,7 @@ public class TimeTableGenerator {
 
     }
 
-    static void assignLabs(Teacher[] teachers, Room lab, Section[] sections){
+    static boolean assignLabs(Teacher[] teachers, Room lab, Section[] sections,Room[] rooms,ArrayList<Teacher> teachersArrayList){
         HashSet<String> coursesWithLab = new HashSet<>();
 
         for (Teacher t : teachers) {
@@ -392,27 +392,215 @@ public class TimeTableGenerator {
             coursesWithLabList.add(sub);
         }
         Collections.shuffle(coursesWithLabList);
+        System.out.println("Labs function not helper" + coursesWithLabList.size());
+        if(helperLabs(coursesWithLabList,0,0,0,new Teacher(),new Teacher(),
+                teachersArrayList,rooms,sections,-1,-1,lab)){
+            return true;
+        }
+        return false;
 
     }
 
     static boolean helperLabs(ArrayList<String> coursesWithLabList,int courseWithLabsListIndex,int sectionIndex,
-                              int selectedTeacherIndex,Teacher teacher1,Teacher teacher2){
+                              int selectedTeacherIndex,Teacher teacher1,Teacher teacher2,ArrayList<Teacher> teachers,
+                              Room[] rooms,Section[] sections,int currD, int currH,Room lab){
         if(courseWithLabsListIndex>=coursesWithLabList.size()){
+            System.out.println("inside lab helper 1");
             return true;
         }
         else if(sectionIndex>1){
-            //return helperLabs
+            System.out.println("inside lab helper 2");
+
+            return helperLabs(coursesWithLabList,courseWithLabsListIndex+1,0,0,new Teacher(),
+                    new Teacher(),teachers,rooms,sections,-1,-1,lab);
         }
         else if(selectedTeacherIndex>1){
-            //return helperLabs
+            System.out.println("inside lab helper 3");
+
+            return helperLabs(coursesWithLabList,courseWithLabsListIndex,sectionIndex+1,0,new Teacher(),
+                    new Teacher(),teachers,rooms,sections,-1,-1,lab);
         }
         else if(selectedTeacherIndex==1){
+            System.out.println("inside lab helper 4");
+
+            int initialSection = getInitialSectionSaag(coursesWithLabList.get(courseWithLabsListIndex));
+            int sectionToAssign = initialSection + sectionIndex;
+
+
+
+            int j;
+            for(j = 0;j<teachers.size();++j){
+                Teacher teacher = teachers.get(j);
+                if(teachers.get(j)!= teacher1 && teachers.get(j).isFree(currD,currH) && teachers.get(j).labHours>=2){
+
+                    int numOfClasses = 0;
+                    for(int p =0;p<10;++p){
+                        if(!(teacher.facultyResponse.timeTable.timetable[currD][p].equals("null") ||
+                                teacher.facultyResponse.timeTable.timetable[currD][p].equals("X"))){
+                            numOfClasses++;
+                        }
+                    }
+                    if(numOfClasses>3){
+                        continue;
+                    }
+
+                    if(currH>2 && !teacher.isFree(currD,currH-1) && !teacher.isFree(currD,currH-2) && !teacher.isFree(currD,currH-3)){
+                        continue;
+                    }
+                    if(currH<6 && !teacher.isFree(currD,currH+2) && !teacher.isFree(currD,currH+3) && !teacher.isFree(currD,currH+4)){
+                        continue;
+                    }
+                    if(currH>1 && currH<8 && !teacher.isFree(currD,currH-1) && !teacher.isFree(currD,currH-2) && !teacher.isFree(currD,currH+2)){
+                        continue;
+                    }
+                    if(currH>0 && currH<7 && !teacher.isFree(currD,currH-1) && !teacher.isFree(currD,currH+2) && !teacher.isFree(currD,currH+3)){
+                        continue;
+                    }
+
+                    teacher2 = teachers.get(j);
+                    //assign lab here
+                    teachers.get(j).labHours-=2;
+
+
+                    teachers.get(j).assign(currD,currH, coursesWithLabList.get(courseWithLabsListIndex) +":"+ getTheYearAndSection(initialSection,sectionIndex)+":"+"Lab"+":"+"3");
+                    sections[sectionToAssign].assign(currD,currH,coursesWithLabList.get(courseWithLabsListIndex)+":"+"Lab"+":"+"3");
+                    rooms[3].assign(currD, currH, coursesWithLabList.get(courseWithLabsListIndex)+":"+getTheYearAndSection(initialSection,sectionIndex)+":"+"Lab");
+
+                    teachers.get(j).assign(currD,currH+1, coursesWithLabList.get(courseWithLabsListIndex) +":"+ getTheYearAndSection(initialSection,sectionIndex)+":"+"Lab"+":"+"3");
+                    sections[sectionToAssign].assign(currD,currH+1,coursesWithLabList.get(courseWithLabsListIndex)+":"+"Lab"+":"+"3");
+                    rooms[3].assign(currD, currH+1, coursesWithLabList.get(courseWithLabsListIndex)+":"+getTheYearAndSection(initialSection,sectionIndex)+":"+"Lab");
+
+
+                    if(helperLabs(coursesWithLabList,courseWithLabsListIndex,sectionIndex,selectedTeacherIndex+1,teacher1,
+                            teacher2,teachers,rooms,sections,currD,currH,lab)){
+                        return true;
+                    }
+                    teachers.get(j).labHours+=2;
+                    teacher2= new Teacher();
+                    //unassign everything here
+
+                    teachers.get(j).assign(currD,currH, "null");
+                    sections[sectionToAssign].assign(currD,currH,"null");
+                    rooms[3].assign(currD, currH, "null");
+
+                    teachers.get(j).assign(currD,currH+1, "null");
+                    sections[sectionToAssign].assign(currD,currH+1,"null");
+                    rooms[3].assign(currD, currH+1, "null");
+
+                }
+            }
 
         }
         else if(selectedTeacherIndex==0){
+            System.out.println("inside lab helper 5");
+
+            int initialSection = getInitialSectionSaag(coursesWithLabList.get(courseWithLabsListIndex));
+            int sectionToAssign = initialSection + sectionIndex;
+            for(int d = 0;d<5;++d){
+                for(int h= 0;h<9;++h){
+                    if(sections[sectionToAssign].isFree(d,h) && lab.isFree(d,h) &&
+                            sections[sectionToAssign].isFree(d,h+1) && lab.isFree(d,h+1)){
+                        int j;
+                        for(j = 0;j<teachers.size();++j){
+                            Teacher teacher = teachers.get(j);
+
+
+                            if(teachers.get(j).isFree(d,h) && teachers.get(j).labHours>=2){
+
+                                int numOfClasses = 0;
+                                for(int p =0;p<10;++p){
+                                    if(!(teacher.facultyResponse.timeTable.timetable[d][p].equals("null") ||
+                                            teacher.facultyResponse.timeTable.timetable[d][p].equals("X"))){
+                                        numOfClasses++;
+                                    }
+                                }
+                                if(numOfClasses>3){
+                                    continue;
+                                }
+
+                                boolean prev3 = false;
+                                boolean next3= false;
+                                boolean prev2next1 = false;
+                                boolean prev1next2= false;
+
+                                if(h>2 && !teacher.isFree(d,h-1) && !teacher.isFree(d,h-2) && !teacher.isFree(d,h-3)){
+                                    continue;
+                                }
+                                if(h<6 && !teacher.isFree(d,h+2) && !teacher.isFree(d,h+3) && !teacher.isFree(d,h+4)){
+                                    continue;
+                                }
+                                if(h>1 && h<8 && !teacher.isFree(d,h-1) && !teacher.isFree(d,h-2) && !teacher.isFree(d,h+2)){
+                                    continue;
+                                }
+                                if(h>0 && h<7 && !teacher.isFree(d,h-1) && !teacher.isFree(d,h+2) && !teacher.isFree(d,h+3)){
+                                    continue;
+                                }
+
+
+
+                                teachers.get(j).labHours-=2;
+                                teacher1 = teachers.get(j);
+                                //assign lab here
+
+
+
+                                teachers.get(j).assign(d,h, coursesWithLabList.get(courseWithLabsListIndex) +":"+ getTheYearAndSection(initialSection,sectionIndex)+":"+"Lab"+":"+"3");
+                                sections[sectionToAssign].assign(d,h,coursesWithLabList.get(courseWithLabsListIndex)+":"+"Lab"+":"+"3");
+                                rooms[3].assign(d, h, coursesWithLabList.get(courseWithLabsListIndex)+":"+getTheYearAndSection(initialSection,sectionIndex)+":"+"Lab");
+
+                                teachers.get(j).assign(d,h+1, coursesWithLabList.get(courseWithLabsListIndex) +":"+ getTheYearAndSection(initialSection,sectionIndex)+":"+"Lab"+":"+"3");
+                                sections[sectionToAssign].assign(d,h+1,coursesWithLabList.get(courseWithLabsListIndex)+":"+"Lab"+":"+"3");
+                                rooms[3].assign(d, h+1, coursesWithLabList.get(courseWithLabsListIndex)+":"+getTheYearAndSection(initialSection,sectionIndex)+":"+"Lab");
+
+
+
+                                if(helperLabs(coursesWithLabList,courseWithLabsListIndex,sectionIndex,selectedTeacherIndex+1,teacher1,
+                                        teacher2,teachers,rooms,sections,d,h,lab)){
+                                    return true;
+                                }
+
+                                teachers.get(j).labHours+=2;
+                                teacher1= new Teacher();
+                                //unassign everything here
+                                teachers.get(j).assign(d,h, "null");
+                                sections[sectionToAssign].assign(d,h,"null");
+                                rooms[3].assign(d, h, "null");
+
+                                teachers.get(j).assign(d,h+1, "null");
+                                sections[sectionToAssign].assign(d,h+1,"null");
+                                rooms[3].assign(d, h+1, "null");
+
+                            }
+                        }
+
+                    }
+                }
+            }
+            return false;
 
         }
         return true;
+    }
+
+    static String getTheYearAndSection(int year,int section){
+        String toReturn="";
+        if(year==0){
+            toReturn+="s";
+        }
+        else if(year==2){
+            toReturn+="t";
+        }
+        else if(year==4){
+            toReturn+="f";
+        }
+        if(section==0){
+            toReturn+="1";
+        }
+
+        else if(section==1){
+            toReturn+="2";
+        }
+        return toReturn;
     }
 
     static void assignLabsPrev(Teacher[] teachers, Room lab, Section[] sections) {
@@ -625,7 +813,20 @@ public class TimeTableGenerator {
 
         if(teacherIndex>=teacherArrayList.size()){
             System.out.println("helper dcc in if 1");
-            return true;
+            //new backtracking condition here
+            Teacher[] teachers = new Teacher[teacherArrayList.size()];
+            for(int i=0;i<teacherArrayList.size();++i){
+                teachers[i]=teacherArrayList.get(i);
+            }
+            ArrayList<Teacher> newTeacherArrayList = new ArrayList<>();
+            for(int i=0;i<teacherArrayList.size();++i){
+                newTeacherArrayList.add(teacherArrayList.get(i));
+            }
+            if(assignLabs(teachers, rooms[3], sections,rooms,newTeacherArrayList)){
+                return true;
+            }
+            return false;
+            //return true;
         }
         else if(subjectListIndex>=subjectListOfAllTeachers.get(teacherIndex).size()) {
 
@@ -1051,7 +1252,11 @@ public class TimeTableGenerator {
         System.out.println("gleba in first function 2 call at 9.2");
 
         // assign labs at last
-        assignLabsPrev(teachers, rooms[3], sectionsArray);
+        ArrayList<Teacher> newTeacherArrayList = new ArrayList<>();
+        for(int p=0;p<teachersData.size();++p){
+            newTeacherArrayList.add(teachers[p]);
+        }
+        //assignLabs(teachers, rooms[3], sectionsArray,rooms,newTeacherArrayList);
 
 
         OverallTT overallTT = new OverallTT();
