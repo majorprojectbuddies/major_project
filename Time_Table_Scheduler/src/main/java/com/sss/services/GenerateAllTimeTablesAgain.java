@@ -2,6 +2,7 @@ package com.sss.services;
 
 import com.sss.classModel.*;
 import com.sss.dao.SignupDao;
+import com.sss.model.Faculty;
 import javafx.util.Pair;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,7 @@ public class GenerateAllTimeTablesAgain {
     public ArrayList<FirstYearGroup> unfreezedFirstYearData;
     // map of (course name, pair of( day<0-mon,1-tue...>, start time(0-9am,1-10am...)))
     public Map<String, Pair<Integer, Integer>> labSlotToBeAssigned;
+    public Room[] rooms;
 
     public OverallTT getAllTimeTableAgainData(){
         System.out.println("overallTT IS faculty response size is : " + overallTT.facultyResponses.size());
@@ -66,7 +68,16 @@ public class GenerateAllTimeTablesAgain {
             System.out.println(facultyResponseobj.isFreezed);
             if(facultyResponseobj.isFreezed.equals(false)){
                 System.out.println("its unfreezed");
-                unfreezedTeachersData.add(facultyResponseobj);
+                //we need to send empty data of teacher (which was in db) not the filled one
+                Iterator fItr = teachersData.iterator();
+                while(fItr.hasNext()){
+                    FacultyResponse facultyResponseobjT = (FacultyResponse) fItr.next();
+                    if(facultyResponseobj.name.equals(facultyResponseobjT.name)){
+                        //we found the initial data of the teacher..so add this to the list of unfreezed teachers
+                        unfreezedTeachersData.add(facultyResponseobjT);
+                        break;
+                    }
+                }
             }else{
                 System.out.println("its freezed");
                 freezedTeachersData.add(facultyResponseobj);
@@ -163,7 +174,6 @@ public class GenerateAllTimeTablesAgain {
         //format -  (MC318:t2:Lab)
 
 
-
         //Fill Sections
         Iterator itrFreezedTeachersData2 = freezedTeachersData.iterator();
         while(itrFreezedTeachersData2.hasNext()){
@@ -217,7 +227,8 @@ public class GenerateAllTimeTablesAgain {
 
 
         //FILL ROOMS
-        Room[] rooms = new Room[4];
+
+        rooms = new Room[4];
         for (int i = 0; i < 4; i++) {
             rooms[i] = new Room(i);
         }
@@ -239,6 +250,11 @@ public class GenerateAllTimeTablesAgain {
                             String t_id = breaks[0] + ":" + breaks[1] + ":" + "Lab";
                             rooms[3].assign(i,j,t_id);
                         }else{
+
+                            //check if its a first year lecture--if so no need to do anything--skip it!
+                            if(breaks[0].equals("MA102")){
+                                continue;
+                            }
                             //its a lecture so block the room accordingly
                             //format for room with lecture -  (MC324:t1:Lecture:PAYAL)
                             String t_id = breaks[0] + ":" + breaks[1] + ":Lecture:" + facultyResponse.name;
@@ -248,7 +264,16 @@ public class GenerateAllTimeTablesAgain {
                 }
             }
         }
-        
-        return overallTT;
+
+
+        // Main Function Calling
+        TimeTableGeneratorAgain timeTableGeneratorAgain = new TimeTableGeneratorAgain(teachersData,courseDataList,
+                firstYearData,phdData,sections,unfreezedTeachersData,
+                freezedTeachersData, freezedFirstYearData,
+                unfreezedFirstYearData,labSlotToBeAssigned,rooms);
+
+        OverallTT dataToBeReturned = timeTableGeneratorAgain.generateTimeTable();
+
+        return dataToBeReturned;
     }
 }
