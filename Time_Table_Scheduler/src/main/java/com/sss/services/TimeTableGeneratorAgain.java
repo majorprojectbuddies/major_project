@@ -46,6 +46,22 @@ public class TimeTableGeneratorAgain {
 
     }
 
+    //FORMAT FOR TEACHER
+    //format -  (MC312(SLOT-A)lab:t1:Lab:COMPUTATION LAB)
+
+    //FORMAT FOR SECTIONS
+    //format -  (MC312(SLOT-A)LAB:Lab:COMPUTATION LAB)
+    //format -  (MC324:Lecture:1:PAYAL)
+    //format -  (MC318(SLOT-A):Lecture:2:PAYAL)
+    //format -  (MC318:Lab:COMPUTATION LAB)
+
+
+    //FORMAT FOR ROOMS
+    //format -  (MC312(SLOT-A)LAB:t2:Lab)
+    //format -  (MC324:t1:Lecture:PAYAL)
+    //format -  (MC318(SLOT-A):t2:Lecture:PAYAL)
+    //format -  (MC318:t2:Lab)
+
     static void assignElectives(Section[] sections, Teacher[] unfreezedTeachers, Room[] rooms) {
 
         for (int section = 0; section < sections.length; section += 2) {
@@ -55,16 +71,19 @@ public class TimeTableGeneratorAgain {
                         String sub = sections[section].timeTable.timetable[d][h];
                         for (Teacher t : unfreezedTeachers) {
                             if (t.facultyResponse.subject1.equals(sub)) {
-                                t.assign(d, h, (section / 2) + "-" + sub);
-                                rooms[section / 2].assign(d, h, sub + "-" + t.facultyResponse.facultyid);
+                                t.assign(d, h, sub + ":" + sections[section].secId + ":" +
+                                        "Lecture:" + (section/2));
+                                rooms[section / 2].assign(d, h, sub + ":" + sections[section].secId + ":Lecture:" + t.facultyResponse.facultyid);
                             }
                             if (t.facultyResponse.subject2.equals(sub)) {
-                                t.assign(d, h, (section / 2) + "-" + sub);
-                                rooms[section / 2].assign(d, h, sub + "-" + t.facultyResponse.facultyid);
+                                t.assign(d, h, sub + ":" + sections[section].secId + ":" +
+                                        "Lecture:" + (section/2));
+                                rooms[section / 2].assign(d, h, sub + ":" + sections[section].secId + ":Lecture:" + t.facultyResponse.facultyid);
                             }
                             if (t.facultyResponse.subject3.equals(sub)) {
-                                t.assign(d, h, (section / 2) + "-" + sub);
-                                rooms[section / 2].assign(d, h, sub + "-" + t.facultyResponse.facultyid);
+                                t.assign(d, h, sub + ":" + sections[section].secId + ":" +
+                                        "Lecture:" + (section/2));
+                                rooms[section / 2].assign(d, h, sub + ":" + sections[section].secId + ":Lecture:" + t.facultyResponse.facultyid);
                             }
 
                         }
@@ -95,12 +114,12 @@ public class TimeTableGeneratorAgain {
         }
 
         //Functions callings will be done here
-
+        System.out.println("gonna assign electives");
         assignElectives(sectionsArray, unfreezedTeachers, rooms);
+        System.out.println("electives assigned");
 
 
 
-        
 
 
 
