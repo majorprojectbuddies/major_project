@@ -86,7 +86,9 @@ public class TimeTableGenerator {
         for(int i=0;i<isAssignedGroup.length;++i){
             isAssignedGroup[i]=false;
         }
-        helperFirstYear(teachers,indexOfFirstYear,isAssignedGroup,numOfFirstYearGroup,rooms,sectionsArray);
+        while(!helperFirstYear(teachers,indexOfFirstYear,isAssignedGroup,numOfFirstYearGroup,rooms,sectionsArray)){
+            Collections.shuffle(firstYearData);
+        }
 
 
     }
@@ -124,45 +126,51 @@ public class TimeTableGenerator {
 
             Teacher t = teachers[j];
 
-            boolean isNotAvailable = false;
-            for(int p=0;p<4;++p){
-
-                int continuousPrev = 0;
-                int continuousNext = 0;
-                int continuousPrevNext = 0;
-
-                if(hours[p]>1 && !(teachers[j].facultyResponse.timeTable.timetable[days[p]][hours[p]-1].equals("null") || teachers[j].facultyResponse.timeTable.timetable[days[p]][hours[p]-1].equals("X"))
-                        && !(teachers[j].facultyResponse.timeTable.timetable[days[p]][hours[p]-2].equals("null") || teachers[j].facultyResponse.timeTable.timetable[days[p]][hours[p]-2].equals("X"))){
-                    continuousPrev=2;
-                }
-
-                if(hours[p]<8 && !(teachers[j].facultyResponse.timeTable.timetable[days[p]][hours[p]+1].equals("null") || teachers[j].facultyResponse.timeTable.timetable[days[p]][hours[p]+1].equals("X"))
-                        && !(teachers[j].facultyResponse.timeTable.timetable[days[p]][hours[p]+2].equals("null") || teachers[j].facultyResponse.timeTable.timetable[days[p]][hours[p]+2].equals("X"))){
-                    continuousNext=2;
-                }
-
-                if(hours[p]>=1 && hours[p]<=8 &&  !(teachers[j].facultyResponse.timeTable.timetable[days[p]][hours[p]-1].equals("null") || teachers[j].facultyResponse.timeTable.timetable[days[p]][hours[p]-1].equals("X"))
-                        && !(teachers[j].facultyResponse.timeTable.timetable[days[p]][hours[p]+1].equals("null") || teachers[j].facultyResponse.timeTable.timetable[days[p]][hours[p]+1].equals("X"))){
-                    continuousPrevNext=2;
-                }
-
-                if(continuousNext>=2 || continuousPrev>=2 || continuousPrevNext>=2 ){
-                    isNotAvailable = true;
-                    break;
-                }
-
-            }
-
-            if(isNotAvailable){
-                continue;
-            }
-
-
-
-
             if ( (t.isFree(days[0], hours[0]) && t.isFree(days[1], hours[1])) &&
                     (t.isFree(days[2], hours[2]) && t.isFree(days[3], hours[3]))
                     && t.current1Batches < t.total1Batches) {
+
+
+
+                boolean isNotAvailable = false;
+                /*for(int p=0;p<4;++p){
+                    teachers[j].facultyResponse.timeTable.timetable[days[p]][hours[p]]="temp";
+                }*/
+                for(int p=0;p<4;++p){
+
+                    int continuousPrev = 0;
+                    int continuousNext = 0;
+                    int continuousPrevNext = 0;
+
+                    if(hours[p]>1 && !(teachers[j].facultyResponse.timeTable.timetable[days[p]][hours[p]-1].equals("null") || teachers[j].facultyResponse.timeTable.timetable[days[p]][hours[p]-1].equals("X"))
+                            && !(teachers[j].facultyResponse.timeTable.timetable[days[p]][hours[p]-2].equals("null") || teachers[j].facultyResponse.timeTable.timetable[days[p]][hours[p]-2].equals("X"))){
+                        continuousPrev=2;
+                    }
+
+                    if(hours[p]<8 && !(teachers[j].facultyResponse.timeTable.timetable[days[p]][hours[p]+1].equals("null") || teachers[j].facultyResponse.timeTable.timetable[days[p]][hours[p]+1].equals("X"))
+                            && !(teachers[j].facultyResponse.timeTable.timetable[days[p]][hours[p]+2].equals("null") || teachers[j].facultyResponse.timeTable.timetable[days[p]][hours[p]+2].equals("X"))){
+                        continuousNext=2;
+                    }
+
+                    if(hours[p]>=1 && hours[p]<=8 &&  !(teachers[j].facultyResponse.timeTable.timetable[days[p]][hours[p]-1].equals("null") || teachers[j].facultyResponse.timeTable.timetable[days[p]][hours[p]-1].equals("X"))
+                            && !(teachers[j].facultyResponse.timeTable.timetable[days[p]][hours[p]+1].equals("null") || teachers[j].facultyResponse.timeTable.timetable[days[p]][hours[p]+1].equals("X"))){
+                        continuousPrevNext=2;
+                    }
+
+                    if(continuousNext>=2 || continuousPrev>=2 || continuousPrevNext>=2 ){
+                        isNotAvailable = true;
+                        break;
+                    }
+
+                }
+                /*for(int p=0;p<4;++p){
+                    teachers[j].facultyResponse.timeTable.timetable[days[p]][hours[p]]="null";
+                }*/
+
+                if(isNotAvailable){
+                    continue;
+                }
+
 
                 t.current1Batches++;
                 t.assign(days[0], hours[0], "MA102:" + firstYearGroup.groupId + ":Lecture" + ":SPS");
@@ -186,7 +194,7 @@ public class TimeTableGenerator {
         if(j==teachers.length){
             return false;
         }
-        return true;
+        return false;
     }
 
 
@@ -359,7 +367,55 @@ public class TimeTableGenerator {
 
     }
 
-    static void assignLabs(Teacher[] teachers, Room lab, Section[] sections) {
+    static void assignLabs(Teacher[] teachers, Room lab, Section[] sections){
+        HashSet<String> coursesWithLab = new HashSet<>();
+
+        for (Teacher t : teachers) {
+
+            String sub = t.facultyResponse.subject1;
+            if (sub.length() == 5 && courseDataHM.get(sub).containsLab) {
+                coursesWithLab.add(sub);
+            }
+            sub = t.facultyResponse.subject2;
+            if (sub.length() == 5 && courseDataHM.get(sub).containsLab) {
+                coursesWithLab.add(sub);
+            }
+            sub = t.facultyResponse.subject3;
+            if (sub.length() == 5 && courseDataHM.get(sub).containsLab) {
+                coursesWithLab.add(sub);
+            }
+        }
+
+        ArrayList<String> coursesWithLabList = new ArrayList<>();
+
+        for (String sub : coursesWithLab) {
+            coursesWithLabList.add(sub);
+        }
+        Collections.shuffle(coursesWithLabList);
+
+    }
+
+    static boolean helperLabs(ArrayList<String> coursesWithLabList,int courseWithLabsListIndex,int sectionIndex,
+                              int selectedTeacherIndex,Teacher teacher1,Teacher teacher2){
+        if(courseWithLabsListIndex>=coursesWithLabList.size()){
+            return true;
+        }
+        else if(sectionIndex>1){
+            //return helperLabs
+        }
+        else if(selectedTeacherIndex>1){
+            //return helperLabs
+        }
+        else if(selectedTeacherIndex==1){
+
+        }
+        else if(selectedTeacherIndex==0){
+
+        }
+        return true;
+    }
+
+    static void assignLabsPrev(Teacher[] teachers, Room lab, Section[] sections) {
 
         HashSet<String> coursesWithLab = new HashSet<>();
 
@@ -995,7 +1051,7 @@ public class TimeTableGenerator {
         System.out.println("gleba in first function 2 call at 9.2");
 
         // assign labs at last
-        assignLabs(teachers, rooms[3], sectionsArray);
+        assignLabsPrev(teachers, rooms[3], sectionsArray);
 
 
         OverallTT overallTT = new OverallTT();
@@ -1048,40 +1104,6 @@ public class TimeTableGenerator {
             }
         }
 
-
-//        int count = 0;
-//        int pid = 0;
-//        for (int i = 0; i < overallTT.facultyResponses.size(); ++i) {
-//
-//            for (int j = 0; j < 5; ++j) {
-//                for (int k = 0; k < 10; ++k) {
-//                    if (overallTT.facultyResponses.get(i).facultyid.equals("payal") && !overallTT.facultyResponses.get(i).timeTable.timetable[j][k].equals("-") && !overallTT.facultyResponses.get(i).timeTable.timetable[j][k].equals("X")) {
-//                        pid = i;
-//                        count++;
-//                    }
-//                }
-//            }
-//            if (count > 0) {
-//                break;
-//            }
-//        }
-//        System.out.println("payal count = " + count);
-//        if (count == 4) {
-//            boolean find = false;
-//            for (int j = 0; j < 5; ++j) {
-//                for (int k = 0; k < 9; ++k) {
-//                    if (overallTT.facultyResponses.get(pid).timeTable.timetable[j][k].equals("-") && overallTT.facultyResponses.get(pid).timeTable.timetable[j][k + 1].equals("-")) {
-//                        overallTT.facultyResponses.get(pid).timeTable.timetable[j][k] = "lab-3B-MC302 lab";
-//                        overallTT.facultyResponses.get(pid).timeTable.timetable[j][k + 1] = "lab-3B-MC302 lab";
-//                        find = true;
-//                        break;
-//                    }
-//                }
-//                if (find) {
-//                    break;
-//                }
-//            }
-//        }
 
         System.out.println("Size of First Year = " + firstYearData.size());
 
