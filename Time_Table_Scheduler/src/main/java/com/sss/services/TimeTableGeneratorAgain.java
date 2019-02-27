@@ -43,7 +43,38 @@ public class TimeTableGeneratorAgain {
         this.freezedTeachersData = freezedTeachersData;
         this.labSlotToBeAssigned = labSlotToBeAssigned;
         this.rooms = rooms;
+
     }
+
+    static void assignElectives(Section[] sections, Teacher[] unfreezedTeachers, Room[] rooms) {
+
+        for (int section = 0; section < sections.length; section += 2) {
+            for (int d = 0; d < 5; d++) {
+                for (int h = 0; h < 10; h++) {
+                    if (!sections[section].timeTable.timetable[d][h].equals("null")) {
+                        String sub = sections[section].timeTable.timetable[d][h];
+                        for (Teacher t : unfreezedTeachers) {
+                            if (t.facultyResponse.subject1.equals(sub)) {
+                                t.assign(d, h, (section / 2) + "-" + sub);
+                                rooms[section / 2].assign(d, h, sub + "-" + t.facultyResponse.facultyid);
+                            }
+                            if (t.facultyResponse.subject2.equals(sub)) {
+                                t.assign(d, h, (section / 2) + "-" + sub);
+                                rooms[section / 2].assign(d, h, sub + "-" + t.facultyResponse.facultyid);
+                            }
+                            if (t.facultyResponse.subject3.equals(sub)) {
+                                t.assign(d, h, (section / 2) + "-" + sub);
+                                rooms[section / 2].assign(d, h, sub + "-" + t.facultyResponse.facultyid);
+                            }
+
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
     public OverallTT generateTimeTable() {
 
         System.out.println("inside generateTimeTable() function");
@@ -64,6 +95,15 @@ public class TimeTableGeneratorAgain {
         }
 
         //Functions callings will be done here
+
+        assignElectives(sectionsArray, unfreezedTeachers, rooms);
+
+
+
+        
+
+
+
 
 
 
