@@ -108,17 +108,14 @@ public class TimeTableGenerator {
 
         int numOfFirstYearGroup = firstYearData.size();
         int indexOfFirstYear = 0;
-        Boolean[] isAssignedGroup = new Boolean[teachers.length];
-        for(int i=0;i<isAssignedGroup.length;++i){
-            isAssignedGroup[i]=false;
-        }
-        while(!helperFirstYear(teachers,indexOfFirstYear,isAssignedGroup,numOfFirstYearGroup,rooms,sectionsArray)){
+
+        while(!helperFirstYear(teachers,indexOfFirstYear,numOfFirstYearGroup,rooms,sectionsArray)){
             Collections.shuffle(firstYearData);
         }
 
     }
 
-    static boolean helperFirstYear(Teacher[] teachers,int indexOfFirstYear, Boolean[] isAssignedGroup, int numOfFirstYearGroup, Room[] rooms,Section[] sectionsArray){
+    static boolean helperFirstYear(Teacher[] teachers,int indexOfFirstYear, int numOfFirstYearGroup, Room[] rooms,Section[] sectionsArray){
         if (indexOfFirstYear == numOfFirstYearGroup){
 
             if(assignDecLabs(teachers, rooms[3], sectionsArray,rooms,sectionsArray)){
@@ -193,7 +190,7 @@ public class TimeTableGenerator {
                 t.assign(days[1], hours[1], "MA102:" + firstYearGroup.groupId + ":Lecture" + ":SPS");
                 t.assign(days[2], hours[2], "MA102:" + firstYearGroup.groupId + ":Lecture" + ":SPS");
                 t.assign(days[3], hours[3], "MA102:" + firstYearGroup.groupId + ":Lecture" + ":SPS");
-                if(helperFirstYear(teachers,indexOfFirstYear+1,isAssignedGroup,numOfFirstYearGroup,rooms,sectionsArray)) {
+                if(helperFirstYear(teachers,indexOfFirstYear+1,numOfFirstYearGroup,rooms,sectionsArray)) {
                     return true;
                 }
 
@@ -324,10 +321,14 @@ public class TimeTableGenerator {
                     if (teachers[k].isFree(d, h) && teachers[k].isFree(d, h + 1)
                             && teachers[k].labHours >= 2 ) {
 
-                        teachers[j].assign(d, h, sub + ":Lab:" + "3");
-                        teachers[j].assign(d, h + 1, sub + ":Lab:" + "3");
-                        teachers[k].assign(d, h, sub + ":Lab:" + "3");
-                        teachers[k].assign(d, h + 1, sub + ":Lab:" + "3");
+                        teachers[j].assign(d, h, sub + ":" +sections[sectionIndexArray.get(sectionIndex)].secId + "-"+
+                                sections[sectionIndexArray.get(sectionIndex)+1].secId + ":Lab:" + "3");
+                        teachers[j].assign(d, h + 1, sub + ":" + sections[sectionIndexArray.get(sectionIndex)].secId + "-"+
+                                sections[sectionIndexArray.get(sectionIndex)+1].secId + ":Lab:" + "3");
+                        teachers[k].assign(d, h, sub + ":" + sections[sectionIndexArray.get(sectionIndex)].secId + "-"+
+                                sections[sectionIndexArray.get(sectionIndex)+1].secId + ":Lab:" + "3");
+                        teachers[k].assign(d, h + 1, sub + ":" + sections[sectionIndexArray.get(sectionIndex)].secId + "-"+
+                                sections[sectionIndexArray.get(sectionIndex)+1].secId + ":Lab:" + "3");
 
                         lab.assign(d, h, sub + ":"+ sections[sectionIndexArray.get(sectionIndex)].secId + "-"+
                                 sections[sectionIndexArray.get(sectionIndex)+1].secId + ":Lab");
