@@ -75,6 +75,7 @@ public class TimeTableGeneratorAgain {
                                 t.assign(d, h, sub + ":" + sections[section].secId + ":" +
                                         "Lecture:" + (section/2));
                                 rooms[section / 2].assign(d, h, sub + ":" + sections[section].secId + ":Lecture:" + t.facultyResponse.facultyid);
+
                             }
                             if (t.facultyResponse.subject2.equals(sub)) {
                                 t.assign(d, h, sub + ":" + sections[section].secId + ":" +
