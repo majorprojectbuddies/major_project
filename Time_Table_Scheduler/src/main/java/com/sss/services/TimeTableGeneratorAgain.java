@@ -127,7 +127,6 @@ public class TimeTableGeneratorAgain {
     //ASSIGN FIRST YEAR
     static void assignTeachersToFirstYear(Teacher[] unfreezedTeachers,Room[] rooms,Section[] sectionsArray){
 
-        int n = unfreezedTeachers.length;
         Collections.shuffle(unfreezedFirstYearData);
 
         int numOfFirstYearGroup = unfreezedFirstYearData.size();
@@ -209,7 +208,6 @@ public class TimeTableGeneratorAgain {
                     continue;
                 }
 
-
                 t.current1Batches++;
                 t.assign(days[0], hours[0], "MA102:" + firstYearGroup.groupId + ":Lecture" + ":SPS");
                 t.assign(days[1], hours[1], "MA102:" + firstYearGroup.groupId + ":Lecture" + ":SPS");
@@ -226,7 +224,6 @@ public class TimeTableGeneratorAgain {
                 t.assign(days[2], hours[2], "null");
                 t.assign(days[3], hours[3], "null");
 
-
             }
         }
         if(j==teachers.length){
@@ -234,7 +231,6 @@ public class TimeTableGeneratorAgain {
         }
         return false;
     }
-
 
 
     public OverallTT generateTimeTable() {
@@ -264,14 +260,6 @@ public class TimeTableGeneratorAgain {
         assignPhdLectures(unfreezedTeachers, rooms, sectionsArray);
 
         assignTeachersToFirstYear(unfreezedTeachers,rooms,sectionsArray);
-
-
-
-
-
-
-
-
 
         //returning the overallTT work done here
 
