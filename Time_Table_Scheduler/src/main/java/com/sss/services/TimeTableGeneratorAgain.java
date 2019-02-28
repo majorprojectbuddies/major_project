@@ -231,7 +231,7 @@ public class TimeTableGeneratorAgain {
         }
         return false;
     }
-    
+
 
     public OverallTT generateTimeTable() {
 
