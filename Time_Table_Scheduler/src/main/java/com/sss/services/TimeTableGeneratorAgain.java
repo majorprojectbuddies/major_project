@@ -127,21 +127,17 @@ public class TimeTableGeneratorAgain {
     //ASSIGN FIRST YEAR
     static void assignTeachersToFirstYear(Teacher[] unfreezedTeachers,Room[] rooms,Section[] sectionsArray){
 
-        int n = unfreezedTeachers.length;
         Collections.shuffle(unfreezedFirstYearData);
 
         int numOfFirstYearGroup = unfreezedFirstYearData.size();
         int indexOfFirstYear = 0;
-        Boolean[] isAssignedGroup = new Boolean[unfreezedTeachers.length];
-        for(int i=0;i<isAssignedGroup.length;++i){
-            isAssignedGroup[i]=false;
-        }
-        while(!helperFirstYear(unfreezedTeachers,indexOfFirstYear,isAssignedGroup,numOfFirstYearGroup,rooms,sectionsArray)){
+
+        while(!helperFirstYear(unfreezedTeachers,indexOfFirstYear,numOfFirstYearGroup,rooms,sectionsArray)){
             Collections.shuffle(unfreezedFirstYearData);
         }
     }
 
-    static boolean helperFirstYear(Teacher[] teachers,int indexOfFirstYear, Boolean[] isAssignedGroup, int numOfFirstYearGroup, Room[] rooms,Section[] sectionsArray){
+    static boolean helperFirstYear(Teacher[] teachers,int indexOfFirstYear, int numOfFirstYearGroup, Room[] rooms,Section[] sectionsArray){
         if (indexOfFirstYear == numOfFirstYearGroup){
 
 // IMP IMP WORK NEED TO BE DONE HERE
@@ -168,7 +164,6 @@ public class TimeTableGeneratorAgain {
                 }
             }
         }
-        DaysHours daysHours = new DaysHours(days, hours);
 
         int j =0;
         for(;j<teachers.length;++j){
@@ -213,13 +208,12 @@ public class TimeTableGeneratorAgain {
                     continue;
                 }
 
-
                 t.current1Batches++;
                 t.assign(days[0], hours[0], "MA102:" + firstYearGroup.groupId + ":Lecture" + ":SPS");
                 t.assign(days[1], hours[1], "MA102:" + firstYearGroup.groupId + ":Lecture" + ":SPS");
                 t.assign(days[2], hours[2], "MA102:" + firstYearGroup.groupId + ":Lecture" + ":SPS");
                 t.assign(days[3], hours[3], "MA102:" + firstYearGroup.groupId + ":Lecture" + ":SPS");
-                if(helperFirstYear(teachers,indexOfFirstYear+1,isAssignedGroup,numOfFirstYearGroup,rooms,sectionsArray)) {
+                if(helperFirstYear(teachers,indexOfFirstYear+1,numOfFirstYearGroup,rooms,sectionsArray)) {
                     return true;
                 }
 
@@ -230,7 +224,6 @@ public class TimeTableGeneratorAgain {
                 t.assign(days[2], hours[2], "null");
                 t.assign(days[3], hours[3], "null");
 
-
             }
         }
         if(j==teachers.length){
@@ -238,17 +231,7 @@ public class TimeTableGeneratorAgain {
         }
         return false;
     }
-
-    static class DaysHours {
-        int[] days;
-        int[] hours;
-
-        DaysHours(int[] days, int[] hours) {
-            this.days = days;
-            this.hours = hours;
-        }
-    }
-
+    
 
     public OverallTT generateTimeTable() {
 
@@ -277,14 +260,6 @@ public class TimeTableGeneratorAgain {
         assignPhdLectures(unfreezedTeachers, rooms, sectionsArray);
 
         assignTeachersToFirstYear(unfreezedTeachers,rooms,sectionsArray);
-
-
-
-
-
-
-
-
 
         //returning the overallTT work done here
 

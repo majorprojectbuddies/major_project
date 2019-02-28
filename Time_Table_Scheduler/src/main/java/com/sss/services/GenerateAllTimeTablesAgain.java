@@ -173,7 +173,7 @@ public class GenerateAllTimeTablesAgain {
         //format -  (MC318(SLOT-A):t2:Lecture:PAYAL)
         //format -  (MC318:t2:Lab)
 
-
+        System.out.println("filling sec");
         //Fill Sections
         Iterator itrFreezedTeachersData2 = freezedTeachersData.iterator();
         while(itrFreezedTeachersData2.hasNext()){
@@ -189,23 +189,28 @@ public class GenerateAllTimeTablesAgain {
                         //format for teacher -  (MC312(SLOT-A)lab:t1:Lab:COMPUTATION LAB)
                         if(breaks[2].equals("Lab")){
                             //its a lab
-                            Iterator secItr = sections.iterator();
-                            while(secItr.hasNext()) {
-                                Section sec = (Section) secItr.next();
-                                if (sec.secId.equals(breaks[1])) {
-                                    //check if its a elective lab or normal lab
-                                    if (breaks[0].contains("lab")) {
-                                        //its an elective lab
-                                        //format of sec for elective lab-  (MC312(SLOT-A)lab:Lab:COMPUTATION LAB)
-                                        sec.timeTable.timetable[i][j] = breaks[0] + ":Lab" + ":3";
-                                    } else {
-                                        //its a normal lab
-                                        //format of sec for normal lab -  (MC318:Lab:COMPUTATION LAB)
-                                        sec.timeTable.timetable[i][j] = breaks[0] + ":Lab" + ":3";
+                            String[] breaksLab = breaks[1].split("-");
+                            for(int l=0;l<breaksLab.length;l++){
+                                String tempSec = breaksLab[l];
+                                Iterator secItr = sections.iterator();
+                                while(secItr.hasNext()) {
+                                    Section sec = (Section) secItr.next();
+                                    if (sec.secId.equals(tempSec)) {
+                                        //check if its a elective lab or normal lab
+                                        if (breaks[0].contains("lab")) {
+                                            //its an elective lab
+                                            //format of sec for elective lab-  (MC312(SLOT-A)lab:Lab:COMPUTATION LAB)
+                                            sec.timeTable.timetable[i][j] = breaks[0] + ":Lab" + ":3";
+                                        } else {
+                                            //its a normal lab
+                                            //format of sec for normal lab -  (MC318:Lab:COMPUTATION LAB)
+                                            sec.timeTable.timetable[i][j] = breaks[0] + ":Lab" + ":3";
+                                        }
+                                        break;
                                     }
-                                    break;
                                 }
                             }
+
                         }else{
                             //its a lecture
                             Iterator secItr = sections.iterator();
@@ -223,11 +228,11 @@ public class GenerateAllTimeTablesAgain {
                 }
             }
         }
-
+        System.out.println("filling sec compp");
 
 
         //FILL ROOMS
-
+        System.out.println("filling rooms");
         rooms = new Room[4];
         for (int i = 0; i < 4; i++) {
             rooms[i] = new Room(i);
@@ -264,14 +269,15 @@ public class GenerateAllTimeTablesAgain {
                 }
             }
         }
-
+        System.out.println("filling rooms comp");
 
         // Main Function Calling
+        System.out.println("main func prep");
         TimeTableGeneratorAgain timeTableGeneratorAgain = new TimeTableGeneratorAgain(teachersData,courseDataList,
                 firstYearData,phdData,sections,unfreezedTeachersData,
                 freezedTeachersData, freezedFirstYearData,
                 unfreezedFirstYearData,labSlotToBeAssigned,rooms);
-
+        System.out.println("main func called");
         OverallTT dataToBeReturned = timeTableGeneratorAgain.generateTimeTable();
 
         return dataToBeReturned;
