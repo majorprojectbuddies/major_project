@@ -239,22 +239,38 @@ public class TimeTableGenerator {
         int d=0,h=0;
         String sub="";
         boolean isFound = false;
-        for (d = day; d < 5; d++) {
-            for (h = hour; h < 10; h++) {
-                if (!sections[sectionIndexArray.get(sectionIndex)].timeTable.timetable[d][h].equals("null") && sections[sectionIndexArray.get(sectionIndex)].timeTable.timetable[d][h].length() > 14 && sections[sectionIndexArray.get(sectionIndex)].timeTable.timetable[d][h].substring(13).equals("lab")) {
-                    System.out.println("gleba dec lab funciton " + sections[sectionIndexArray.get(sectionIndex)].timeTable.timetable[d][h].substring(13));
-                    sub = sections[sectionIndexArray.get(sectionIndex)].timeTable.timetable[d][h];
-                    System.out.println("gleba sub found" + sub);
-                    isFound = true;
-                    break;
-                }
 
-            }
-            if(isFound){
+        for(h= hour;h<10;++h){
+            if (!sections[sectionIndexArray.get(sectionIndex)].timeTable.timetable[d][h].equals("null") && sections[sectionIndexArray.get(sectionIndex)].timeTable.timetable[d][h].length() > 14 && sections[sectionIndexArray.get(sectionIndex)].timeTable.timetable[d][h].substring(13).equals("lab")) {
+                System.out.println("gleba dec lab funciton " + sections[sectionIndexArray.get(sectionIndex)].timeTable.timetable[d][h].substring(13));
+                sub = sections[sectionIndexArray.get(sectionIndex)].timeTable.timetable[d][h];
+                System.out.println("gleba sub found" + sub);
+                isFound = true;
                 break;
             }
         }
+        
+        if(!isFound){
+            for (d = day+1; d < 5; d++) {
+                for (h = 0; h < 10; h++) {
+                    System.out.println("new gleba "+ d+ " "+h+ " "+ sections[sectionIndexArray.get(sectionIndex)].timeTable.timetable[d][h]);
+                    if (!sections[sectionIndexArray.get(sectionIndex)].timeTable.timetable[d][h].equals("null") && sections[sectionIndexArray.get(sectionIndex)].timeTable.timetable[d][h].length() > 14 && sections[sectionIndexArray.get(sectionIndex)].timeTable.timetable[d][h].substring(13).equals("lab")) {
+                        System.out.println("gleba dec lab funciton " + sections[sectionIndexArray.get(sectionIndex)].timeTable.timetable[d][h].substring(13));
+                        sub = sections[sectionIndexArray.get(sectionIndex)].timeTable.timetable[d][h];
+                        System.out.println("gleba sub found" + sub);
+                        isFound = true;
+                        break;
+                    }
+
+                }
+                if(isFound){
+                    break;
+                }
+            }
+        }
+
         if(d==5){
+
             return helperDecLabs(teachers,lab,sections,0,0,sectionIndex+1,sectionIndexArray,rooms,sectionsArray);
         }
         System.out.println("saags " + sectionIndexArray.get(sectionIndex) + " " + d + " " + h);
@@ -335,6 +351,11 @@ public class TimeTableGenerator {
                         lab.assign(d, h+1, sub + ":"+ sections[sectionIndexArray.get(sectionIndex)].secId + "-"+
                                 sections[sectionIndexArray.get(sectionIndex)+1].secId + ":Lab");
 
+                        sections[sectionIndexArray.get(sectionIndex)].assign(d,h,sub + ":Lab:3");
+                        sections[sectionIndexArray.get(sectionIndex)].assign(d,h+1,sub + ":Lab:3");
+
+                        sections[sectionIndexArray.get(sectionIndex)+1].assign(d,h,sub + ":Lab:3");
+                        sections[sectionIndexArray.get(sectionIndex)+1].assign(d,h+1,sub + ":Lab:3");
 
                         teachers[j].labHours -= 2;
                         teachers[k].labHours -= 2;
@@ -351,6 +372,12 @@ public class TimeTableGenerator {
 
                         lab.assign(d, h, "null");
                         lab.assign(d, h + 1, "null");
+
+                        sections[sectionIndexArray.get(sectionIndex)].assign(d,h,sub);
+                        sections[sectionIndexArray.get(sectionIndex)].assign(d,h+1,sub);
+
+                        sections[sectionIndexArray.get(sectionIndex)+1].assign(d,h,sub);
+                        sections[sectionIndexArray.get(sectionIndex)+1].assign(d,h+1,sub);
 
                         teachers[j].labHours += 2;
                         teachers[k].labHours += 2;
