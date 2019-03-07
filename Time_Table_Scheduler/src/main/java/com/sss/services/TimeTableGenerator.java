@@ -118,6 +118,19 @@ public class TimeTableGenerator {
     static boolean helperFirstYear(Teacher[] teachers,int indexOfFirstYear, int numOfFirstYearGroup, Room[] rooms,Section[] sectionsArray){
         if (indexOfFirstYear == numOfFirstYearGroup){
 
+            for(int i=0;i<teachers.length;++i){
+                if(teachers[i].facultyResponse.name.equals("DK")){
+                    System.out.println("Printing timetable in first year ");
+                    for(int j=0;j<5;++j){
+                        for(int k=0;k<10;++k){
+                            System.out.print(teachers[i].facultyResponse.timeTable.timetable[j][k] + "$$$");
+                        }
+                        System.out.println("");
+                    }
+                    break;
+                }
+            }
+
             if(assignDecLabs(teachers, rooms[3], sectionsArray,rooms,sectionsArray)){
                 return true;
             }
@@ -230,6 +243,20 @@ public class TimeTableGenerator {
 
         if(sectionIndex>=sectionIndexArray.size()){
 
+
+            for(int i=0;i<teachers.length;++i){
+                if(teachers[i].facultyResponse.name.equals("DK")){
+                    System.out.println("Printing timetable in dec labs ");
+                    for(int j=0;j<5;++j){
+                        for(int k=0;k<10;++k){
+                            System.out.print(teachers[i].facultyResponse.timeTable.timetable[j][k] + "$$$");
+                        }
+                        System.out.println("");
+                    }
+                    break;
+                }
+            }
+
             if(assignDccCourses(teachers, rooms, sectionsArray)){
                 return true;
             }
@@ -249,7 +276,7 @@ public class TimeTableGenerator {
                 break;
             }
         }
-        
+
         if(!isFound){
             for (d = day+1; d < 5; d++) {
                 for (h = 0; h < 10; h++) {
@@ -402,6 +429,7 @@ public class TimeTableGenerator {
         ArrayList<Teacher> teacherArrayList = new ArrayList<>();
         for(int i=0;i<teachers.length;++i){
             teacherArrayList.add(teachers[i]);
+            teacherArrayList.get(i).facultyResponse.timeTable.timetable=teachers[i].facultyResponse.timeTable.timetable;
         }
         Collections.shuffle(teacherArrayList);
 
@@ -471,6 +499,24 @@ public class TimeTableGenerator {
             for(int i=0;i<teacherArrayList.size();++i){
                 newTeacherArrayList.add(teacherArrayList.get(i));
             }
+
+
+
+            for(int i=0;i<teachers.length;++i){
+                if(teachers[i].facultyResponse.name.equals("DK")){
+                    System.out.println("Printing timetable in dcc courses ");
+                    for(int j=0;j<5;++j){
+                        for(int k=0;k<10;++k){
+                            System.out.print(teachers[i].facultyResponse.timeTable.timetable[j][k] + "$$$");
+                        }
+                        System.out.println("");
+                    }
+                    break;
+                }
+            }
+
+
+
             if(assignLabs(teachers, rooms[3], sections,rooms,newTeacherArrayList)){
                 return true;
             }
@@ -582,43 +628,48 @@ public class TimeTableGenerator {
                     int continuousLecturesNext = 0;
                     int continuousLecturesPrevNext = 0;
 
-                    if(k-1>=0){
-                        if(!(teacherArrayList.get(teacherIndex).facultyResponse.timeTable.timetable[j][k-1].equals("null")||
-                                teacherArrayList.get(teacherIndex).facultyResponse.timeTable.timetable[j][k-1].equals("X"))){
+                    if(k>1){
+                        if(!(teacherArrayList.get(teacherIndex).facultyResponse.timeTable.timetable[newDay][k-1].equals("null")||
+                                teacherArrayList.get(teacherIndex).facultyResponse.timeTable.timetable[newDay][k-1].equals("X"))){
+                            continuousLecturesPrev++;
+
+                        }
+                        System.out.println("CP "+continuousLecturesPrev+" "+teacherArrayList.get(teacherIndex).facultyResponse.timeTable.timetable[newDay][k-1] );
+                        if(!(teacherArrayList.get(teacherIndex).facultyResponse.timeTable.timetable[newDay][k-2].equals("null")||
+                                teacherArrayList.get(teacherIndex).facultyResponse.timeTable.timetable[newDay][k-2].equals("X"))){
                             continuousLecturesPrev++;
                         }
-                    }
-                    if(k-2>=0){
-                        if(!(teacherArrayList.get(teacherIndex).facultyResponse.timeTable.timetable[j][k-2].equals("null")||
-                                teacherArrayList.get(teacherIndex).facultyResponse.timeTable.timetable[j][k-2].equals("X"))){
-                            continuousLecturesPrev++;
-                        }
+                        System.out.println("CP "+continuousLecturesPrev+" "+teacherArrayList.get(teacherIndex).facultyResponse.timeTable.timetable[newDay][k-2]);
                     }
 
-                    if(k+1<10){
-                        if(!(teacherArrayList.get(teacherIndex).facultyResponse.timeTable.timetable[j][k+1].equals("null")||
-                                teacherArrayList.get(teacherIndex).facultyResponse.timeTable.timetable[j][k+1].equals("X"))){
+                    if(k<8){
+                        if(!(teacherArrayList.get(teacherIndex).facultyResponse.timeTable.timetable[newDay][k+1].equals("null")||
+                                teacherArrayList.get(teacherIndex).facultyResponse.timeTable.timetable[newDay][k+1].equals("X"))){
                             continuousLecturesNext++;
                         }
-                    }
-                    if(k+2<10){
-                        if(!(teacherArrayList.get(teacherIndex).facultyResponse.timeTable.timetable[j][k+2].equals("null")||
-                                teacherArrayList.get(teacherIndex).facultyResponse.timeTable.timetable[j][k+2].equals("X"))){
+                        System.out.println("Cn "+continuousLecturesNext+" "+teacherArrayList.get(teacherIndex).facultyResponse.timeTable.timetable[newDay][k+1]);
+                        if(!(teacherArrayList.get(teacherIndex).facultyResponse.timeTable.timetable[newDay][k+2].equals("null")||
+                                teacherArrayList.get(teacherIndex).facultyResponse.timeTable.timetable[newDay][k+2].equals("X"))){
                             continuousLecturesNext++;
                         }
+                        System.out.println("Cn "+continuousLecturesNext+" "+teacherArrayList.get(teacherIndex).facultyResponse.timeTable.timetable[newDay][k+2]);
                     }
 
-                    if(k-1>=0){
-                        if(!(teacherArrayList.get(teacherIndex).facultyResponse.timeTable.timetable[j][k-1].equals("null")||
-                                teacherArrayList.get(teacherIndex).facultyResponse.timeTable.timetable[j][k-1].equals("X"))){
+                    if(k>0){
+                        if(!(teacherArrayList.get(teacherIndex).facultyResponse.timeTable.timetable[newDay][k-1].equals("null")||
+                                teacherArrayList.get(teacherIndex).facultyResponse.timeTable.timetable[newDay][k-1].equals("X"))){
                             continuousLecturesPrevNext++;
                         }
+                        System.out.println("CPn "+continuousLecturesPrevNext+" "+teacherArrayList.get(teacherIndex).facultyResponse.timeTable.timetable[newDay][k-1]);
+
                     }
-                    if(k+1<10){
-                        if(!(teacherArrayList.get(teacherIndex).facultyResponse.timeTable.timetable[j][k+1].equals("null")||
-                                teacherArrayList.get(teacherIndex).facultyResponse.timeTable.timetable[j][k+1].equals("X"))){
+                    if(k<9){
+                        if(!(teacherArrayList.get(teacherIndex).facultyResponse.timeTable.timetable[newDay][k+1].equals("null")||
+                                teacherArrayList.get(teacherIndex).facultyResponse.timeTable.timetable[newDay][k+1].equals("X"))){
                             continuousLecturesPrevNext++;
                         }
+                        System.out.println("CPn "+continuousLecturesPrevNext+" "+teacherArrayList.get(teacherIndex).facultyResponse.timeTable.timetable[newDay][k+1]);
+
                     }
 
                     if(continuousLecturesPrev>=2 || continuousLecturesNext>=2 || continuousLecturesPrevNext>=2){
@@ -636,7 +687,7 @@ public class TimeTableGenerator {
                         sections[(getInitialSectionSaag(subjectListOfAllTeachers.get(teacherIndex).get(subjectListIndex)) + sectionPassed)].assign(newDay,newHour,subjectListOfAllTeachers.get(teacherIndex).get(subjectListIndex)+":Lecture:"+(getInitialSectionSaag(subjectListOfAllTeachers.get(teacherIndex).get(subjectListIndex)) + sectionPassed)/2+":"+teacherArrayList.get(teacherIndex).facultyResponse.name);
                         rooms[(getInitialSectionSaag(subjectListOfAllTeachers.get(teacherIndex).get(subjectListIndex)) + sectionPassed)/2].assign(newDay, newHour, subjectListOfAllTeachers.get(teacherIndex).get(subjectListIndex)+":"+((((getInitialSectionSaag(subjectListOfAllTeachers.get(teacherIndex).get(subjectListIndex)) + sectionPassed)/2)+2)==2?"s":((((getInitialSectionSaag(subjectListOfAllTeachers.get(teacherIndex).get(subjectListIndex)) + sectionPassed)/2)+2)==3)?"t":"f")+ ((getInitialSectionSaag(subjectListOfAllTeachers.get(teacherIndex).get(subjectListIndex)) + sectionPassed)%2==0?"1:":"2:") +"Lecture:"+"t.facultyResponse.name");
 
-                        System.out.println("assigned to teacher " + teacherArrayList.get(teacherIndex).facultyResponse.name + " " + subjectListOfAllTeachers.get(teacherIndex).get(subjectListIndex) + " in section" + (getInitialSectionSaag(subjectListOfAllTeachers.get(teacherIndex).get(subjectListIndex)) + sectionPassed));
+                        System.out.println("assigned to teacher " + teacherArrayList.get(teacherIndex).facultyResponse.name + " " + subjectListOfAllTeachers.get(teacherIndex).get(subjectListIndex) + " in section" + (getInitialSectionSaag(subjectListOfAllTeachers.get(teacherIndex).get(subjectListIndex)) + sectionPassed) + " at "+newDay+" "+newHour+" with "+continuousLecturesPrev+ " "+continuousLecturesNext+" "+continuousLecturesPrevNext);
 
                         if(helperDccCourses(teacherArrayList, teacherIndex, rooms, sections, subjectListOfAllTeachers, subjectListIndex, sectionPassed,currentHour+1)){
                             return true;
@@ -695,6 +746,21 @@ public class TimeTableGenerator {
                               Room[] rooms,Section[] sections,int currD, int currH,Room lab){
         if(courseWithLabsListIndex>=coursesWithLabList.size()){
             System.out.println("inside lab helper 1");
+
+
+            for(int i=0;i<teachers.size();++i){
+                if(teachers.get(i).facultyResponse.name.equals("DK")){
+                    System.out.println("Printing timetable in normal labs ");
+                    for(int j=0;j<5;++j){
+                        for(int k=0;k<10;++k){
+                            System.out.print(teachers.get(i).facultyResponse.timeTable.timetable[j][k] + "$$$");
+                        }
+                        System.out.println("");
+                    }
+                    break;
+                }
+            }
+
             return true;
         }
         else if(sectionIndex>1){
@@ -935,6 +1001,20 @@ public class TimeTableGenerator {
 
         System.out.println("gleba in first function 2 call at 4");
         assignPhdLectures(teachers, rooms, sectionsArray);
+
+
+        for(int i=0;i<teachers.length;++i){
+            if(teachers[i].facultyResponse.name.equals("DK")){
+                System.out.println("Printing timetable after electives and phd ");
+                for(int j=0;j<5;++j){
+                    for(int k=0;k<10;++k){
+                        System.out.print(teachers[i].facultyResponse.timeTable.timetable[j][k] + "$$$");
+                    }
+                    System.out.println("");
+                }
+                break;
+            }
+        }
 
         System.out.println("gleba in first function 2 call at 5");
         assignTeachersToFirstYear(teachers,rooms,sectionsArray);
