@@ -25,6 +25,7 @@ public class GenerateAllTimeTablesAgain {
     // map of (course name, pair of( day<0-mon,1-tue...>, start time(0-9am,1-10am...)))
     public Map<String, Pair<Integer, Integer>> labSlotToBeAssigned;
     public Room[] rooms;
+    public Map<String,Integer> labCoursesCompleted;
 
     public OverallTT getAllTimeTableAgainData(){
         System.out.println("overallTT IS faculty response size is : " + overallTT.facultyResponses.size());
@@ -127,8 +128,9 @@ public class GenerateAllTimeTablesAgain {
 
         // find lab slot that needs to be definitely filled
         //format -  (MC312(SLOT-A)lab:t1:Lab:COMPUTATION LAB)
-
+        //format - (MC312:t1:Lab:COMPUTATION LAB)
         labSlotToBeAssigned = new HashMap<>();
+        labCoursesCompleted = new HashMap<>();
         Iterator itrFreezedTeachersData = freezedTeachersData.iterator();
         while(itrFreezedTeachersData.hasNext()){
             FacultyResponse facultyResponse = (FacultyResponse) itrFreezedTeachersData.next();
@@ -145,9 +147,10 @@ public class GenerateAllTimeTablesAgain {
                             if(labSlotToBeAssigned.containsKey(breaks[0])){
                                 labSlotToBeAssigned.remove(breaks[0]);
                             }else{
+                                labCoursesCompleted.put(breaks[0],1);
                                 Pair p = new Pair(i,j);
                                 j++;
-                                labSlotToBeAssigned.put(breaks[0],p);
+                                labSlotToBeAssigned.put(breaks[0] + ":" + breaks[1],p);
                             }
                         }else{
                             continue;
@@ -220,6 +223,7 @@ public class GenerateAllTimeTablesAgain {
                                     //format for section -  (MC324:Lecture:1:PAYAL)
                                     //format for teacher -  (MC312(SLOT-A)lab:t1:Lab:COMPUTATION LAB)
                                     sec.timeTable.timetable[i][j] = breaks[0] + ":Lecture:" + breaks[3] + ":" + facultyResponse.name;
+                                    sec.subjects.put(breaks[0],1);
                                     break;
                                 }
                             }
