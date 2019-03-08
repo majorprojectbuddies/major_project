@@ -532,8 +532,6 @@ public class TimeTableGeneratorAgain {
     }
 
 
-
-
     static int getInitialSectionSaag(String subject){
         int year = Integer.parseInt(subject.charAt(2) + "");
         if(year==2){
