@@ -23,9 +23,12 @@ public class GenerateAllTimeTablesAgain {
     public ArrayList<FirstYearGroup> freezedFirstYearData;
     public ArrayList<FirstYearGroup> unfreezedFirstYearData;
     // map of (course name, pair of( day<0-mon,1-tue...>, start time(0-9am,1-10am...)))
-    public Map<String, Pair<Integer, Integer>> labSlotToBeAssigned;
+    public Map<String, Pair<Integer, Integer>> decLabSlotToBeAssigned;
+    public ArrayList<String> decRemainingLabList;
     public Room[] rooms;
-    public Map<String,Integer> labCoursesCompleted;
+    //map that stores no of teachers assigned to every dec lab along with day and time vals
+    // --initialize it using sections with 0
+    public Map<String,Pair<Integer,Pair<Integer,Integer>>> decLabsFixedMap;
 
     public OverallTT getAllTimeTableAgainData(){
         System.out.println("overallTT IS faculty response size is : " + overallTT.facultyResponses.size());
@@ -126,11 +129,49 @@ public class GenerateAllTimeTablesAgain {
             }
         }
 
+        System.out.println("init declabsfixed");
+        //Initialize this map with values from sections array
+        decLabsFixedMap = new HashMap<>();
+        Iterator sectionItr = sections.iterator();
+        while(sectionItr.hasNext()){
+            Section sec = (Section) sectionItr.next();
+            for(int d=0;d<5;d++){
+                for(int h=0;h<10;h++){
+                    String cellValue = sec.timeTable.timetable[d][h];
+                    System.out.println(cellValue);
+                    if(cellValue.equals("-") || cellValue.equals("null") || cellValue.equals("X")){
+                        continue;
+                    }else{
+                        System.out.println("gonna separate");
+
+                        if(cellValue.contains("lab")){
+                            //its an elective lab
+                            System.out.println("found elective lab");
+                            if(decLabsFixedMap.containsKey(cellValue)){
+                                continue;
+                            }else{
+                                //pair for day time
+                                Pair p = new Pair(0,0);
+                                //pair for val and p
+                                Pair q = new Pair(0,p);
+                                System.out.println("putting val");
+                                decLabsFixedMap.put(cellValue,q);
+                            }
+                        }else{
+                            //dcc course or lab
+                            continue;
+                        }
+                    }
+                }
+            }
+        }
+
+
         // find lab slot that needs to be definitely filled
         //format -  (MC312(SLOT-A)lab:t1:Lab:COMPUTATION LAB)
         //format - (MC312:t1:Lab:COMPUTATION LAB)
-        labSlotToBeAssigned = new HashMap<>();
-        labCoursesCompleted = new HashMap<>();
+        System.out.println("put values in dec lab fixed");
+        //put values in decLabFixedMap
         Iterator itrFreezedTeachersData = freezedTeachersData.iterator();
         while(itrFreezedTeachersData.hasNext()){
             FacultyResponse facultyResponse = (FacultyResponse) itrFreezedTeachersData.next();
@@ -143,14 +184,18 @@ public class GenerateAllTimeTablesAgain {
                         //separate the string to check whether its a lab or not
                         String[] breaks = s.split(":");
                         if(breaks[2].equals("Lab")){
-                            //if lab already present remove it coz partner found
-                            if(labSlotToBeAssigned.containsKey(breaks[0])){
-                                labSlotToBeAssigned.remove(breaks[0]);
-                            }else{
-                                labCoursesCompleted.put(breaks[0],1);
-                                Pair p = new Pair(i,j);
-                                j++;
-                                labSlotToBeAssigned.put(breaks[0] + ":" + breaks[1],p);
+                            //check if its a elective lab or normal lab
+                            if (breaks[0].contains("lab")){
+                                //its an electives lab
+                                Pair<Integer,Pair<Integer,Integer>> currPair = decLabsFixedMap.get(breaks[0]);
+                                Integer currVal = currPair.getKey();
+                                currVal++;
+                                Pair p = currPair.getValue();
+                                Pair q = new Pair(currVal,p);
+                                decLabsFixedMap.put(breaks[0],q);
+                            }else {
+                                //dcc lab
+                                continue;
                             }
                         }else{
                             continue;
@@ -159,6 +204,34 @@ public class GenerateAllTimeTablesAgain {
                 }
             }
         }
+
+        //FILL REMAINING LAB LIST AND LAB SLOTS
+        decRemainingLabList = new ArrayList<>();
+        decLabSlotToBeAssigned = new HashMap<>();
+        System.out.println("doing final work dec lab");
+        for (Map.Entry<String, Pair<Integer,Pair<Integer,Integer>>> entry : decLabsFixedMap.entrySet()) {
+            String courseId = entry.getKey();
+            Pair<Integer,Pair<Integer,Integer>> valPair = entry.getValue();
+            //case 1 : no teacher : 0 val
+            if(valPair.getKey().equals(0)){
+                decRemainingLabList.add(courseId);
+            }else if(valPair.getKey().equals(2)){
+                //case 2: 1 teacher val : 2
+                decLabSlotToBeAssigned.put(courseId,valPair.getValue());
+            }else if(valPair.getKey().equals(4)){
+                //case 3: 2 teacher val : 4
+                //ignore
+                continue;
+            }
+        }
+
+
+
+
+
+
+
+
 
         //FORMAT FOR TEACHER
         //format -  (MC312(SLOT-A)lab:t1:Lab:COMPUTATION LAB)
@@ -277,13 +350,32 @@ public class GenerateAllTimeTablesAgain {
 
         // Main Function Calling
         System.out.println("main func prep");
+
+
+
+
+
+
+        //temp work
+        System.out.println("lab slot to be assigned are");
+        for (Map.Entry<String, Pair<Integer,Integer>> entry : decLabSlotToBeAssigned.entrySet()) {
+            String courseId = entry.getKey();
+            System.out.println(courseId);
+        }
+        System.out.println("remaining labs are");
+        for(String s: decRemainingLabList){
+            System.out.println(s);
+        }
+
+
+
+
         TimeTableGeneratorAgain timeTableGeneratorAgain = new TimeTableGeneratorAgain(teachersData,courseDataList,
                 firstYearData,phdData,sections,unfreezedTeachersData,
                 freezedTeachersData, freezedFirstYearData,
-                unfreezedFirstYearData,labSlotToBeAssigned,rooms);
+                unfreezedFirstYearData,decLabSlotToBeAssigned,rooms,decRemainingLabList);
         System.out.println("main func called");
         OverallTT dataToBeReturned = timeTableGeneratorAgain.generateTimeTable();
-
         return dataToBeReturned;
     }
 }

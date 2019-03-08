@@ -19,8 +19,9 @@ public class TimeTableGeneratorAgain {
     public static ArrayList<FacultyResponse> freezedTeachersData;
     public static ArrayList<FirstYearGroup> freezedFirstYearData;
     public static ArrayList<FirstYearGroup> unfreezedFirstYearData;
-    public static Map<String, Pair<Integer, Integer>> labSlotToBeAssigned;
+    public static Map<String, Pair<Integer, Integer>> decLabSlotToBeAssigned;
     public Room[] rooms;
+    public static ArrayList<String> decRemainingLabList;
 
     public TimeTableGeneratorAgain(ArrayList<FacultyResponse> teachersData,
                               ArrayList<Course> courseDataList,
@@ -29,7 +30,8 @@ public class TimeTableGeneratorAgain {
                               ArrayList<Section> sections,ArrayList<FacultyResponse> unfreezedTeachersData,
                                    ArrayList<FacultyResponse> freezedTeachersData, ArrayList<FirstYearGroup> freezedFirstYearData,
                                    ArrayList<FirstYearGroup> unfreezedFirstYearData ,
-                                   Map<String,Pair<Integer,Integer>> labSlotToBeAssigned, Room[] rooms) {
+                                   Map<String,Pair<Integer,Integer>> decLabSlotToBeAssigned, Room[] rooms,
+                                   ArrayList<String> decRemainingLabList) {
         this.teachersData = teachersData;
         this.courseDataHM = new HashMap<>();
         for (Course course : courseDataList) {
@@ -42,9 +44,9 @@ public class TimeTableGeneratorAgain {
         this.freezedFirstYearData = freezedFirstYearData;
         this.unfreezedTeachersData = unfreezedTeachersData;
         this.freezedTeachersData = freezedTeachersData;
-        this.labSlotToBeAssigned = labSlotToBeAssigned;
+        this.decLabSlotToBeAssigned = decLabSlotToBeAssigned;
         this.rooms = rooms;
-
+        this.decRemainingLabList = decRemainingLabList;
     }
 
     //FORMAT FOR TEACHER
