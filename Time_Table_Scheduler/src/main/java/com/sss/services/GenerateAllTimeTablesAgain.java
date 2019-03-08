@@ -34,6 +34,7 @@ public class GenerateAllTimeTablesAgain {
     public ArrayList<String> dccLabsAssignToBothSections;
     public ArrayList<Pair<String,Integer>> dccLabsAssignToSingleSection;
     public ArrayList<Pair<Pair<String,Integer>,Pair<Integer,Integer>>> dccLabsAssignToSingleTeacher;
+    public HashMap<String, Course> courseDataHM;
 
     public OverallTT getAllTimeTableAgainData(){
         System.out.println("overallTT IS faculty response size is : " + overallTT.facultyResponses.size());
@@ -375,35 +376,122 @@ public class GenerateAllTimeTablesAgain {
 
 
         // Filling the DCC lab lists
-        dccLabsAssignToBothSections = new ArrayList<>();
-        dccLabsAssignToSingleSection = new ArrayList<>();
-        dccLabsAssignToSingleTeacher = new ArrayList<>();
 
+        //Filling courses details
+        this.courseDataHM = new HashMap<>();
+        for (Course course : courseDataList) {
+            this.courseDataHM.put(course.courseId, course);
+        }
         //Finding courses with labs
         HashSet<String> coursesWithLab = new HashSet<>();
-        /*for (Teacher t : teachersData) {
+        for (FacultyResponse t : teachersData) {
 
-            String sub = t.facultyResponse.subject1;
+            String sub = t.subject1;
             if (sub.length() == 5 && courseDataHM.get(sub).containsLab) {
                 coursesWithLab.add(sub);
             }
-            sub = t.facultyResponse.subject2;
+            sub = t.subject2;
             if (sub.length() == 5 && courseDataHM.get(sub).containsLab) {
                 coursesWithLab.add(sub);
             }
-            sub = t.facultyResponse.subject3;
+            sub = t.subject3;
             if (sub.length() == 5 && courseDataHM.get(sub).containsLab) {
                 coursesWithLab.add(sub);
             }
         }
 
-        ArrayList<String> coursesWithLabList = new ArrayList<>();
+        /*ArrayList<String> coursesWithLabList = new ArrayList<>();
 
         for (String sub : coursesWithLab) {
             coursesWithLabList.add(sub);
         }
         Collections.shuffle(coursesWithLabList);*/
 
+        HashMap<String,Integer> labsSectionsDetails = new HashMap<>();
+        HashMap<String,Pair<Integer,Integer>> previousTeacherLabDetails = new HashMap<>();
+
+        //Fill the labSectionDetails with 0
+        for (String sub : coursesWithLab) {
+            labsSectionsDetails.put(sub,0);
+        }
+
+        for(int i=0;i<freezedTeachersData.size();++i){
+            for(int j=0;j<5;++j){
+                for(int k=0;k<10;++k){
+                    String sub = freezedTeachersData.get(i).timeTable.timetable[j][k];
+                    if(sub.equals("null") || sub.equals("X") || sub.equals("-")){
+                        continue;
+                    }
+                    else{
+                        //separate the string to check whether its a lab or lecture
+                        String[] breaks = sub.split(":");
+                        //format for teacher -  (MC312(SLOT-A)lab:t1:Lab:COMPUTATION LAB)
+                        if(breaks[2].equals("Lab")){
+                            if(!breaks[0].contains("SLOT")){
+                                if(breaks[1].contains("1")){
+                                    if(labsSectionsDetails.get(breaks[0])==0 || labsSectionsDetails.get(breaks[0])==8 ||
+                                            labsSectionsDetails.get(breaks[0])==16 || labsSectionsDetails.get(breaks[0])==24 ||
+                                            labsSectionsDetails.get(breaks[0])==32){
+                                        previousTeacherLabDetails.put(breaks[0]+":0",new Pair(j,k));
+                                    }
+                                    labsSectionsDetails.put(breaks[0],labsSectionsDetails.get(breaks[0])+1);
+                                }
+                                else if(breaks[1].contains("2")){
+                                    if(labsSectionsDetails.get(breaks[0])==0 || labsSectionsDetails.get(breaks[0])==1 ||
+                                            labsSectionsDetails.get(breaks[0])==2 || labsSectionsDetails.get(breaks[0])==3 ||
+                                            labsSectionsDetails.get(breaks[0])==4){
+                                        previousTeacherLabDetails.put(breaks[0]+":1",new Pair(j,k));
+                                    }
+                                    labsSectionsDetails.put(breaks[0],labsSectionsDetails.get(breaks[0])+8);
+                                }
+                            }
+
+                        }
+                    }
+                }
+            }
+        }
+
+        //Populating these arraylists
+        dccLabsAssignToBothSections = new ArrayList<>();
+        dccLabsAssignToSingleSection = new ArrayList<>();
+        dccLabsAssignToSingleTeacher = new ArrayList<>();
+
+        Iterator<Map.Entry<String, Integer>> itr2 = labsSectionsDetails.entrySet().iterator();
+        while(itr2.hasNext()){
+            Map.Entry<String, Integer> entry = itr2.next();
+            if(entry.getValue()==0){
+                dccLabsAssignToBothSections.add(entry.getKey());
+            }
+            else if(entry.getValue()==2){
+                dccLabsAssignToSingleSection.add(new Pair(entry.getKey(),1));
+                dccLabsAssignToSingleTeacher.add(new Pair(new Pair(entry.getKey(),0),previousTeacherLabDetails.get(entry.getKey()+":0")));
+            }
+            else if(entry.getValue()==16){
+                dccLabsAssignToSingleSection.add(new Pair(entry.getKey(),0));
+                dccLabsAssignToSingleTeacher.add(new Pair(new Pair(entry.getKey(),1),previousTeacherLabDetails.get(entry.getKey()+":1")));
+            }
+            else if(entry.getValue()==18){
+                dccLabsAssignToSingleTeacher.add(new Pair(new Pair(entry.getKey(),0),previousTeacherLabDetails.get(entry.getKey()+":0")));
+
+                dccLabsAssignToSingleTeacher.add(new Pair(new Pair(entry.getKey(),1),previousTeacherLabDetails.get(entry.getKey()+":1")));
+            }
+            else if(entry.getValue()==32){
+                dccLabsAssignToSingleSection.add(new Pair(entry.getKey(),0));
+            }
+            else if(entry.getValue()==4){
+                dccLabsAssignToSingleSection.add(new Pair(entry.getKey(),1));
+            }
+            else if(entry.getValue()==34){
+                dccLabsAssignToSingleTeacher.add(new Pair(new Pair(entry.getKey(),0),previousTeacherLabDetails.get(entry.getKey()+":0")));
+            }
+            else if(entry.getValue()==20){
+                dccLabsAssignToSingleTeacher.add(new Pair(new Pair(entry.getKey(),1),previousTeacherLabDetails.get(entry.getKey()+":1")));
+            }
+            else{
+
+            }
+        }
 
 
 
