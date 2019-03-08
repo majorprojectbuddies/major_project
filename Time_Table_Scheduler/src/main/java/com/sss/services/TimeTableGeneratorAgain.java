@@ -287,9 +287,13 @@ public class TimeTableGeneratorAgain {
         boolean isFound = false;
 
         for (h = hour; h < 10; ++h) {
-            if (!sections[sectionIndexArray.get(sectionIndex)].timeTable.timetable[d][h].equals("null") && sections[sectionIndexArray.get(sectionIndex)].timeTable.timetable[d][h].length() > 14 && sections[sectionIndexArray.get(sectionIndex)].timeTable.timetable[d][h].substring(13).equals("lab")) {
+            if (!sections[sectionIndexArray.get(sectionIndex)].timeTable.timetable[d][h].equals("null") && sections[sectionIndexArray.get(sectionIndex)].timeTable.timetable[d][h].length() > 14 && sections[sectionIndexArray.get(sectionIndex)].timeTable.timetable[d][h].contains("lab")) {
                 System.out.println("gleba dec lab funciton " + sections[sectionIndexArray.get(sectionIndex)].timeTable.timetable[d][h].substring(13));
                 sub = sections[sectionIndexArray.get(sectionIndex)].timeTable.timetable[d][h];
+                if(sub.length()>15){
+                    String[] breaks = sub.split(":");
+                    sub = breaks[0];
+                }
                 System.out.println("gleba sub found" + sub);
                 isFound = true;
                 break;
@@ -300,9 +304,13 @@ public class TimeTableGeneratorAgain {
             for (d = day + 1; d < 5; d++) {
                 for (h = 0; h < 10; h++) {
                     System.out.println("new gleba " + d + " " + h + " " + sections[sectionIndexArray.get(sectionIndex)].timeTable.timetable[d][h]);
-                    if (!sections[sectionIndexArray.get(sectionIndex)].timeTable.timetable[d][h].equals("null") && sections[sectionIndexArray.get(sectionIndex)].timeTable.timetable[d][h].length() > 14 && sections[sectionIndexArray.get(sectionIndex)].timeTable.timetable[d][h].substring(13).equals("lab")) {
+                    if (!sections[sectionIndexArray.get(sectionIndex)].timeTable.timetable[d][h].equals("null") && sections[sectionIndexArray.get(sectionIndex)].timeTable.timetable[d][h].length() > 14 && sections[sectionIndexArray.get(sectionIndex)].timeTable.timetable[d][h].contains("lab")) {
                         System.out.println("gleba dec lab funciton " + sections[sectionIndexArray.get(sectionIndex)].timeTable.timetable[d][h].substring(13));
                         sub = sections[sectionIndexArray.get(sectionIndex)].timeTable.timetable[d][h];
+                        if(sub.length()>15){
+                            String[] breaks = sub.split(":");
+                            sub = breaks[0];
+                        }
                         System.out.println("gleba sub found" + sub);
                         isFound = true;
                         break;
@@ -327,7 +335,7 @@ public class TimeTableGeneratorAgain {
 
         if (decRemainingLabList.contains(sub)) {
             //2 teachers will be assigned
-
+            System.out.println("2 teachers will be assigned");
             int j = 0;
             int k = 0;
             for (; j < teachers.length; ++j) {
@@ -451,7 +459,7 @@ public class TimeTableGeneratorAgain {
         }
         if (decLabSlotToBeAssigned.containsKey(sub)) {
             //1 teacher will be assigned
-
+            System.out.println("1 teacher will be assigned and subject is " + sub);
             int j = 0;
 
             for (; j < teachers.length; ++j) {
