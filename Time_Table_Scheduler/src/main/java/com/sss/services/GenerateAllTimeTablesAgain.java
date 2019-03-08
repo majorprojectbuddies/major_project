@@ -30,6 +30,11 @@ public class GenerateAllTimeTablesAgain {
     // --initialize it using sections with 0
     public Map<String,Pair<Integer,Pair<Integer,Integer>>> decLabsFixedMap;
 
+
+    public ArrayList<String> dccLabsAssignToBothSections;
+    public ArrayList<Pair<String,Integer>> dccLabsAssignToSingleSection;
+    public ArrayList<Pair<Pair<String,Integer>,Pair<Integer,Integer>>> dccLabsAssignToSingleTeacher;
+
     public OverallTT getAllTimeTableAgainData(){
         System.out.println("overallTT IS faculty response size is : " + overallTT.facultyResponses.size());
 
@@ -366,6 +371,39 @@ public class GenerateAllTimeTablesAgain {
         for(String s: decRemainingLabList){
             System.out.println(s);
         }
+
+
+
+        // Filling the DCC lab lists
+        dccLabsAssignToBothSections = new ArrayList<>();
+        dccLabsAssignToSingleSection = new ArrayList<>();
+        dccLabsAssignToSingleTeacher = new ArrayList<>();
+
+        //Finding courses with labs
+        HashSet<String> coursesWithLab = new HashSet<>();
+        /*for (Teacher t : teachersData) {
+
+            String sub = t.facultyResponse.subject1;
+            if (sub.length() == 5 && courseDataHM.get(sub).containsLab) {
+                coursesWithLab.add(sub);
+            }
+            sub = t.facultyResponse.subject2;
+            if (sub.length() == 5 && courseDataHM.get(sub).containsLab) {
+                coursesWithLab.add(sub);
+            }
+            sub = t.facultyResponse.subject3;
+            if (sub.length() == 5 && courseDataHM.get(sub).containsLab) {
+                coursesWithLab.add(sub);
+            }
+        }
+
+        ArrayList<String> coursesWithLabList = new ArrayList<>();
+
+        for (String sub : coursesWithLab) {
+            coursesWithLabList.add(sub);
+        }
+        Collections.shuffle(coursesWithLabList);*/
+
 
 
 
