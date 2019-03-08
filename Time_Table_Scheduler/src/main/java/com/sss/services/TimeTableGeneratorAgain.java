@@ -235,6 +235,342 @@ public class TimeTableGeneratorAgain {
 
 
 
+    static boolean assignDecLabs(Teacher[] teachers,Room lab, Section[] sections,Room[] rooms,Section[] sectionArray,
+                                 Map<String, Pair<Integer, Integer>> decLabSlotToBeAssigned,
+                                 ArrayList<String> decRemainingLabList){
+
+        int sectionIndex = 0;
+        ArrayList<Integer> sectionIndexArray=new ArrayList<Integer>();
+        sectionIndexArray.add(0);
+        sectionIndexArray.add(2);
+        sectionIndexArray.add(4);
+        Collections.shuffle(sectionIndexArray);
+        if(helperDecLabs(teachers,lab,sections,0,0,sectionIndex,sectionIndexArray,rooms,sectionArray,
+                decLabSlotToBeAssigned,decRemainingLabList)){
+            return true;
+        }
+        return false;
+    }
+
+
+
+    static boolean helperDecLabs(Teacher[] teachers, Room lab,Section[] sections,int day,int hour, int sectionIndex,ArrayList<Integer> sectionIndexArray,Room[] rooms,Section[] sectionsArray,
+                                 Map<String, Pair<Integer, Integer>> decLabSlotToBeAssigned,
+                                 ArrayList<String> decRemainingLabList) {
+
+        if (sectionIndex >= sectionIndexArray.size()) {
+
+
+            for (int i = 0; i < teachers.length; ++i) {
+                if (teachers[i].facultyResponse.name.equals("DK")) {
+                    System.out.println("Printing timetable in dec labs ");
+                    for (int j = 0; j < 5; ++j) {
+                        for (int k = 0; k < 10; ++k) {
+                            System.out.print(teachers[i].facultyResponse.timeTable.timetable[j][k] + "$$$");
+                        }
+                        System.out.println("");
+                    }
+                    break;
+                }
+            }
+
+            //**IMP IMP REMOVE FROM COMMENTS
+            /*if(assignDccCourses(teachers, rooms, sectionsArray)){
+                return true;
+            }
+            return false;*/
+            return true;
+        }
+
+        int d = 0, h = 0;
+        String sub = "";
+        boolean isFound = false;
+
+        for (h = hour; h < 10; ++h) {
+            if (!sections[sectionIndexArray.get(sectionIndex)].timeTable.timetable[d][h].equals("null") && sections[sectionIndexArray.get(sectionIndex)].timeTable.timetable[d][h].length() > 14 && sections[sectionIndexArray.get(sectionIndex)].timeTable.timetable[d][h].contains("lab")) {
+                System.out.println("gleba dec lab funciton " + sections[sectionIndexArray.get(sectionIndex)].timeTable.timetable[d][h].substring(13));
+                sub = sections[sectionIndexArray.get(sectionIndex)].timeTable.timetable[d][h];
+                if(sub.length()>15){
+                    String[] breaks = sub.split(":");
+                    sub = breaks[0];
+                }
+                System.out.println("gleba sub found" + sub);
+                isFound = true;
+                break;
+            }
+        }
+
+        if (!isFound) {
+            for (d = day + 1; d < 5; d++) {
+                for (h = 0; h < 10; h++) {
+                    System.out.println("new gleba " + d + " " + h + " " + sections[sectionIndexArray.get(sectionIndex)].timeTable.timetable[d][h]);
+                    if (!sections[sectionIndexArray.get(sectionIndex)].timeTable.timetable[d][h].equals("null") && sections[sectionIndexArray.get(sectionIndex)].timeTable.timetable[d][h].length() > 14 && sections[sectionIndexArray.get(sectionIndex)].timeTable.timetable[d][h].contains("lab")) {
+                        System.out.println("gleba dec lab funciton " + sections[sectionIndexArray.get(sectionIndex)].timeTable.timetable[d][h].substring(13));
+                        sub = sections[sectionIndexArray.get(sectionIndex)].timeTable.timetable[d][h];
+                        if(sub.length()>15){
+                            String[] breaks = sub.split(":");
+                            sub = breaks[0];
+                        }
+                        System.out.println("gleba sub found" + sub);
+                        isFound = true;
+                        break;
+                    }
+
+                }
+                if (isFound) {
+                    break;
+                }
+            }
+        }
+
+        if (d == 5) {
+
+            return helperDecLabs(teachers, lab, sections, 0, 0, sectionIndex + 1, sectionIndexArray, rooms, sectionsArray,
+                    decLabSlotToBeAssigned, decRemainingLabList);
+        }
+        System.out.println("saags " + sectionIndexArray.get(sectionIndex) + " " + d + " " + h);
+
+
+        //check how many teachers to be assigned
+
+        if (decRemainingLabList.contains(sub)) {
+            //2 teachers will be assigned
+            System.out.println("2 teachers will be assigned");
+            int j = 0;
+            int k = 0;
+            for (; j < teachers.length; ++j) {
+
+                System.out.println("saagsSS " + j);
+
+                int continuousPrev = 0;
+                int continuousNext = 0;
+                int continuousPrevNext = 0;
+
+                if (h > 1 && !(teachers[j].facultyResponse.timeTable.timetable[d][h - 1].equals("null") || teachers[j].facultyResponse.timeTable.timetable[d][h - 1].equals("X"))
+                        && !(teachers[j].facultyResponse.timeTable.timetable[d][h - 2].equals("null") || teachers[j].facultyResponse.timeTable.timetable[d][h - 2].equals("X"))) {
+                    continuousPrev = 2;
+                }
+
+                if (h < 8 && !(teachers[j].facultyResponse.timeTable.timetable[d][h + 1].equals("null") || teachers[j].facultyResponse.timeTable.timetable[d][h + 1].equals("X"))
+                        && !(teachers[j].facultyResponse.timeTable.timetable[d][h + 2].equals("null") || teachers[j].facultyResponse.timeTable.timetable[d][h + 2].equals("X"))) {
+                    continuousNext = 2;
+                }
+
+                if (h >= 1 && h <= 8 && !(teachers[j].facultyResponse.timeTable.timetable[d][h - 1].equals("null") || teachers[j].facultyResponse.timeTable.timetable[d][h - 1].equals("X"))
+                        && !(teachers[j].facultyResponse.timeTable.timetable[d][h + 1].equals("null") || teachers[j].facultyResponse.timeTable.timetable[d][h + 1].equals("X"))) {
+                    continuousPrevNext = 2;
+                }
+
+                if (continuousNext >= 2 || continuousPrev >= 2 || continuousPrevNext >= 2) {
+                    continue;
+                }
+
+
+                if (teachers[j].isFree(d, h) && teachers[j].isFree(d, h + 1)
+                        && teachers[j].labHours >= 2) {
+
+                    for (k = j + 1; k < teachers.length; ++k) {
+
+
+                        int continuousPrevForK = 0;
+                        int continuousNextForK = 0;
+                        int continuousPrevNextForK = 0;
+
+                        if (h > 1 && !(teachers[k].facultyResponse.timeTable.timetable[d][h - 1].equals("null") || teachers[k].facultyResponse.timeTable.timetable[d][h - 1].equals("X"))
+                                && !(teachers[k].facultyResponse.timeTable.timetable[d][h - 2].equals("null") || teachers[k].facultyResponse.timeTable.timetable[d][h - 2].equals("X"))) {
+                            continuousPrevForK = 2;
+                        }
+
+                        if (h < 8 && !(teachers[k].facultyResponse.timeTable.timetable[d][h + 1].equals("null") || teachers[k].facultyResponse.timeTable.timetable[d][h + 1].equals("X"))
+                                && !(teachers[k].facultyResponse.timeTable.timetable[d][h + 2].equals("null") || teachers[k].facultyResponse.timeTable.timetable[d][h + 2].equals("X"))) {
+                            continuousNextForK = 2;
+                        }
+
+                        if (h >= 1 && h <= 8 && !(teachers[k].facultyResponse.timeTable.timetable[d][h - 1].equals("null") || teachers[k].facultyResponse.timeTable.timetable[d][h - 1].equals("X"))
+                                && !(teachers[k].facultyResponse.timeTable.timetable[d][h + 1].equals("null") || teachers[k].facultyResponse.timeTable.timetable[d][h + 1].equals("X"))) {
+                            continuousPrevNextForK = 2;
+                        }
+
+                        if (continuousNextForK >= 2 || continuousPrevForK >= 2 || continuousPrevNextForK >= 2) {
+                            continue;
+                        }
+
+                        if (teachers[k].isFree(d, h) && teachers[k].isFree(d, h + 1)
+                                && teachers[k].labHours >= 2) {
+
+                            teachers[j].assign(d, h, sub + ":" + sections[sectionIndexArray.get(sectionIndex)].secId + "-" +
+                                    sections[sectionIndexArray.get(sectionIndex) + 1].secId + ":Lab:" + "3");
+                            teachers[j].assign(d, h + 1, sub + ":" + sections[sectionIndexArray.get(sectionIndex)].secId + "-" +
+                                    sections[sectionIndexArray.get(sectionIndex) + 1].secId + ":Lab:" + "3");
+                            teachers[k].assign(d, h, sub + ":" + sections[sectionIndexArray.get(sectionIndex)].secId + "-" +
+                                    sections[sectionIndexArray.get(sectionIndex) + 1].secId + ":Lab:" + "3");
+                            teachers[k].assign(d, h + 1, sub + ":" + sections[sectionIndexArray.get(sectionIndex)].secId + "-" +
+                                    sections[sectionIndexArray.get(sectionIndex) + 1].secId + ":Lab:" + "3");
+
+                            lab.assign(d, h, sub + ":" + sections[sectionIndexArray.get(sectionIndex)].secId + "-" +
+                                    sections[sectionIndexArray.get(sectionIndex) + 1].secId + ":Lab");
+                            lab.assign(d, h + 1, sub + ":" + sections[sectionIndexArray.get(sectionIndex)].secId + "-" +
+                                    sections[sectionIndexArray.get(sectionIndex) + 1].secId + ":Lab");
+
+                            sections[sectionIndexArray.get(sectionIndex)].assign(d, h, sub + ":Lab:3");
+                            sections[sectionIndexArray.get(sectionIndex)].assign(d, h + 1, sub + ":Lab:3");
+
+                            sections[sectionIndexArray.get(sectionIndex) + 1].assign(d, h, sub + ":Lab:3");
+                            sections[sectionIndexArray.get(sectionIndex) + 1].assign(d, h + 1, sub + ":Lab:3");
+
+                            teachers[j].labHours -= 2;
+                            teachers[k].labHours -= 2;
+
+                            if (helperDecLabs(teachers, lab, sections, d, h + 2, sectionIndex, sectionIndexArray, rooms, sectionsArray,
+                                    decLabSlotToBeAssigned, decRemainingLabList)) {
+                                return true;
+                            }
+
+
+                            teachers[j].assign(d, h, "null");
+                            teachers[j].assign(d, h + 1, "null");
+                            teachers[k].assign(d, h, "null");
+                            teachers[k].assign(d, h + 1, "null");
+
+                            lab.assign(d, h, "null");
+                            lab.assign(d, h + 1, "null");
+
+                            sections[sectionIndexArray.get(sectionIndex)].assign(d, h, sub);
+                            sections[sectionIndexArray.get(sectionIndex)].assign(d, h + 1, sub);
+
+                            sections[sectionIndexArray.get(sectionIndex) + 1].assign(d, h, sub);
+                            sections[sectionIndexArray.get(sectionIndex) + 1].assign(d, h + 1, sub);
+
+                            teachers[j].labHours += 2;
+                            teachers[k].labHours += 2;
+
+                        }
+                    }
+                }
+            }
+            if (j == teachers.length) {
+                return false;
+            }
+
+            if (k == teachers.length) {
+                return false;
+            }
+            return true;
+        }
+        if (decLabSlotToBeAssigned.containsKey(sub)) {
+            //1 teacher will be assigned
+            System.out.println("1 teacher will be assigned and subject is " + sub);
+            int j = 0;
+
+            for (; j < teachers.length; ++j) {
+
+                System.out.println("saagsSS " + j);
+
+                int continuousPrev = 0;
+                int continuousNext = 0;
+                int continuousPrevNext = 0;
+
+                if (h > 1 && !(teachers[j].facultyResponse.timeTable.timetable[d][h - 1].equals("null") || teachers[j].facultyResponse.timeTable.timetable[d][h - 1].equals("X"))
+                        && !(teachers[j].facultyResponse.timeTable.timetable[d][h - 2].equals("null") || teachers[j].facultyResponse.timeTable.timetable[d][h - 2].equals("X"))) {
+                    continuousPrev = 2;
+                }
+
+                if (h < 8 && !(teachers[j].facultyResponse.timeTable.timetable[d][h + 1].equals("null") || teachers[j].facultyResponse.timeTable.timetable[d][h + 1].equals("X"))
+                        && !(teachers[j].facultyResponse.timeTable.timetable[d][h + 2].equals("null") || teachers[j].facultyResponse.timeTable.timetable[d][h + 2].equals("X"))) {
+                    continuousNext = 2;
+                }
+
+                if (h >= 1 && h <= 8 && !(teachers[j].facultyResponse.timeTable.timetable[d][h - 1].equals("null") || teachers[j].facultyResponse.timeTable.timetable[d][h - 1].equals("X"))
+                        && !(teachers[j].facultyResponse.timeTable.timetable[d][h + 1].equals("null") || teachers[j].facultyResponse.timeTable.timetable[d][h + 1].equals("X"))) {
+                    continuousPrevNext = 2;
+                }
+
+                if (continuousNext >= 2 || continuousPrev >= 2 || continuousPrevNext >= 2) {
+                    continue;
+                }
+
+
+                if (teachers[j].isFree(d, h) && teachers[j].isFree(d, h + 1)
+                        && teachers[j].labHours >= 2) {
+
+                    teachers[j].assign(d, h, sub + ":" + sections[sectionIndexArray.get(sectionIndex)].secId + "-" +
+                            sections[sectionIndexArray.get(sectionIndex) + 1].secId + ":Lab:" + "3");
+                    teachers[j].assign(d, h + 1, sub + ":" + sections[sectionIndexArray.get(sectionIndex)].secId + "-" +
+                            sections[sectionIndexArray.get(sectionIndex) + 1].secId + ":Lab:" + "3");
+
+
+                    lab.assign(d, h, sub + ":" + sections[sectionIndexArray.get(sectionIndex)].secId + "-" +
+                            sections[sectionIndexArray.get(sectionIndex) + 1].secId + ":Lab");
+                    lab.assign(d, h + 1, sub + ":" + sections[sectionIndexArray.get(sectionIndex)].secId + "-" +
+                            sections[sectionIndexArray.get(sectionIndex) + 1].secId + ":Lab");
+
+                    sections[sectionIndexArray.get(sectionIndex)].assign(d, h, sub + ":Lab:3");
+                    sections[sectionIndexArray.get(sectionIndex)].assign(d, h + 1, sub + ":Lab:3");
+
+                    sections[sectionIndexArray.get(sectionIndex) + 1].assign(d, h, sub + ":Lab:3");
+                    sections[sectionIndexArray.get(sectionIndex) + 1].assign(d, h + 1, sub + ":Lab:3");
+
+                    teachers[j].labHours -= 2;
+
+
+                    if (helperDecLabs(teachers, lab, sections, d, h + 2, sectionIndex, sectionIndexArray, rooms, sectionsArray,
+                            decLabSlotToBeAssigned, decRemainingLabList)) {
+                        return true;
+                    }
+
+                    teachers[j].assign(d, h, "null");
+                    teachers[j].assign(d, h + 1, "null");
+
+                    lab.assign(d, h, "null");
+                    lab.assign(d, h + 1, "null");
+
+                    sections[sectionIndexArray.get(sectionIndex)].assign(d, h, sub);
+                    sections[sectionIndexArray.get(sectionIndex)].assign(d, h + 1, sub);
+
+                    sections[sectionIndexArray.get(sectionIndex) + 1].assign(d, h, sub);
+                    sections[sectionIndexArray.get(sectionIndex) + 1].assign(d, h + 1, sub);
+
+                    teachers[j].labHours += 2;
+
+                }
+            }
+            if (j == teachers.length) {
+                return false;
+            }
+
+            return true;
+
+        }
+        //else 0 teacher should be assigned so simply return true
+        return true;
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -605,6 +941,8 @@ public class TimeTableGeneratorAgain {
         assignPhdLectures(unfreezedTeachers, rooms, sectionsArray);
 
         assignTeachersToFirstYear(unfreezedTeachers,rooms,sectionsArray);
+
+        assignDecLabs(unfreezedTeachers,rooms[3],sectionsArray,rooms,sectionsArray,decLabSlotToBeAssigned,decRemainingLabList);
 
         if(assignDccCourses(unfreezedTeachers,rooms,sectionsArray)){
             System.out.println("wuhoooo");
