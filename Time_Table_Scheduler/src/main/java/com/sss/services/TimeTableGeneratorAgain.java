@@ -568,6 +568,23 @@ public class TimeTableGeneratorAgain {
         Teacher[] freezedTeachers = new Teacher[freezedTeachersData.size()];
         for (int i = 0; i < freezedTeachersData.size(); i++) {
             freezedTeachers[i] = new Teacher(freezedTeachersData.get(i));
+            for(int j=0;j<5;++j){
+                for(int k=0;k<10;++k){
+                    String s = freezedTeachersData.get(i).timeTable.timetable[j][k];
+                    if(s.equals("-") || s.equals("null") || s.equals("X")){
+                        continue;
+                    }else{
+                        //separate the string to check whether its a lab or lecture
+                        String[] breaks = s.split(":");
+                        //format for teacher -  (MC312(SLOT-A)lab:t1:Lab:COMPUTATION LAB)
+                        if(breaks[2].equals("Lab")){
+                            //its a lab so block the lab
+                            //format for lab room-  (MC312(SLOT-A)LAB:t2:Lab)
+                            freezedTeachers[i].labHours--;
+                        }
+                    }
+                }
+            }
         }
 
         Teacher[] unfreezedTeachers = new Teacher[unfreezedTeachersData.size()];
@@ -601,6 +618,7 @@ public class TimeTableGeneratorAgain {
         //adding the freezed teachers
         for (Teacher t : freezedTeachers) {
             overallTT.facultyResponses.add(t.facultyResponse);
+
         }
         //adding the unfreezed teachers
         for (Teacher t : unfreezedTeachers) {
