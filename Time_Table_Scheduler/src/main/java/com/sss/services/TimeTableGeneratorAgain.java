@@ -28,7 +28,9 @@ public class TimeTableGeneratorAgain {
                                    ArrayList<FacultyResponse> freezedTeachersData, ArrayList<FirstYearGroup> freezedFirstYearData,
                                    ArrayList<FirstYearGroup> unfreezedFirstYearData ,
                                    Map<String,Pair<Integer,Integer>> decLabSlotToBeAssigned, Room[] rooms,
-                                   ArrayList<String> decRemainingLabList) {
+                                   ArrayList<String> decRemainingLabList,ArrayList<String> dccLabsAssignToBothSections,
+                                   ArrayList<Pair<String,Integer>> dccLabsAssignToSingleSection,
+                                   ArrayList<Pair<Pair<String,Integer>,Pair<Integer,Integer>>> dccLabsAssignToSingleTeacher) {
         this.teachersData = teachersData;
         this.courseDataHM = new HashMap<>();
         for (Course course : courseDataList) {

@@ -499,7 +499,8 @@ public class GenerateAllTimeTablesAgain {
         TimeTableGeneratorAgain timeTableGeneratorAgain = new TimeTableGeneratorAgain(teachersData,courseDataList,
                 firstYearData,phdData,sections,unfreezedTeachersData,
                 freezedTeachersData, freezedFirstYearData,
-                unfreezedFirstYearData,decLabSlotToBeAssigned,rooms,decRemainingLabList);
+                unfreezedFirstYearData,decLabSlotToBeAssigned,rooms,decRemainingLabList,dccLabsAssignToBothSections,
+                dccLabsAssignToSingleSection,dccLabsAssignToSingleTeacher);
         System.out.println("main func called");
         OverallTT dataToBeReturned = timeTableGeneratorAgain.generateTimeTable();
         return dataToBeReturned;
