@@ -20,6 +20,10 @@ public class TimeTableGeneratorAgain {
     public Room[] rooms;
     public static ArrayList<String> decRemainingLabList;
 
+    public ArrayList<String> dccLabsAssignToBothSections;
+    public ArrayList<Pair<String,Integer>> dccLabsAssignToSingleSection;
+    public ArrayList<Pair<Pair<String,Integer>,Pair<Integer,Integer>>> dccLabsAssignToSingleTeacher;
+
     public TimeTableGeneratorAgain(ArrayList<FacultyResponse> teachersData,
                               ArrayList<Course> courseDataList,
                               ArrayList<FirstYearGroup> firstYearData,
@@ -46,6 +50,9 @@ public class TimeTableGeneratorAgain {
         this.decLabSlotToBeAssigned = decLabSlotToBeAssigned;
         this.rooms = rooms;
         this.decRemainingLabList = decRemainingLabList;
+        this.dccLabsAssignToBothSections = dccLabsAssignToBothSections;
+        this.dccLabsAssignToSingleSection = dccLabsAssignToSingleSection;
+        this.dccLabsAssignToSingleTeacher = dccLabsAssignToSingleTeacher;
     }
 
     //FORMAT FOR TEACHER
@@ -872,6 +879,282 @@ public class TimeTableGeneratorAgain {
     }
 
 
+
+
+
+
+
+    static boolean assignLabs(ArrayList<Teacher> unfreezedTeacherArrayList,ArrayList<String> dccLabsAssignToBothSections,
+                              ArrayList<Pair<String,Integer>> dccLabsAssignToSingleSection,
+                              ArrayList<Pair<Pair<String,Integer>,Pair<Integer,Integer>>> dccLabsAssignToSingleTeacher,
+                              Room lab, Section[] sections,Room[] rooms){
+
+        /*if(helperLabs(coursesWithLabList,0,0,0,new Teacher(),new Teacher(),
+                teachersArrayList,rooms,sections,-1,-1,lab)){
+            return true;
+        }
+        return false;*/
+
+        System.out.println("sub in both section");
+        for(int i=0;i<dccLabsAssignToBothSections.size();++i){
+            System.out.println(dccLabsAssignToBothSections.get(i));
+        }
+
+        System.out.println("sub in single section " + dccLabsAssignToSingleSection.size());
+        /*for(int i=0;i<dccLabsAssignToBothSections.size();++i){
+            System.out.println(dccLabsAssignToSingleSection.get(i).getKey());
+        }*/
+
+        System.out.println("sub in single teacher" + dccLabsAssignToSingleTeacher.size());
+        /*for(int i=0;i<dccLabsAssignToBothSections.size();++i){
+            System.out.println(dccLabsAssignToSingleTeacher.get(i).getKey().getKey());
+        }*/
+
+        if(assignDccLabsAssignToBothSections(dccLabsAssignToBothSections,
+                dccLabsAssignToSingleSection,
+                dccLabsAssignToSingleTeacher,
+                0,0,0,
+                new Teacher(),new Teacher(),unfreezedTeacherArrayList,
+                lab,sections,rooms,-1,-1)){
+            return true;
+        }
+        return false;
+    }
+
+    static boolean assignDccLabsAssignToBothSections(ArrayList<String> dccLabsAssignToBothSections,
+                                                     ArrayList<Pair<String,Integer>> dccLabsAssignToSingleSection,
+                                                     ArrayList<Pair<Pair<String,Integer>,Pair<Integer,Integer>>> dccLabsAssignToSingleTeacher,
+                                                     int courseWithLabsListIndex,int sectionIndex,
+                                                     int selectedTeacherIndex,Teacher teacher1,Teacher teacher2,ArrayList<Teacher> unfreezedTeacherArrayList,
+                                                     Room lab, Section[] sections,Room[] rooms,int currD, int currH){
+
+        if(courseWithLabsListIndex>=dccLabsAssignToBothSections.size()){
+            System.out.println("inside lab helper 1");
+
+
+            for(int i=0;i<unfreezedTeacherArrayList.size();++i){
+                if(unfreezedTeacherArrayList.get(i).facultyResponse.name.equals("DK")){
+                    System.out.println("Printing timetable in normal labs ");
+                    for(int j=0;j<5;++j){
+                        for(int k=0;k<10;++k){
+                            System.out.print(unfreezedTeacherArrayList.get(i).facultyResponse.timeTable.timetable[j][k] + "$$$");
+                        }
+                        System.out.println("");
+                    }
+                    break;
+                }
+            }
+
+            //MAKE THE RECURSIVE CALL FOR SINGLE SECTION HERE
+            return true;
+        }
+        else if(sectionIndex>1){
+            System.out.println("inside lab helper 2");
+
+            return assignDccLabsAssignToBothSections(dccLabsAssignToBothSections,dccLabsAssignToSingleSection,
+                    dccLabsAssignToSingleTeacher,courseWithLabsListIndex+1,0,0,new Teacher(),
+                    new Teacher(),unfreezedTeacherArrayList,lab,sections,rooms,-1,-1);
+        }
+        else if(selectedTeacherIndex>1){
+            System.out.println("inside lab helper 3");
+
+            return assignDccLabsAssignToBothSections(dccLabsAssignToBothSections,dccLabsAssignToSingleSection,
+                    dccLabsAssignToSingleTeacher,courseWithLabsListIndex,sectionIndex+1,0,new Teacher(),
+                    new Teacher(),unfreezedTeacherArrayList,lab,sections,rooms,-1,-1);
+        }
+        else if(selectedTeacherIndex==1){
+            System.out.println("inside lab helper 4");
+
+            int initialSection = getInitialSectionSaag(dccLabsAssignToBothSections.get(courseWithLabsListIndex));
+            int sectionToAssign = initialSection + sectionIndex;
+
+
+
+            int j;
+            System.out.println(unfreezedTeacherArrayList.size());
+            for(j = 0;j<unfreezedTeacherArrayList.size();++j){
+                Teacher teacher = unfreezedTeacherArrayList.get(j);
+                System.out.println("inside lab helper 4.1");
+                System.out.println(unfreezedTeacherArrayList.get(j).labHours);
+//                if(unfreezedTeacherArrayList.get(j).isFree(currD,currH)){
+//                    System.out.println("free hai");
+//                }
+//                else{
+//                    System.out.println("not free hai");
+//                }
+                if(unfreezedTeacherArrayList.get(j)!= teacher1){
+                    System.out.println("same nahi hai");
+                }
+                else{
+                    System.out.println("same hai");
+                }
+                if(unfreezedTeacherArrayList.get(j)!= teacher1 && unfreezedTeacherArrayList.get(j).isFree(currD,currH) && unfreezedTeacherArrayList.get(j).labHours>=2){
+                    System.out.println("inside lab helper 4.2");
+                    int numOfClasses = 0;
+                    for(int p =0;p<10;++p){
+                        if(!(teacher.facultyResponse.timeTable.timetable[currD][p].equals("null") ||
+                                teacher.facultyResponse.timeTable.timetable[currD][p].equals("X"))){
+                            numOfClasses++;
+                        }
+                    }
+                    System.out.println("inside lab helper 4.3");
+                    if(numOfClasses>3){
+                        continue;
+                    }
+
+                    System.out.println("inside lab helper 4.4");
+                    if(currH>2 && !teacher.isFree(currD,currH-1) && !teacher.isFree(currD,currH-2) && !teacher.isFree(currD,currH-3)){
+                        continue;
+                    }
+                    if(currH<6 && !teacher.isFree(currD,currH+2) && !teacher.isFree(currD,currH+3) && !teacher.isFree(currD,currH+4)){
+                        continue;
+                    }
+                    if(currH>1 && currH<8 && !teacher.isFree(currD,currH-1) && !teacher.isFree(currD,currH-2) && !teacher.isFree(currD,currH+2)){
+                        continue;
+                    }
+                    if(currH>0 && currH<7 && !teacher.isFree(currD,currH-1) && !teacher.isFree(currD,currH+2) && !teacher.isFree(currD,currH+3)){
+                        continue;
+                    }
+                    System.out.println("inside lab helper 4.5");
+
+                    teacher2 = unfreezedTeacherArrayList.get(j);
+                    //assign lab here
+                    unfreezedTeacherArrayList.get(j).labHours-=2;
+
+
+                    System.out.println("inside lab helper 4.6");
+                    unfreezedTeacherArrayList.get(j).assign(currD,currH, dccLabsAssignToBothSections.get(courseWithLabsListIndex) +":"+ getTheYearAndSection(initialSection,sectionIndex)+":"+"Lab"+":"+"3");
+                    sections[sectionToAssign].assign(currD,currH,dccLabsAssignToBothSections.get(courseWithLabsListIndex)+":"+"Lab"+":"+"3");
+                    rooms[3].assign(currD, currH, dccLabsAssignToBothSections.get(courseWithLabsListIndex)+":"+getTheYearAndSection(initialSection,sectionIndex)+":"+"Lab");
+
+                    System.out.println("inside lab helper 4.7");
+                    unfreezedTeacherArrayList.get(j).assign(currD,currH+1, dccLabsAssignToBothSections.get(courseWithLabsListIndex) +":"+ getTheYearAndSection(initialSection,sectionIndex)+":"+"Lab"+":"+"3");
+                    sections[sectionToAssign].assign(currD,currH+1,dccLabsAssignToBothSections.get(courseWithLabsListIndex)+":"+"Lab"+":"+"3");
+                    rooms[3].assign(currD, currH+1, dccLabsAssignToBothSections.get(courseWithLabsListIndex)+":"+getTheYearAndSection(initialSection,sectionIndex)+":"+"Lab");
+
+
+                    System.out.println("inside lab helper 4.8");
+                    if(assignDccLabsAssignToBothSections(dccLabsAssignToBothSections,dccLabsAssignToSingleSection,
+                            dccLabsAssignToSingleTeacher,courseWithLabsListIndex,sectionIndex,selectedTeacherIndex+1,
+                            teacher1,teacher2,unfreezedTeacherArrayList,lab,sections,rooms,currD,currH)){
+                        System.out.println("inside lab helper 4.9");
+                        return true;
+                    }
+                    System.out.println("inside lab helper 4.10");
+                    unfreezedTeacherArrayList.get(j).labHours+=2;
+                    teacher2= new Teacher();
+
+                    //unassign everything here
+                    unfreezedTeacherArrayList.get(j).assign(currD,currH, "null");
+                    sections[sectionToAssign].assign(currD,currH,"null");
+                    rooms[3].assign(currD, currH, "null");
+
+                    unfreezedTeacherArrayList.get(j).assign(currD,currH+1, "null");
+                    sections[sectionToAssign].assign(currD,currH+1,"null");
+                    rooms[3].assign(currD, currH+1, "null");
+
+                }
+            }
+
+        }
+        else if(selectedTeacherIndex==0){
+            System.out.println("inside lab helper 5");
+
+            int initialSection = getInitialSectionSaag(dccLabsAssignToBothSections.get(courseWithLabsListIndex));
+            int sectionToAssign = initialSection + sectionIndex;
+            for(int d = 0;d<5;++d){
+                for(int h= 0;h<9;++h){
+                    if(sections[sectionToAssign].isFree(d,h) && lab.isFree(d,h) &&
+                            sections[sectionToAssign].isFree(d,h+1) && lab.isFree(d,h+1)){
+                        int j;
+                        for(j = 0;j<unfreezedTeacherArrayList.size();++j){
+                            Teacher teacher = unfreezedTeacherArrayList.get(j);
+
+
+                            if(unfreezedTeacherArrayList.get(j).isFree(d,h) && unfreezedTeacherArrayList.get(j).labHours>=2){
+
+                                int numOfClasses = 0;
+                                for(int p =0;p<10;++p){
+                                    if(!(teacher.facultyResponse.timeTable.timetable[d][p].equals("null") ||
+                                            teacher.facultyResponse.timeTable.timetable[d][p].equals("X"))){
+                                        numOfClasses++;
+                                    }
+                                }
+                                if(numOfClasses>3){
+                                    continue;
+                                }
+
+                                boolean prev3 = false;
+                                boolean next3= false;
+                                boolean prev2next1 = false;
+                                boolean prev1next2= false;
+
+                                if(h>2 && !teacher.isFree(d,h-1) && !teacher.isFree(d,h-2) && !teacher.isFree(d,h-3)){
+                                    continue;
+                                }
+                                if(h<6 && !teacher.isFree(d,h+2) && !teacher.isFree(d,h+3) && !teacher.isFree(d,h+4)){
+                                    continue;
+                                }
+                                if(h>1 && h<8 && !teacher.isFree(d,h-1) && !teacher.isFree(d,h-2) && !teacher.isFree(d,h+2)){
+                                    continue;
+                                }
+                                if(h>0 && h<7 && !teacher.isFree(d,h-1) && !teacher.isFree(d,h+2) && !teacher.isFree(d,h+3)){
+                                    continue;
+                                }
+
+
+
+                                unfreezedTeacherArrayList.get(j).labHours-=2;
+                                teacher1 = unfreezedTeacherArrayList.get(j);
+                                //assign lab here
+
+
+
+                                unfreezedTeacherArrayList.get(j).assign(d,h, dccLabsAssignToBothSections.get(courseWithLabsListIndex) +":"+ getTheYearAndSection(initialSection,sectionIndex)+":"+"Lab"+":"+"3");
+                                sections[sectionToAssign].assign(d,h,dccLabsAssignToBothSections.get(courseWithLabsListIndex)+":"+"Lab"+":"+"3");
+                                rooms[3].assign(d, h, dccLabsAssignToBothSections.get(courseWithLabsListIndex)+":"+getTheYearAndSection(initialSection,sectionIndex)+":"+"Lab");
+
+                                unfreezedTeacherArrayList.get(j).assign(d,h+1, dccLabsAssignToBothSections.get(courseWithLabsListIndex) +":"+ getTheYearAndSection(initialSection,sectionIndex)+":"+"Lab"+":"+"3");
+                                sections[sectionToAssign].assign(d,h+1,dccLabsAssignToBothSections.get(courseWithLabsListIndex)+":"+"Lab"+":"+"3");
+                                rooms[3].assign(d, h+1, dccLabsAssignToBothSections.get(courseWithLabsListIndex)+":"+getTheYearAndSection(initialSection,sectionIndex)+":"+"Lab");
+
+
+
+                                if(assignDccLabsAssignToBothSections(dccLabsAssignToBothSections,dccLabsAssignToSingleSection,
+                                        dccLabsAssignToSingleTeacher,courseWithLabsListIndex,sectionIndex,selectedTeacherIndex+1,
+                                        teacher1,teacher2,unfreezedTeacherArrayList,lab,sections,rooms,d,h)){
+                                    return true;
+                                }
+
+                                unfreezedTeacherArrayList.get(j).labHours+=2;
+                                teacher1= new Teacher();
+                                //unassign everything here
+                                unfreezedTeacherArrayList.get(j).assign(d,h, "null");
+                                sections[sectionToAssign].assign(d,h,"null");
+                                rooms[3].assign(d, h, "null");
+
+                                unfreezedTeacherArrayList.get(j).assign(d,h+1, "null");
+                                sections[sectionToAssign].assign(d,h+1,"null");
+                                rooms[3].assign(d, h+1, "null");
+
+                            }
+                        }
+
+                    }
+                }
+            }
+            return false;
+
+        }
+        return true;
+
+
+    }
+
+
+
+
+
     static int getInitialSectionSaag(String subject){
         int year = Integer.parseInt(subject.charAt(2) + "");
         if(year==2){
@@ -886,6 +1169,26 @@ public class TimeTableGeneratorAgain {
         return 0;
     }
 
+
+    static String getTheYearAndSection(int year,int section){
+        String toReturn="";
+        if(year==0){
+            toReturn+="s";
+        }
+        else if(year==2){
+            toReturn+="t";
+        }
+        else if(year==4){
+            toReturn+="f";
+        }
+        if(section==0){
+            toReturn+="1";
+        }
+        else if(section==1){
+            toReturn+="2";
+        }
+        return toReturn;
+    }
 
 
 
@@ -950,6 +1253,17 @@ public class TimeTableGeneratorAgain {
             System.out.println("wuhoooo");
         }
 
+        ArrayList<Teacher> unfreezedTeacherArrayList = new ArrayList<>();
+        for(int i=0;i<unfreezedTeachers.length;++i){
+            unfreezedTeacherArrayList.add(unfreezedTeachers[i]);
+        }
+
+        if(assignLabs(unfreezedTeacherArrayList,dccLabsAssignToBothSections,
+                dccLabsAssignToSingleSection,
+                dccLabsAssignToSingleTeacher,
+                rooms[3],sectionsArray,rooms)){
+            System.out.println("wuhooo2");
+        }
 
         //returning the overallTT work done here
 

@@ -377,12 +377,15 @@ public class GenerateAllTimeTablesAgain {
 
         // Filling the DCC lab lists
 
+        System.out.println("gizmo finding error 1");
         //Filling courses details
         this.courseDataHM = new HashMap<>();
         for (Course course : courseDataList) {
             this.courseDataHM.put(course.courseId, course);
         }
         //Finding courses with labs
+        System.out.println("gizmo finding error 2");
+
         HashSet<String> coursesWithLab = new HashSet<>();
         for (FacultyResponse t : teachersData) {
 
@@ -400,6 +403,7 @@ public class GenerateAllTimeTablesAgain {
             }
         }
 
+        System.out.println("gizmo finding error 3");
         /*ArrayList<String> coursesWithLabList = new ArrayList<>();
 
         for (String sub : coursesWithLab) {
@@ -410,16 +414,20 @@ public class GenerateAllTimeTablesAgain {
         HashMap<String,Integer> labsSectionsDetails = new HashMap<>();
         HashMap<String,Pair<Integer,Integer>> previousTeacherLabDetails = new HashMap<>();
 
+        System.out.println("gizmo finding error 4");
         //Fill the labSectionDetails with 0
         for (String sub : coursesWithLab) {
             labsSectionsDetails.put(sub,0);
         }
 
+        System.out.println("gizmo finding error 5");
         for(int i=0;i<freezedTeachersData.size();++i){
             for(int j=0;j<5;++j){
                 for(int k=0;k<10;++k){
                     String sub = freezedTeachersData.get(i).timeTable.timetable[j][k];
+                    System.out.println("sub value is "+ sub);
                     if(sub.equals("null") || sub.equals("X") || sub.equals("-")){
+                        System.out.println("gizmo finding error 5.1");
                         continue;
                     }
                     else{
@@ -427,7 +435,7 @@ public class GenerateAllTimeTablesAgain {
                         String[] breaks = sub.split(":");
                         //format for teacher -  (MC312(SLOT-A)lab:t1:Lab:COMPUTATION LAB)
                         if(breaks[2].equals("Lab")){
-                            if(!breaks[0].contains("SLOT")){
+                            if(!breaks[0].contains("lab")){
                                 if(breaks[1].contains("1")){
                                     if(labsSectionsDetails.get(breaks[0])==0 || labsSectionsDetails.get(breaks[0])==8 ||
                                             labsSectionsDetails.get(breaks[0])==16 || labsSectionsDetails.get(breaks[0])==24 ||
@@ -435,6 +443,7 @@ public class GenerateAllTimeTablesAgain {
                                         previousTeacherLabDetails.put(breaks[0]+":0",new Pair(j,k));
                                     }
                                     labsSectionsDetails.put(breaks[0],labsSectionsDetails.get(breaks[0])+1);
+                                    System.out.println("gizmo finding error 5.2");
                                 }
                                 else if(breaks[1].contains("2")){
                                     if(labsSectionsDetails.get(breaks[0])==0 || labsSectionsDetails.get(breaks[0])==1 ||
@@ -443,6 +452,7 @@ public class GenerateAllTimeTablesAgain {
                                         previousTeacherLabDetails.put(breaks[0]+":1",new Pair(j,k));
                                     }
                                     labsSectionsDetails.put(breaks[0],labsSectionsDetails.get(breaks[0])+8);
+                                    System.out.println("gizmo finding error 5.3");
                                 }
                             }
 
@@ -456,10 +466,13 @@ public class GenerateAllTimeTablesAgain {
         dccLabsAssignToBothSections = new ArrayList<>();
         dccLabsAssignToSingleSection = new ArrayList<>();
         dccLabsAssignToSingleTeacher = new ArrayList<>();
+        System.out.println("gizmo finding error 6");
 
         Iterator<Map.Entry<String, Integer>> itr2 = labsSectionsDetails.entrySet().iterator();
         while(itr2.hasNext()){
+            System.out.println("gizmo finding error 6.1");
             Map.Entry<String, Integer> entry = itr2.next();
+            System.out.println("gizmo finding error 6.2");
             if(entry.getValue()==0){
                 dccLabsAssignToBothSections.add(entry.getKey());
             }
@@ -494,6 +507,7 @@ public class GenerateAllTimeTablesAgain {
         }
 
 
+        System.out.println("gizmo finding error 7");
 
 
         TimeTableGeneratorAgain timeTableGeneratorAgain = new TimeTableGeneratorAgain(teachersData,courseDataList,
