@@ -516,7 +516,8 @@ public class GenerateAllTimeTablesAgain {
                 unfreezedFirstYearData,decLabSlotToBeAssigned,rooms,decRemainingLabList,dccLabsAssignToBothSections,
                 dccLabsAssignToSingleSection,dccLabsAssignToSingleTeacher);
         System.out.println("main func called");
-        OverallTT dataToBeReturned = timeTableGeneratorAgain.generateTimeTable();
+        OverallTT dataToBeReturned = new OverallTT();
+        //dataToBeReturned= timeTableGeneratorAgain.generateTimeTable();
         return dataToBeReturned;
     }
 }
